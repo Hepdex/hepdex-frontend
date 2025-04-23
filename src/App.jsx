@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import GlobalStyles from "./GlobalStyles";
+import Home from "./pages/Home";
+import AOS from "aos";
+import MainLayout from "./layouts/MainLayout";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // Set animation library
+  useEffect(() => {
+    AOS.init({
+      once: true, // only animate once
+      offset: 0,
+    });
 
+    // Delay refresh to ensure DOM is fully loaded
+    setTimeout(() => {
+      AOS.refresh();
+    }, 100);
+  }, []);
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <GlobalStyles />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Navigate replace to="home" />} />
+          <Route element={<MainLayout />}>
+            <Route path="home" element={<Home />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
-
-export default App
