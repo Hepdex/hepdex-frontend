@@ -1,15 +1,23 @@
-import styled from "styled-components";
-import Section from "./Section";
-import { reviews } from "../data/reviews";
-import { flex } from "../GlobalStyles";
 import { BsStarFill } from "react-icons/bs";
-import { motion } from "framer-motion";
+import styled, { css } from "styled-components";
+import Section from "../../components/Section";
+import { reviews } from "../../data/reviews";
+import { flex, mq } from "../../GlobalStyles";
+import Container from "../../components/Container";
 
 const Div = styled.div`
   ul.reviews {
-    ${flex("space-between")}
+    ${flex("center")}
+    row-gap: 32px;
+    ${mq(
+      "800px",
+      css`
+        justify-content: space-between;
+      `
+    )}
     .review {
       max-width: 520px;
+
       .text {
         font-size: 24px;
         line-height: 32px;
@@ -50,23 +58,12 @@ export default function Reviews() {
       marginBottom={true}
     >
       <Div>
-        <ul className="reviews">
+        <Container.Row data-aos className="custom-fade-up reviews">
           {reviews.map((review, index) => (
-            <motion.li
+            <Container.Col
               className="review"
               key={index}
-              initial={{ opacity: 0, y: "50%" }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-              }}
-              transition={{
-                duration: 0.4,
-                ease: "easeIn",
-              }}
+              breakPoints={[{ name: "800px", cols: 2 }]}
             >
               <p className="text">“{review.text}”</p>
               <div className="rating">
@@ -83,9 +80,9 @@ export default function Reviews() {
                   <span className="role">{review.role}</span>
                 </div>
               </div>
-            </motion.li>
+            </Container.Col>
           ))}
-        </ul>
+        </Container.Row>
       </Div>
     </Section>
   );

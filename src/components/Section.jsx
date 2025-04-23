@@ -1,16 +1,28 @@
 import styled, { css } from "styled-components";
 import Container from "./Container";
-import { flex } from "../GlobalStyles";
-import { motion } from "framer-motion";
+import { flex, mq } from "../GlobalStyles";
 
 const SectionDiv = styled.section`
-  margin-top: 96px;
+  padding-top: 72px;
+  ${mq(
+    "lg",
+    css`
+      padding-top: 96px;
+    `
+  )}
+
   & .title {
     text-align: center;
     ${flex("center")}
     flex-direction: column;
-    margin-bottom: 56px;
+    margin-bottom: 40px;
     row-gap: 8px;
+    ${mq(
+      "lg",
+      css`
+        margin-bottom: 56px;
+      `
+    )}
     p {
       color: var(--color-grey-2);
     }
@@ -19,7 +31,13 @@ const SectionDiv = styled.section`
   ${(props) =>
     props.$marginBottom &&
     css`
-      margin-bottom: 96px;
+      padding-bottom: 72px;
+      ${mq(
+        "lg",
+        css`
+          padding-bottom: 96px;
+        `
+      )}
     `}
 `;
 
@@ -28,27 +46,10 @@ export default function Section({ title, subtitle, children, marginBottom }) {
     <SectionDiv $marginBottom={marginBottom}>
       <Container>
         {title && (
-          <motion.div
-            className="title"
-            initial={{
-              opacity: 0,
-              y: "100%",
-            }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{
-              once: true,
-            }}
-            transition={{
-              duration: 0.4,
-              ease: "easeIn",
-            }}
-          >
+          <div data-aos className="title custom-fade-up">
             <h1 className="heading-md">{title}</h1>
             {subtitle && <p className="text-md">{subtitle}</p>}
-          </motion.div>
+          </div>
         )}
         {children}
       </Container>

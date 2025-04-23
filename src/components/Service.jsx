@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Container from "./Container";
 import { Link } from "react-router-dom";
 import { flex } from "../GlobalStyles";
-import { motion } from "framer-motion";
 
 const Div = styled(Link)`
   transition: all 0.3s ease-in-out;
@@ -10,6 +9,7 @@ const Div = styled(Link)`
   flex-direction: column;
   background-color: var(--color-grey-1);
   border-radius: 8px;
+  height: 100%;
   padding: 48px 32px;
   &:hover {
     background-color: var(--color-secondary);
@@ -40,30 +40,20 @@ const Div = styled(Link)`
 `;
 export default function Service({ service }) {
   return (
-    <Container.Col breakPoints={[{ name: "md", cols: 3 }]}>
-      <motion.div
-        initial={{ opacity: 0, y: "40%" }}
-        whileInView={{
-          opacity: 1,
-          y: 0,
-        }}
-        viewport={{
-          once: true,
-        }}
-        transition={{
-          duration: 0.4,
-          ease: "easeIn",
-        }}
-      >
-        <Div to={"/services"}>
-          <div className="icon">
-            <img src={service.img} alt={service.name} />
-          </div>
-          <h3 className="name">{service.name}</h3>
-          <p className="text">{service.text}</p>
-          <span className="browse">Browse experts</span>
-        </Div>
-      </motion.div>
+    <Container.Col
+      breakPoints={[
+        { name: "sm", cols: 2 },
+        { name: "900px", cols: 3 },
+      ]}
+    >
+      <Div to={"/services"}>
+        <div className="icon">
+          <img src={service.img} alt={service.name} />
+        </div>
+        <h3 className="name">{service.name}</h3>
+        <p className="text">{service.text}</p>
+        <span className="browse">Browse experts</span>
+      </Div>
     </Container.Col>
   );
 }

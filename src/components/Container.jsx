@@ -1,9 +1,8 @@
 import styled, { css } from "styled-components";
-import { flex, mq, sizes } from "../GlobalStyles";
+import { flex, mq } from "../GlobalStyles";
 
 // Container
 const ContainerDiv = styled.div`
-  max-width: ${sizes["sm"]};
   width: 100%;
   padding: 0 10px;
   margin-left: auto;
@@ -15,18 +14,10 @@ const ContainerDiv = styled.div`
       padding: 0 15px;
     `
   )}
-
   ${mq(
     "xl",
     css`
-      ${(props) =>
-        props.$inner
-          ? css`
-              max-width: 1200px;
-            `
-          : css`
-              max-width: 1400px;
-            `}
+      max-width: 1200px;
     `
   )}
 `;
@@ -86,17 +77,25 @@ const ColDiv = styled.li`
     )}
 `;
 
-function Container({ children, inner = true }) {
-  return <ContainerDiv $inner={inner}>{children}</ContainerDiv>;
+function Container({ children }) {
+  return <ContainerDiv>{children}</ContainerDiv>;
 }
 
-function Row({ children, gap = 24 }) {
-  return <RowDiv $gap={gap}>{children}</RowDiv>;
-}
-
-function Col({ children, breakPoints, defaultCols }) {
+function Row({ children, gap = 24, className = "", ...rest }) {
   return (
-    <ColDiv $breakPoints={breakPoints} $defaultCols={defaultCols}>
+    <RowDiv $gap={gap} className={className} {...rest}>
+      {children}
+    </RowDiv>
+  );
+}
+
+function Col({ children, breakPoints, defaultCols, className = "" }) {
+  return (
+    <ColDiv
+      $breakPoints={breakPoints}
+      $defaultCols={defaultCols}
+      className={className}
+    >
       {children}
     </ColDiv>
   );

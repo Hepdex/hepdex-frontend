@@ -1,27 +1,25 @@
-import Faqs from "../components/Faqs";
-import Footer from "../components/Footer";
-import Hero from "../components/Hero";
-import HowItWorks from "../components/HowItWorks";
-import Portfolio from "../components/Portfolio";
-import Reviews from "../components/Reviews";
-import Services from "../components/Services";
-import WhyHepDex from "../components/WhyHepDex";
-import Team from "../components/Team";
-import Talent from "../components/Talent";
+import Faqs from "../ui/home/Faqs";
+import Hero from "../ui/home/Hero";
+import HowItWorks from "../ui/home/HowItWorks";
+import Portfolio from "../ui/home/Portfolio";
+import Reviews from "../ui/home/Reviews";
+import ServiceList from "../ui/home/ServiceList";
+import WhyHepDex from "../ui/home/WhyHepDex";
+import Team from "../ui/home/Team";
+import Talent from "../ui/home/Talent";
 
 export default function Home() {
   return (
-    <main>
+    <div>
       <Hero />
       <Portfolio />
       <Talent />
       <Team />
-      <Services />
+      <ServiceList />
       <Reviews />
       <HowItWorks />
       <WhyHepDex />
       <Faqs />
-      <Footer />
-    </main>
+    </div>
   );
 }
