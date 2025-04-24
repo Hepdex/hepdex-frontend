@@ -53,12 +53,12 @@ const Div = styled.div`
 export default function Reviews() {
   return (
     <Section
-      title="What our clients say"
-      subtitle="We consistently guide clients worldwide to success."
+      title={`HepDex - The Trusted Partner for Remote Hiring!`}
+      subtitle="Discover how Hepdex has helped businesses transform their operations with skilled remote talent - straight from our customers."
       marginBottom={true}
     >
       <Div>
-        <Container.Row data-aos className="custom-fade-up reviews">
+        <Container.Row data-aos className="reviews custom-fade-up">
           {reviews.map((review, index) => (
             <Container.Col
               className="review"

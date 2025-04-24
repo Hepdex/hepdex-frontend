@@ -132,7 +132,10 @@ const Div = styled.div`
 `;
 
 export default function Header() {
+  // Menu state
   const [open, setIsOpen] = useState(false);
+  // Close menu
+  const close = () => setIsOpen(false);
   return (
     <Div>
       <Container>
@@ -141,27 +144,31 @@ export default function Header() {
           <div className={`nav-box ${open ? "open" : ""}`}>
             <ul className="nav">
               <li>
-                <NavLink to="/home" className="nav-link">
+                <NavLink to="/home" className="nav-link" onClick={close}>
                   Home
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/services" className="nav-link">
+                <NavLink to="/services" className="nav-link" onClick={close}>
                   Services
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/hire-an-expert" className="nav-link">
+                <NavLink
+                  to="/hire-an-expert"
+                  className="nav-link"
+                  onClick={close}
+                >
                   Hire an Expert
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/find-talent" className="nav-link">
+                <NavLink to="/find-talent" className="nav-link" onClick={close}>
                   Find Talent
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/find-work" className="nav-link">
+                <NavLink to="/find-work" className="nav-link" onClick={close}>
                   Find Work
                 </NavLink>
               </li>
@@ -169,7 +176,7 @@ export default function Header() {
             <AuthMenu className="mobile-auth" />
           </div>
           <div className="box">
-            <AuthMenu className="auth-nav" />
+            <AuthMenu className="auth-nav" close={close} />
             <button className="mobile-btn" onClick={() => setIsOpen((s) => !s)}>
               {open ? <BsXLg size={18} /> : <BsList size={24} />}
             </button>
@@ -180,16 +187,16 @@ export default function Header() {
   );
 }
 
-const AuthMenu = ({ className }) => {
+const AuthMenu = ({ className, close }) => {
   return (
     <ul className={className}>
       <li>
-        <Link to="/login" className="nav-link">
+        <Link to="/login" className="nav-link" onClick={close}>
           Log In
         </Link>
       </li>
       <li>
-        <Button as={Link} to="/signup">
+        <Button as={Link} to="/signup" onClick={close}>
           Sign Up
         </Button>
       </li>

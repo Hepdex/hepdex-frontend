@@ -35,7 +35,7 @@ const Div = styled.div`
 export default function WhyHepDex() {
   return (
     <Section
-      title="Why choose HepDex?"
+      title="Why Hire with HepDex?"
       subtitle="HepDex gives you the tools to scale your business."
       marginBottom={true}
     >

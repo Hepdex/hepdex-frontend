@@ -4,16 +4,11 @@ import { flex, mq } from "../GlobalStyles";
 // Container
 const ContainerDiv = styled.div`
   width: 100%;
-  padding: 0 10px;
+  padding: 0 15px;
   margin-left: auto;
   margin-right: auto;
   max-width: 100%;
-  ${mq(
-    "xs",
-    css`
-      padding: 0 15px;
-    `
-  )}
+
   ${mq(
     "xl",
     css`

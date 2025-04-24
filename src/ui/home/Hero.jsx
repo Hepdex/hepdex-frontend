@@ -10,17 +10,19 @@ import { flex, mq } from "../../GlobalStyles";
 const HeroDiv = styled.div`
   position: relative;
   height: auto;
+  background-color: var(--color-tertiary);
   ${mq(
     "lg",
     css`
-      height: 100vh;
+      @media (min-height: 700px) and (max-height: 1000px) {
+        height: 100vh;
+        background-image: url("heroBg.jpg");
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
     `
   )}
-  background-color: var(--color-tertiary);
-  background-image: url("heroBg.jpg");
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  background-size: cover;
   // Content
   .content {
     min-height: 100%;
@@ -29,12 +31,15 @@ const HeroDiv = styled.div`
       ${flex(undefined, "center")}
       flex-direction: column;
       padding: 132px 0px 40px 0px;
+
       ${mq(
         "lg",
         css`
           flex-direction: row;
-          padding-top: 50px;
-          padding-bottom: 0px;
+          @media (min-height: 700px) and (max-height: 1000px) {
+            padding-top: 50px;
+            padding-bottom: 0px;
+          }
         `
       )}
       column-gap: 64px;
@@ -53,18 +58,12 @@ const HeroDiv = styled.div`
           margin-bottom: 24px;
         }
         .info-list {
-          max-width: 280px;
           width: 100%;
           margin-top: 8px;
           ${flex()}
           flex-direction: column;
           row-gap: 8px;
-          ${mq(
-            "380px",
-            css`
-              max-width: 100%;
-            `
-          )}
+
           li {
             svg {
               min-width: 20px;
@@ -80,6 +79,7 @@ const HeroDiv = styled.div`
         }
         .btn-group {
           ${flex(undefined, "center")}
+          flex-wrap: wrap;
           gap: 16px;
           margin-top: 32px;
         }

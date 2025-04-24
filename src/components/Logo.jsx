@@ -15,7 +15,7 @@ const LogoLink = styled(Link)`
 `;
 export default function Logo({ alt = false }) {
   return (
-    <LogoLink className="logo">
+    <LogoLink className="logo" to={"/home"}>
       <img
         className="logo-img"
         alt="logo"
