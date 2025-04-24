@@ -101,6 +101,7 @@ const SelectBox = styled.div`
     top: 16px;
     right: 12px;
     fill: #989898;
+    pointer-events: none;
   }
 `;
 
