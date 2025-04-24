@@ -6,7 +6,7 @@ export default function Team() {
   return (
     <Section>
       <div className="info-box">
-        <div data-aos className="custom-fade-right img-box">
+        <div data-aos className="img-box custom-fade-right">
           <img src="team.jpg" alt="hire-team" />
         </div>
         <div className="content custom-fade-left" data-aos>
@@ -18,7 +18,7 @@ export default function Team() {
             tailored team of experts who work together to deliver high-quality
             results.
           </p>
-          <Button as={Link} to="/share-requirements">
+          <Button as={Link} to="/share-requirement">
             Hire a Team
           </Button>
         </div>

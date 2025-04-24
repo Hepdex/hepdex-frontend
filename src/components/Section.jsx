@@ -15,6 +15,9 @@ const SectionDiv = styled.section`
     text-align: center;
     ${flex("center")}
     flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     margin-bottom: 40px;
     row-gap: 8px;
     ${mq(
@@ -41,12 +44,21 @@ const SectionDiv = styled.section`
     `}
 `;
 
-export default function Section({ title, subtitle, children, marginBottom }) {
+export default function Section({
+  title,
+  subtitle,
+  children,
+  marginBottom,
+  animation = true,
+}) {
   return (
     <SectionDiv $marginBottom={marginBottom}>
       <Container>
         {title && (
-          <div data-aos className="title custom-fade-up">
+          <div
+            data-aos
+            className={`title ${animation ? "custom-fade-up" : ""}`}
+          >
             <h1 className="heading-md">{title}</h1>
             {subtitle && <p className="text-md">{subtitle}</p>}
           </div>

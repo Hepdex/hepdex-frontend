@@ -19,7 +19,7 @@ export default function Talent() {
             Find Talent
           </Button>
         </div>
-        <div data-aos className=" custom-fade-left img-box">
+        <div data-aos className="img-box custom-fade-left">
           <img src="talent.jpg" alt="find-talent" />
         </div>
       </div>

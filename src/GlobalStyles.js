@@ -41,6 +41,7 @@ const GlobalStyles = createGlobalStyle`
     --color-tertiary: #E7DDFF;
     --color-grey-1: #F9FAFC;
     --color-grey-2: #5A5758;
+    --color-grey-3: #D2D2D2;
 }
 // Resets
 *,
@@ -154,6 +155,24 @@ img{
   font-size: 18px;
   line-height: 28px;
 }
+
+// Steps
+.steps {
+      ${flex("center")}
+      flex-direction: column;
+      li:last-child {
+        .icon {
+          align-self: flex-start;
+        }
+        .arrow {
+          display: none;
+        }
+        .content{
+          padding-bottom: 0px;
+        }
+      }
+    }
+
 // Info box
 .info-box{
   &#talent{
@@ -164,7 +183,7 @@ img{
   column-gap: 32px;
   row-gap: 24px;
   ${mq(
-    "800px",
+    "700px",
     css`
       flex-direction: row !important;
       align-items: flex-start;
@@ -177,14 +196,21 @@ img{
     `
   )}
   .content{
+    max-width: 400px;
     ${mq(
       "800px",
       css`
         padding-top: 24px;
       `
     )}
+    ${mq(
+      "700px",
+      css`
+        max-width: 500px;
+      `
+    )}
 
-    max-width: 500px;
+  
     width: 100%;
     p {
       color: var(--color-grey-2);
