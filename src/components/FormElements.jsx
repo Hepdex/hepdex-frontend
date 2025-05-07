@@ -25,9 +25,9 @@ const FormHeader = (props) => {
 }
 
 const FormBox = (props) => {
-  return <div className={formStyles.formBox}>
+  return <form className={formStyles.formBox} onSubmit={props.actionHandler}>
       {props.children}
-    </div>
+    </form>
 };
 
 
