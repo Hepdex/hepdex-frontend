@@ -7,6 +7,7 @@ import GlobalStyles from "./GlobalStyles";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Requirements from "./pages/Requirements";
+import Signin from "./pages/Signin";
 
 export default function App() {
   const location = useLocation();
@@ -30,10 +31,11 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route index element={<Navigate replace to="home" />} />
-        <Route element={<MainLayout />}>
+          <Route element={<MainLayout />}>
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
         </Route>
+         <Route path="login" element={<Signin />} />
       </Routes>
     </div>
   );
