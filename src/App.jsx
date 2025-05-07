@@ -8,6 +8,7 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Requirements from "./pages/Requirements";
 import Signin from "./pages/Signin";
+import ForgotPassword from "./pages/Forgotpassword";
 
 export default function App() {
   const location = useLocation();
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="share-requirement" element={<Requirements />} />
         </Route>
          <Route path="login" element={<Signin />} />
+         <Route path="forgot-password" element={<ForgotPassword />} />
       </Routes>
     </div>
   );

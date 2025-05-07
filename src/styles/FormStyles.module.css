@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color:rgb(231,221,255);
+    background-color:rgb(238, 234, 248);
 }
 .header{
     display: flex;
@@ -45,8 +45,8 @@ font-weight: 500;
     color: var(--color-primary);
 }
 .formBox{
-    width: 40%;
-    padding: 30px 50px;
+    width: 35%;
+    padding: 30px;
     background-color: #fff;
     border-radius: 10px;
 }
@@ -55,8 +55,12 @@ font-weight: 500;
 }
 
 @media screen and (max-width: 600px){
+    .formContainer{
+        align-items: unset;
+    }
     .formBox{
-        width: 95%;
+        width: 100%;
         padding: 30px 20px;
+        border-radius: 0;
     }
 }
