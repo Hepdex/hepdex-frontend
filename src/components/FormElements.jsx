@@ -12,7 +12,7 @@ const FormButton = (props) => {
 const InputField = (props) => {
     return <div className={formStyles.inputBox}>
         <label>{props.labelValue}</label>
-        <input type={props.type} name={props.name} placeHolder={props.placeHolder} />
+        <input type={props.type} name={props.name} placeholder={props.placeHolder} />
     </div>
 }
 
