@@ -1,6 +1,9 @@
+import { useState } from "react";
 import formStyles from "../styles/FormStyles.module.css";
 import Logo from "../components/Logo";
 import { Link } from "react-router-dom";
+import { GoEyeClosed, GoEye} from "react-icons/go";
+
 import "../styles/MainStyles.css";
 
 const FormButton = (props) => {
@@ -10,9 +13,30 @@ const FormButton = (props) => {
 }
 
 const InputField = (props) => {
+   
     return <div className={formStyles.inputBox}>
         <label>{props.labelValue}</label>
         <input type={props.type} name={props.name} placeholder={props.placeHolder} />
+    </div>
+}
+
+
+const PasswordField = (props) => {
+    const [pass, setpass] = useState(true);
+
+    const handleShowPass = () => {
+        if(pass){
+            setpass(false);
+        }
+        else {
+            setpass(true);
+        }
+    }
+  
+    return <div className={formStyles.inputBox}>
+        <label>{props.labelValue}</label>
+        <input type={pass ? "password" : "text"} name={props.name} placeholder={props.placeHolder} />
+        {pass ? <GoEyeClosed className={formStyles.passIcon} onClick={handleShowPass} /> : <GoEye className={formStyles.passIcon} onClick={handleShowPass} />}
     </div>
 }
 
@@ -20,7 +44,7 @@ const FormHeader = (props) => {
     return  <div className={formStyles.header}>
             <Logo alt={false} />
             <h1>{props.title}</h1>
-            <p>{props.titleText}<Link className={formStyles.forgotLink} to="/signup">{props.titleLink}</Link></p>
+            <p>{props.titleText}<Link className={formStyles.forgotLink} to="/signup"> {props.titleLink}</Link></p>
         </div>
 }
 
@@ -31,4 +55,4 @@ const FormBox = (props) => {
 };
 
 
-export {FormButton, InputField, FormHeader, FormBox};
+export {FormButton, InputField, FormHeader, FormBox, PasswordField};

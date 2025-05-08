@@ -1,5 +1,5 @@
-import { useState} from "react";
-import { InputField, FormButton, FormHeader, FormBox } from "../components/FormElements";
+import { useState, useEffect} from "react";
+import { InputField, PasswordField, FormButton, FormHeader, FormBox } from "../components/FormElements";
 import formStyles from "../styles/FormStyles.module.css";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -7,15 +7,24 @@ import { Toastify } from "../components/Toastify";
 import Preloader from "../components/Preloader";
 import { apiBaseUrl } from "../utils/api";
 import useDocumentTitle from "../utils/TitleUpdater";
-import useCheckAuthStatus from "../utils/useCheckAuthStatus";
+import { useNavigate } from "react-router-dom";
+import { getToken, tokenUpdater, userDataUpdater } from "../utils/tokenUpdater";
+
 
 
 const Signin = () => {
-        
     useDocumentTitle("Hepdex - Login");
-    useCheckAuthStatus();
-
+    const navigate = useNavigate();
     const [loading, setloading] = useState(false);
+   
+
+    useEffect(() => {
+        // check if user token exists
+        if(getToken("token")){
+            navigate("/dashboard")
+        }
+    }, [])
+
 
     // handle user signin form 
     const signInHandler = (e) => {
@@ -46,14 +55,13 @@ const Signin = () => {
                 
                 setloading(false);
 
-                console.log(resp);
-
                 if(resp.statusCode === 400){
                     Toastify(resp.data.msg);
                 }
                 else {
-                    
-                    // localStorage.setItem("userData", )
+                    tokenUpdater(resp.data.token);
+                    userDataUpdater(resp.data.user);
+                    navigate("/dashboard");
                 }
             
               
@@ -67,7 +75,7 @@ const Signin = () => {
              <FormHeader title="Welcome back!" titleText="Don't have an account yet?" titleLink="Sign up" />
 
             <InputField labelValue="Email adddress" name="email" placeHolder="Enter your email address" />
-            <InputField labelValue="Password" name="password" placeHolder="Enter your password" type="password" />
+            <PasswordField labelValue="Password" name="password" placeHolder="Enter your password" />
 
             <Link to="/forgot-password" className={formStyles.forgotLink}>Forgot password?</Link>
             
