@@ -49,6 +49,7 @@ font-weight: 500;
     padding: 30px;
     background-color: #fff;
     border-radius: 10px;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
 }
 .header p{
     font-weight: 300;

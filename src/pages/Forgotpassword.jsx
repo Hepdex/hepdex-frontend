@@ -1,9 +1,13 @@
 
 import { InputField, FormButton, FormHeader, FormBox } from "../components/FormElements";
 import formStyles from "../styles/FormStyles.module.css";
+import useDocumentTitle from "../utils/TitleUpdater";
 
 
 const ForgotPassword = () => {
+
+    useDocumentTitle("Hepdex - Forgot Password");
+    
     return <div className={formStyles.formContainer}>
         <FormBox>
              <FormHeader title="Forgot Password?" titleText="Forgot password? Reset your password" />

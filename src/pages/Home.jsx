@@ -7,8 +7,12 @@ import ServiceList from "../ui/home/ServiceList";
 import WhyHepDex from "../ui/home/WhyHepDex";
 import Team from "../ui/home/Team";
 import Talent from "../ui/home/Talent";
+import useDocumentTitle from "../utils/TitleUpdater";
 
 export default function Home() {
+
+  useDocumentTitle("HepDex - The #1 Global platform for remote workers.");
+  
   return (
     <div>
       <Hero />
