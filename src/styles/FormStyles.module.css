@@ -20,7 +20,7 @@ font-weight: 500;
     margin: 20px 0;
 }
 .inputBox label{
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
 }
 .inputBox input{
@@ -49,19 +49,34 @@ font-weight: 500;
     padding: 30px;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
 }
 .header p{
     font-weight: 300;
 }
 
-@media screen and (max-width: 600px){
+
+@media screen and (max-width: 1207px){
     .formContainer{
+        align-items: center;
+    }
+    .formBox{
+        width: 70%;
+        padding: 30px 20px;
+    }
+}
+@media screen and (max-width: 800px){
+    .formBox{
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 600px){
+     .formContainer{
         align-items: unset;
     }
     .formBox{
         width: 100%;
-        padding: 30px 20px;
-        border-radius: 0;
     }
 }
+

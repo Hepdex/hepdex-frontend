@@ -7,10 +7,13 @@ import { Toastify } from "../components/Toastify";
 import Preloader from "../components/Preloader";
 import { apiBaseUrl } from "../utils/api";
 import useDocumentTitle from "../utils/TitleUpdater";
+import useCheckAuthStatus from "../utils/useCheckAuthStatus";
+
 
 const Signin = () => {
         
     useDocumentTitle("Hepdex - Login");
+    useCheckAuthStatus();
 
     const [loading, setloading] = useState(false);
 
@@ -43,13 +46,16 @@ const Signin = () => {
                 
                 setloading(false);
 
+                console.log(resp);
+
                 if(resp.statusCode === 400){
                     Toastify(resp.data.msg);
                 }
                 else {
-                    localStorage.setItem("userData", )
+                    
+                    // localStorage.setItem("userData", )
                 }
-                console.log(resp);
+            
               
             })
         }
