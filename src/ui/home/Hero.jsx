@@ -1,5 +1,5 @@
 import Container from "../../components/Container";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
@@ -7,15 +7,22 @@ import { Link } from "react-router-dom";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
 import { flex, mq } from "../../GlobalStyles";
 
-const HeroDiv = styled.div`
+// Hero box
+const HeroBox = styled.div`
   position: relative;
-  height: auto;
+  height: 620px;
   background-color: var(--color-tertiary);
+  ${mq(
+    "400px",
+    css`
+      height: auto;
+    `
+  )}
   ${mq(
     "lg",
     css`
       @media (min-height: 700px) and (max-height: 1000px) {
-        height: 100vh;
+        height: 100dvh;
         background-image: url("heroBg.jpg");
         background-position: 50% 50%;
         background-repeat: no-repeat;
@@ -100,7 +107,6 @@ const HeroDiv = styled.div`
             width: 50%;
           `
         )}
-
         img {
           width: 100%;
           height: 100%;
@@ -123,7 +129,7 @@ export default function Hero() {
     onDelete: () => setDeleting(true),
   });
   return (
-    <HeroDiv>
+    <HeroBox>
       <div className="content">
         <Container>
           <div className="inner">
@@ -164,6 +170,6 @@ export default function Hero() {
           </div>
         </Container>
       </div>
-    </HeroDiv>
+    </HeroBox>
   );
 }

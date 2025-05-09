@@ -1,17 +1,19 @@
-import styled, { css } from "styled-components";
 import Container from "./Container";
-import Logo from "./logo";
-import Button from "./button";
+import Logo from "./Logo";
+import Button from "./Button";
+import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 import { NavLink, Link } from "react-router-dom";
 import { BsList, BsXLg } from "react-icons/bs";
 import { useState } from "react";
 
-const Div = styled.div`
+// Header box
+const HeaderBox = styled.div`
   position: fixed;
   width: 100%;
   top: 28px;
   z-index: 10;
+  // Inner
   & .inner {
     border-radius: 300px;
     position: relative;
@@ -19,7 +21,11 @@ const Div = styled.div`
     box-shadow: 0 7px 24px 0 #64646f33;
     ${flex("space-between", "center")}
     padding: 12px 24px;
+    // Nav box
     .nav-box {
+      .auth-menu__mobile {
+        display: none;
+      }
       @media (max-width: 992px) {
         display: none;
         // Open menu
@@ -32,10 +38,14 @@ const Div = styled.div`
           top: calc(100% + 16px);
           border-radius: 8px;
           background-color: var(--color-white-1);
-          max-width: 280px;
           width: 100%;
           box-shadow: 0 7px 24px 0 #64646f33;
-          ${flex()}
+          ${mq(
+            "400px",
+            css`
+              max-width: 280px;
+            `
+          )}
           .nav {
             &,
             li,
@@ -53,7 +63,7 @@ const Div = styled.div`
             flex-direction: column;
             align-items: start;
           }
-          .mobile-auth {
+          .auth-menu__mobile {
             ${flex(undefined, "start")}
             flex-direction: column;
             padding-bottom: 12px;
@@ -83,10 +93,6 @@ const Div = styled.div`
           ${flex()}
         `
       )}
-
-      .mobile-auth {
-        display: none;
-      }
     }
     ul li a {
       padding: 8px 16px;
@@ -100,10 +106,10 @@ const Div = styled.div`
       }
     }
     .nav,
-    .box {
+    .mobile-menu__box {
       ${flex(undefined, "center")}
     }
-    .auth-nav {
+    .auth-menu {
       display: none;
       gap: 16px;
       ${mq(
@@ -113,7 +119,7 @@ const Div = styled.div`
         `
       )}
     }
-    .box {
+    .mobile-menu__box {
       gap: 16px;
       .mobile-btn {
         background-color: transparent;
@@ -126,18 +132,21 @@ const Div = styled.div`
             display: none;
           `
         )}
+        svg {
+          fill: #757575;
+        }
       }
     }
   }
 `;
 
 export default function Header() {
-  // Menu state
+  // Open menu state
   const [open, setIsOpen] = useState(false);
   // Close menu
   const close = () => setIsOpen(false);
   return (
-    <Div>
+    <HeaderBox>
       <Container>
         <div className="inner">
           <Logo />
@@ -173,20 +182,21 @@ export default function Header() {
                 </NavLink>
               </li>
             </ul>
-            <AuthMenu className="mobile-auth" />
+            <AuthMenu className="auth-menu__mobile" />
           </div>
-          <div className="box">
-            <AuthMenu className="auth-nav" close={close} />
+          <div className="mobile-menu__box">
+            <AuthMenu className="auth-menu" close={close} />
             <button className="mobile-btn" onClick={() => setIsOpen((s) => !s)}>
               {open ? <BsXLg size={18} /> : <BsList size={24} />}
             </button>
           </div>
         </div>
       </Container>
-    </Div>
+    </HeaderBox>
   );
 }
 
+// Auth menu
 const AuthMenu = ({ className, close }) => {
   return (
     <ul className={className}>
@@ -196,7 +206,7 @@ const AuthMenu = ({ className, close }) => {
         </Link>
       </li>
       <li>
-        <Button as={Link} to="/signup" onClick={close}>
+        <Button as={Link} to="/dashboard/home" onClick={close}>
           Sign Up
         </Button>
       </li>

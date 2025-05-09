@@ -1,11 +1,11 @@
-import { BsStarFill } from "react-icons/bs";
-import styled, { css } from "styled-components";
+import Container from "../../components/Container";
 import Section from "../../components/Section";
+import styled, { css } from "styled-components";
+import { BsStarFill } from "react-icons/bs";
 import { reviews } from "../../data/reviews";
 import { flex, mq } from "../../GlobalStyles";
-import Container from "../../components/Container";
 
-const Div = styled.div`
+const ReviewsBox = styled.div`
   ul.reviews {
     ${flex("center")}
     row-gap: 32px;
@@ -17,7 +17,6 @@ const Div = styled.div`
     )}
     .review {
       max-width: 520px;
-
       .text {
         font-size: 24px;
         line-height: 32px;
@@ -57,7 +56,7 @@ export default function Reviews() {
       subtitle="Discover how Hepdex has helped businesses transform their operations with skilled remote talent - straight from our customers."
       marginBottom={true}
     >
-      <Div>
+      <ReviewsBox>
         <Container.Row data-aos className="reviews custom-fade-up">
           {reviews.map((review, index) => (
             <Container.Col
@@ -83,7 +82,7 @@ export default function Reviews() {
             </Container.Col>
           ))}
         </Container.Row>
-      </Div>
+      </ReviewsBox>
     </Section>
   );
 }

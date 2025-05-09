@@ -1,11 +1,10 @@
-import styled, { css } from "styled-components";
 import Container from "../../components/Container";
+import styled, { css } from "styled-components";
 import { flex, mq } from "../../GlobalStyles";
 
-const Div = styled.div`
+const Box = styled.div`
   background-color: var(--color-grey-1);
   padding: 40px 0px;
-
   .portfolio {
     ${flex("center")}
     flex-direction: column;
@@ -42,7 +41,7 @@ const Div = styled.div`
 
 export default function Portfolio() {
   return (
-    <Div>
+    <Box>
       <Container>
         <div className="portfolio">
           <p>Trusted by 500+ companies and startups worldwide</p>
@@ -65,6 +64,6 @@ export default function Portfolio() {
           </ul>
         </div>
       </Container>
-    </Div>
+    </Box>
   );
 }

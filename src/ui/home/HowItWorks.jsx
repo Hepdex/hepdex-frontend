@@ -1,11 +1,12 @@
 import styled, { css } from "styled-components";
 import Section from "../../components/Section";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import Step from "../../components/Step";
 import { flex, mq } from "../../GlobalStyles";
 import { Link } from "react-router-dom";
 
-const Div = styled.div`
+// Box
+const Box = styled.div`
   background-color: var(--color-secondary);
   & > section {
     .btn-box {
@@ -23,7 +24,7 @@ const Div = styled.div`
 
 export default function HowItWorks() {
   return (
-    <Div>
+    <Box>
       <Section title="How it works" marginBottom={true}>
         <div data-aos className="custom-fade-up">
           <ul className="steps">
@@ -54,6 +55,6 @@ export default function HowItWorks() {
           </div>
         </div>
       </Section>
-    </Div>
+    </Box>
   );
 }

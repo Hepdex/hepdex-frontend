@@ -3,7 +3,8 @@ import Container from "../../components/Container";
 import Section from "../../components/Section";
 import { faqs } from "../../data/faqs";
 
-const Main = styled.div`
+// Faqs box
+const FaqsBox = styled.div`
   background-color: var(--color-grey-1);
   section {
     ul {
@@ -24,7 +25,7 @@ const Main = styled.div`
 
 export default function Faqs() {
   return (
-    <Main>
+    <FaqsBox>
       <Section
         title="Frequently asked questions"
         marginBottom={true}
@@ -49,6 +50,6 @@ export default function Faqs() {
           </Container.Row>
         </div>
       </Section>
-    </Main>
+    </FaqsBox>
   );
 }

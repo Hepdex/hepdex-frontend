@@ -1,8 +1,8 @@
-import styled, { css } from "styled-components";
 import Container from "./Container";
+import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 
-const SectionDiv = styled.section`
+const SectionBox = styled.section`
   padding-top: 72px;
   ${mq(
     "lg",
@@ -10,13 +10,13 @@ const SectionDiv = styled.section`
       padding-top: 96px;
     `
   )}
-
+  // Title
   & .title {
     text-align: center;
     ${flex("center")}
     flex-direction: column;
     width: 100%;
-    max-width: 600px;
+    max-width: 620px;
     margin: 0 auto;
     margin-bottom: 40px;
     row-gap: 8px;
@@ -52,7 +52,7 @@ export default function Section({
   animation = true,
 }) {
   return (
-    <SectionDiv $marginBottom={marginBottom}>
+    <SectionBox $marginBottom={marginBottom}>
       <Container>
         {title && (
           <div
@@ -65,6 +65,6 @@ export default function Section({
         )}
         {children}
       </Container>
-    </SectionDiv>
+    </SectionBox>
   );
 }
