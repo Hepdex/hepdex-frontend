@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import Container from "./Container";
-import Logo from "./logo";
+import Logo from "./Logo";
 import Button from "./button";
 import { flex, mq } from "../GlobalStyles";
 import { NavLink, Link } from "react-router-dom";
