@@ -13,6 +13,7 @@ import PageContent from "../components/PageContent";
 import Section from "../components/Section";
 import Step from "../components/Step";
 import { mq } from "../GlobalStyles";
+import useDocumentTitle from "../utils/TitleUpdater";
 
 const Div = styled.div`
   .steps-box {
@@ -37,6 +38,8 @@ const Div = styled.div`
 `;
 
 export default function Requirements() {
+
+  useDocumentTitle("Hepdex - share requirement");
   return (
     <PageContent>
       <Section
