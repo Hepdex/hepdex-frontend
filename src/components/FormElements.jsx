@@ -4,7 +4,7 @@ import Logo from "../components/Logo";
 import { Link } from "react-router-dom";
 import { GoEyeClosed, GoEye} from "react-icons/go";
 
-import "../styles/MainStyles.css";
+import "../styles/Mainstyles.css";
 
 const FormButton = (props) => {
     return <div className={formStyles.formButton}>
