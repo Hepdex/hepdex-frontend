@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
-import Logo from "./logo";
+import Logo from "./Logo";
 
 const FooterDiv = styled.footer`
   &.footer {
