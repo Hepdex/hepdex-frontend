@@ -1,5 +1,5 @@
 import Container from "../../components/Container";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import Section from "../../components/Section";
-import Button from "../../components/button";
+import Button from "../../components/Button";
 import Step from "../../components/Step";
 import { flex, mq } from "../../GlobalStyles";
 import { Link } from "react-router-dom";
