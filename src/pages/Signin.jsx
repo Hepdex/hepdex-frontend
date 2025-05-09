@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Toastify } from "../components/Toastify";
 import Preloader from "../components/Preloader";
-import { apiBaseUrl } from "../utils/api";
+import { apiBaseUrl } from "../utils/Api";
 import useDocumentTitle from "../utils/TitleUpdater";
 import { useNavigate } from "react-router-dom";
 import { getToken, tokenUpdater, userDataUpdater } from "../utils/tokenUpdater";
