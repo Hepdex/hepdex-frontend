@@ -3,7 +3,6 @@ import { InputField, FormButton, FormHeader, FormBox } from "../components/FormE
 import formStyles from "../styles/FormStyles.module.css";
 import useDocumentTitle from "../utils/TitleUpdater";
 
-
 const ForgotPassword = () => {
 
     useDocumentTitle("Hepdex - Forgot Password");
