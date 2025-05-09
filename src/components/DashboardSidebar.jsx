@@ -54,7 +54,7 @@ const Sidebar = styled.div`
       "md",
       css`
         left: 0;
-        max-width: 72px;
+        max-width: 68px;
         height: calc(100% - 70px);
       `
     )}
@@ -68,6 +68,7 @@ const Sidebar = styled.div`
           padding: 10px;
           gap: 12px;
           border-radius: 8px;
+          min-width: 44px;
           transition: color 0.4s ease-in-out, background-color 0.4s ease-in-out;
           ${flex(undefined, "center")}
           .link-text {
