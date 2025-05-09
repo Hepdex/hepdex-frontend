@@ -9,11 +9,10 @@ const ForgotPassword = () => {
     
     return <div className={formStyles.formContainer}>
         <FormBox>
-             <FormHeader title="Forgot Password?" titleText="Forgot password? Reset your password" />
+            <FormHeader title="Forgot Password?" titleText="Forgot password? Reset your password" />
 
             <InputField labelValue="Email adddress" placeHolder="Enter your email address" />
         
-            
             <FormButton value="Reset Password" />
             
         </FormBox>

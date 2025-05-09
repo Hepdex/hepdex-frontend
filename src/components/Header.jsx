@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import Container from "./Container";
 import Logo from "./Logo";
-import Button from "./button";
+import Button from "./Button";
 import { flex, mq } from "../GlobalStyles";
 import { NavLink, Link } from "react-router-dom";
 import { BsList, BsXLg } from "react-icons/bs";
