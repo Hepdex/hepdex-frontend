@@ -1,0 +1,23 @@
+:root{
+    --color-white-1: #ffffff;
+    --color-white-2: #fff9;
+    --color-black-1: #111827;
+    --color-primary: #915DC2;
+    --color-primary-hover: #7c43b1;
+    --color-secondary: #F5F1FF;
+    --color-tertiary: #E7DDFF;
+    --color-grey-1: #F9FAFC;
+    --color-grey-2: #5A5758;
+    --color-grey-3: #D2D2D2;
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    font-family: "Outfit", sans-serif;
+}
+button{
+    border: none;
+}
+

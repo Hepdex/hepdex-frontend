@@ -13,6 +13,7 @@ import {
   Textarea,
 } from "../components/Form";
 import { mq } from "../GlobalStyles";
+import useDocumentTitle from "../utils/TitleUpdater";
 
 const Box = styled.div`
   .steps-box {
@@ -37,6 +38,8 @@ const Box = styled.div`
 `;
 
 export default function Requirements() {
+
+  useDocumentTitle("Hepdex - share requirement");
   return (
     <PageContent>
       <Section
