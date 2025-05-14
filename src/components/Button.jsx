@@ -46,10 +46,12 @@ const sizes = {
   lg: css`
     padding: 20px 32px;
     max-height: 64px;
+    min-height: 64px;
   `,
   // md
   md: css`
     padding: 12px 32px !important;
+    min-height: 48px;
     max-height: 48px;
   `,
   // sm
@@ -57,7 +59,7 @@ const sizes = {
     padding: 0px 16px;
     font-size: 15px;
     font-weight: 400;
-    line-height: 40px;
+    min-height: 40px;
     max-height: 40px;
     min-width: 96px;
     border-radius: 4px;
@@ -72,11 +74,27 @@ const Button = styled.button`
   align-items: center;
   gap: 8px;
   justify-content: center;
+  position: relative;
   font-weight: 500;
   // Set size
   ${(props) => sizes[props.size ? props.size : "md"]}
   // Set color
   ${(props) => colors[props.color ? props.color : "primary"]}
+  // Set loading styles
+  ${(props) =>
+    props.$loading &&
+    css`
+      span {
+        visibility: hidden;
+      }
+    `}
+  // Spinner
+  .spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 export default Button;

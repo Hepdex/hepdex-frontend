@@ -1,10 +1,12 @@
 import Logo from "./Logo";
+import Dropdown from "./Dropdown";
 import styled, { css } from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BsBell, BsList, BsQuestionCircle } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
 import { useDashboardContext } from "../context/DashboardContext";
+import { useUserContext } from "../context/UserContext";
 
 // Dashboard header
 const Header = styled.header`
@@ -31,6 +33,9 @@ const Header = styled.header`
     ${flex("center", "center")}
     border-radius: 50%;
     transition: all 0.4s ease-in-out;
+    svg {
+      pointer-events: none;
+    }
     &:hover {
       background-color: #f3f4f6;
       & > svg {
@@ -60,6 +65,11 @@ const Header = styled.header`
           display: none;
         `
       )}
+    }
+    .main-menu__btn,
+    .mobile-menu__btn {
+      width: 40px;
+      height: 40px;
     }
     // logo
     .logo {
@@ -98,6 +108,7 @@ const Header = styled.header`
       // User box
       &__user {
         span {
+          text-transform: uppercase;
           pointer-events: none;
         }
         button {
@@ -107,7 +118,7 @@ const Header = styled.header`
           font-family: sans-serif;
           margin-left: 4px;
           font-weight: 600;
-          font-size: 14px;
+          font-size: 15px;
           background-color: var(--color-tertiary);
           border-radius: 50%;
         }
@@ -119,18 +130,18 @@ const Header = styled.header`
           right: 0;
           min-width: 200px;
           box-shadow: 0 7px 24px 0 #64646f33;
-          padding: 0px 4px;
+          padding: 1px 4px;
           border-bottom-left-radius: 8px;
           border-bottom-right-radius: 8px;
           text-align: left;
           li {
-            padding: 4px 0px;
+            padding: 3px 0px;
             &:not(:last-child) {
               border-bottom: 1px solid #e5e7eb;
             }
             a {
               ${flex(undefined, "center")}
-              padding: 8px 10px;
+              padding: 10px;
               border-radius: 4px;
               display: inline-flex;
               width: 100%;
@@ -158,28 +169,30 @@ const Header = styled.header`
 
 export default function DashboardHeader() {
   // Get dashboard context
-  const { toggleNav, toggleMobileNav, isMobileNavOpen, setIsMobileNavOpen } =
-    useDashboardContext();
+  const { toggleNav, toggleMobileNav } = useDashboardContext();
+  // Get user context
+  const { user } = useUserContext();
   // Dropdown state
   const [open, setOpen] = useState(false);
+  // Close
+  const close = () => setOpen(false);
   return (
     <Header>
       <div className="left">
         <button className="nav-btn main-menu__btn" onClick={toggleNav}>
-          <BsList size={20} />
+          <BsList size={24} />
         </button>
-        <button className="nav-btn mobile-menu__btn" onClick={toggleMobileNav}>
-          <BsList size={20} />
+        <button
+          className="nav-btn mobile-menu__btn"
+          id="side-nav__btn"
+          onClick={toggleMobileNav}
+        >
+          <BsList size={24} />
         </button>
-        <Logo url="/dashboard/home" />
+        <Logo url="/home" />
       </div>
       <div className="center">
-        <Logo
-          url="/dashboard/home"
-          onClick={() => {
-            setIsMobileNavOpen(false);
-          }}
-        />
+        <Logo url="/home" />
       </div>
       <div className="right">
         <ul className="right-nav">
@@ -194,73 +207,49 @@ export default function DashboardHeader() {
             </Link>
           </li>
           <li className="right-nav__user" id="user-menu">
-            <button
-              onClick={() => {
-                if (isMobileNavOpen) toggleMobileNav();
-                setOpen((s) => !s);
-              }}
-            >
-              <span>CM</span>
+            <button onClick={() => setOpen((s) => !s)}>
+              <span>{`${user.firstName.at(0)}${user.lastName.at(0)}`}</span>
             </button>
-            {open && <DropdownMenu close={() => setOpen(false)} />}
+            {open && (
+              <Dropdown close={() => setOpen(false)} menuId="user-menu">
+                <ul className="dropdown-menu">
+                  <li className="dropdown-menu__item">
+                    <Link
+                      className="dropdown-menu__item--link"
+                      to="/dashboard/notifications"
+                      onClick={close}
+                    >
+                      Notifications
+                    </Link>
+                  </li>
+                  <li className="dropdown-menu__item">
+                    <Link
+                      className="dropdown-menu__item--link"
+                      to="/dashboard/help"
+                      onClick={close}
+                    >
+                      Help centre
+                    </Link>
+                  </li>
+
+                  <li className="dropdown-menu__item">
+                    <Link
+                      className="dropdown-menu__item--link"
+                      to="/dashboard/settings"
+                      onClick={close}
+                    >
+                      Settings
+                    </Link>
+                  </li>
+                  <li className="dropdown-menu__item">
+                    <Link className="dropdown-menu__item--link">Log out</Link>
+                  </li>
+                </ul>
+              </Dropdown>
+            )}
           </li>
         </ul>
       </div>
     </Header>
-  );
-}
-
-// Dropdown menu
-function DropdownMenu({ close }) {
-  useEffect(() => {
-    // Listen handler
-    const listen = (e) => {
-      const menu = document.getElementById("user-menu");
-      const element = e.target;
-      if (menu?.contains(element)) return;
-      else close();
-    };
-    // Listen for click event
-    document.addEventListener("click", listen);
-    return () => {
-      // Remove event listener
-      document.removeEventListener("click", listen);
-    };
-  }, [close]);
-
-  return (
-    <ul className="dropdown-menu">
-      <li className="dropdown-menu__item">
-        <Link
-          className="dropdown-menu__item--link"
-          to="/dashboard/notifications"
-          onClick={close}
-        >
-          Notifications
-        </Link>
-      </li>
-      <li className="dropdown-menu__item">
-        <Link
-          className="dropdown-menu__item--link"
-          to="/dashboard/help"
-          onClick={close}
-        >
-          Help centre
-        </Link>
-      </li>
-
-      <li className="dropdown-menu__item">
-        <Link
-          className="dropdown-menu__item--link"
-          to="/dashboard/settings"
-          onClick={close}
-        >
-          Settings
-        </Link>
-      </li>
-      <li className="dropdown-menu__item">
-        <Link className="dropdown-menu__item--link">Log out</Link>
-      </li>
-    </ul>
   );
 }

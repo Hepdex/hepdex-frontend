@@ -1,4 +1,4 @@
-import { createGlobalStyle, css } from "styled-components";
+import { createGlobalStyle, css, keyframes } from "styled-components";
 
 // Flex helper
 export const flex = (justify, align) => css`
@@ -23,6 +23,13 @@ export const sizes = {
   xxl: "1400px",
 };
 
+// Animations
+export const rotate = keyframes`
+  to {
+    transform: rotate(1turn)
+  }
+`;
+
 // Media query helper
 export const mq = (size, inner) => css`
   @media (min-width: ${sizes[size] ? sizes[size] : size}) {
@@ -44,6 +51,9 @@ const GlobalStyles = createGlobalStyle`
     --color-grey-2: #5A5758;
     --color-grey-3: #D2D2D2;
     --color-grey-4: #989898;
+
+    // Toastify
+    --toastify-font-family: "Outfit" , sans-serif;
 }
 
 // Resets
@@ -300,8 +310,6 @@ img{
 .table-box{
   ${flex("center")}
   flex-direction: column;
-  border-radius: 8px;
-  overflow: hidden;
   // Pagination
   .pagination{
     background-color: var(--color-white-1);
@@ -309,21 +317,30 @@ img{
     padding: 18px 16px;
     font-size: 15px;
     line-height: 20px;
+    min-height: 64px;
+    max-height: 64px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
     ${flex("space-between", "center")}
     &-controls{
       ${flex(undefined, "center")}
       gap: 4px;
       button{
-        height: 32px;
+        min-height: 32px;
         min-width: 32px;
         padding: 0px;
       }
     }
   }
-  .table{
+  .table-container{
+    overflow-x: auto;
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0,1fr));
+    .table{
     border-spacing: 0;
     text-align: left;
     border-collapse: collapse;
+    white-space: nowrap;
     thead{
       letter-spacing: 0px;
       line-height: 56px;
@@ -346,17 +363,20 @@ img{
         border-bottom: 1px solid #e5e7eb;
         }
         td{
-          padding: 8px 8px 8px 16px;
+          padding: 8px 16px;
+      
         }
       }
     }
     tr{
       width: 100%;
+
     th{
       padding: 0px 16px;
     }
   }
 }
+  }
 }
 
 // Tabs
@@ -392,7 +412,135 @@ img{
   }
 }
 
-// Custom animations
+// Toast
+.toast{
+  position: relative;
+  & > div:first-child{
+    width: 100%;
+    // Top
+    .top{
+      button{
+        position: absolute;
+        right: 14px;
+        top: 12px;
+        background-color: transparent;
+        svg{
+          fill: #757575;
+        }
+      }
+    }
+    // Content
+    .content{
+      ${flex(undefined, "center")}
+      gap: 8px;
+      // Icon
+      .icon{
+        ${flex("center", "center")}
+        min-width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        // Success
+        &.success{
+          background-color: #aee5c2;
+          svg{
+            color: #12b749;
+          }
+        }
+        &.error{
+          background-color: #fad2ce;
+          svg{
+            color: #ed6658;
+          }
+        }
+      }
+      .label{
+        &::first-letter{
+          text-transform: uppercase;
+        }
+        color: var(--color-black-1);
+      }
+    }
+  }
+}
+
+  // Details box
+  .details-box {
+    ${flex(undefined, "stretch")}
+    flex-direction: column;
+    ${mq(
+      "1100px",
+      css`
+        flex-direction: row;
+      `
+    )}
+    &__content {
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      flex: 1;
+      .info {
+        padding-left: 20px;
+        ${mq(
+          "sm",
+          css`
+            padding-left: 40px;
+          `
+        )}
+        flex-direction: column;
+        ${flex("center")}
+        &-item {
+          ${flex("space-between", "center")}
+          gap: 16px;
+          padding: 12px 0px;
+          border-bottom: 1px solid #e5e7eb;
+          &:first-child {
+            padding-top: 0px;
+          }
+          .name {
+            width: 33.333%;
+            font-weight: 500;
+          }
+          .value {
+            width: 33.333%;
+            flex: 1; 
+            color: var(--color-grey-2);
+            max-width: calc(100% - 16px);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+          }
+          button{
+            ${flex(undefined, "center")}
+            background-color: transparent;
+            color: var(--color-primary);
+            gap: 4px;
+            transition: color 0.4s ease-in-out;
+            font-size: 15px;
+            line-height: 20px;
+            &:hover {
+              color: var(--color-primary-hover);
+            }
+          }
+        }
+      }
+    }
+    // Side box
+    .side-box {
+      width: 100%;
+      background-color: var(--color-grey-1);
+      padding: 40px 32px;
+      ${mq(
+        "1100px",
+        css`
+          max-width: 380px;
+        `
+      )}
+      ${flex("center", "center")}
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+// Animation classes
 .custom-fade-right{
   opacity: 0;
   transform: translateX(-50%);

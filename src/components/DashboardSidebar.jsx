@@ -1,14 +1,17 @@
+import Dropdown from "./Dropdown";
 import styled, { css } from "styled-components";
 import {
   BsBriefcaseFill,
-  BsClipboardCheckFill,
   BsGearFill,
+  BsHouseDoorFill,
+  BsPersonFill,
   BsPieChartFill,
   BsShareFill,
 } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
 import { useDashboardContext } from "../context/DashboardContext";
+import { useUserContext } from "../context/UserContext";
 
 // Employer menu
 const employerMenu = [
@@ -22,6 +25,11 @@ const employerMenu = [
     icon: <BsShareFill />,
     link: "/dashboard/talent",
   },
+  {
+    text: "Company",
+    icon: <BsHouseDoorFill />,
+    link: "/dashboard/company-bio",
+  },
 ];
 
 // Candidate menu
@@ -32,8 +40,8 @@ const candidateMenu = [
     link: "/dashboard/browse-jobs",
   },
   {
-    text: "Applications",
-    icon: <BsClipboardCheckFill />,
+    text: "Profile",
+    icon: <BsPersonFill />,
     link: "/dashboard/talent",
   },
 ];
@@ -87,9 +95,7 @@ const Sidebar = styled.div`
             min-width: 24px;
             transition: fill 0.4s ease-in-out;
           }
-          &.active {
-            font-weight: 500;
-          }
+
           &.active,
           &:hover {
             background-color: var(--color-secondary);
@@ -149,59 +155,51 @@ const Sidebar = styled.div`
 
 export default function DashboardSideBar() {
   // User role
-  const role = "employer";
+  const { user } = useUserContext();
   // Get dashboard context
   const { isNavOpen, isMobileNavOpen, setIsMobileNavOpen } =
     useDashboardContext();
+  // Close
+  const close = () => setIsMobileNavOpen(false);
   return (
     <Sidebar $isNavOpen={isNavOpen} $isMobileNavOpen={isMobileNavOpen}>
-      <aside>
-        <ul className="sidebar-nav">
-          <li>
-            <NavLink
-              to="/dashboard/home"
-              onClick={() => setIsMobileNavOpen(false)}
-            >
-              <BsPieChartFill />
-              <span className="link-text">Dashboard</span>
-            </NavLink>
-          </li>
-          {role === "employer" &&
-            employerMenu.map((item, index) => (
-              <li key={index}>
-                <NavLink
-                  to={item.link}
-                  onClick={() => setIsMobileNavOpen(false)}
-                >
-                  {item.icon}
-                  <span className="link-text">{item.text}</span>
-                </NavLink>
-              </li>
-            ))}
-          {role === "candidate" &&
-            candidateMenu.map((item, index) => (
-              <li key={index}>
-                <NavLink
-                  to={item.link}
-                  onClick={() => setIsMobileNavOpen(false)}
-                >
-                  {item.icon}
-                  <span className="link-text">{item.text}</span>
-                </NavLink>
-              </li>
-            ))}
-          <li>
-            <NavLink
-              to="/dashboard/settings"
-              onClick={() => setIsMobileNavOpen(false)}
-            >
-              <BsGearFill />
-              <span className="link-text">Settings</span>
-            </NavLink>
-          </li>
-        </ul>
-      </aside>
-      <div className="overlay" onClick={() => setIsMobileNavOpen(false)} />
+      <Dropdown close={close} btnId="side-nav__btn" menuId="dashboard-sidebar">
+        <aside id="dashboard-sidebar">
+          <ul className="sidebar-nav">
+            <li>
+              <NavLink to="/dashboard/home" onClick={close}>
+                <BsPieChartFill />
+                <span className="link-text">Dashboard</span>
+              </NavLink>
+            </li>
+            {user.role === "employer" &&
+              employerMenu.map((item, index) => (
+                <li key={index}>
+                  <NavLink to={item.link} onClick={close}>
+                    {item.icon}
+                    <span className="link-text">{item.text}</span>
+                  </NavLink>
+                </li>
+              ))}
+            {user.role === "candidate" &&
+              candidateMenu.map((item, index) => (
+                <li key={index}>
+                  <NavLink to={item.link} onClick={close}>
+                    {item.icon}
+                    <span className="link-text">{item.text}</span>
+                  </NavLink>
+                </li>
+              ))}
+            <li>
+              <NavLink to="/dashboard/settings" onClick={close}>
+                <BsGearFill />
+                <span className="link-text">Settings</span>
+              </NavLink>
+            </li>
+          </ul>
+        </aside>
+      </Dropdown>
+      <div className="overlay" />
     </Sidebar>
   );
 }

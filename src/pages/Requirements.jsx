@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import PageContent from "../components/PageContent";
 import Section from "../components/Section";
 import Step from "../components/Step";
+import useDocumentTitle from "../utils/TitleUpdater";
 import styled, { css } from "styled-components";
 import {
   Form,
@@ -12,14 +13,15 @@ import {
   Select,
   Textarea,
 } from "../components/Form";
-import { mq } from "../GlobalStyles";
-import useDocumentTitle from "../utils/TitleUpdater";
+import { flex, mq } from "../GlobalStyles";
 
 const Box = styled.div`
   .steps-box {
     background-color: var(--color-secondary);
     border-radius: 8px;
     padding: 32px 16px;
+    height: 100%;
+    ${flex("center", "center")}
     ul li {
       align-self: flex-start;
     }
@@ -38,7 +40,7 @@ const Box = styled.div`
 `;
 
 export default function Requirements() {
-
+  // Title
   useDocumentTitle("Hepdex - share requirement");
   return (
     <PageContent>
@@ -75,10 +77,10 @@ export default function Requirements() {
               <div className="requirement-box">
                 <Form $gap={18}>
                   <InputGroup>
-                    <FormGroup>
+                    <FormGroup label="Full name">
                       <Input placeholder="Full name" type="text" required />
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup label="Email address">
                       <Input
                         placeholder="Email address"
                         type="email"
@@ -87,15 +89,15 @@ export default function Requirements() {
                     </FormGroup>
                   </InputGroup>
                   <InputGroup>
-                    <FormGroup>
+                    <FormGroup label="Phone number">
                       <Input placeholder="Phone number" type="text" required />
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup label="Company name">
                       <Input placeholder="Company name" type="text" required />
                     </FormGroup>
                   </InputGroup>
                   <InputGroup>
-                    <FormGroup>
+                    <FormGroup label="Requirement">
                       <Select>
                         <option value="">Select requirement</option>
                         <option value="1">Looking for an employee</option>
@@ -103,7 +105,7 @@ export default function Requirements() {
                         <option value="3">Not sure</option>
                       </Select>
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup label="Duration">
                       <Select>
                         <option value="">Select duration</option>
                         <option value="1">Less than 1 Month</option>
@@ -115,8 +117,8 @@ export default function Requirements() {
                       </Select>
                     </FormGroup>
                   </InputGroup>
-                  <FormGroup>
-                    <Textarea placeholder="Requirement details" rows={8} />
+                  <FormGroup label="Requirement details">
+                    <Textarea placeholder="Requirement details" rows={5} />
                   </FormGroup>
                   <Button className="cta">Submit requirements</Button>
                 </Form>

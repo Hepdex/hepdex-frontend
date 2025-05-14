@@ -59,6 +59,10 @@ const FormGroupDiv = styled.div`
   row-gap: 8px;
   .label-error {
     min-height: 25px;
+    span {
+      font-weight: 500;
+      color: var(--color-grey-2);
+    }
     & > * {
       display: inline-block;
       &::first-letter {
@@ -171,10 +175,10 @@ const TimeBox = styled.div`
   }
 `;
 
-function Select({ children, onChange, required = false }) {
+function Select({ children, ...rest }) {
   return (
     <SelectBox>
-      <select className="select" onChange={onChange} required={required}>
+      <select className="select" {...rest}>
         {children}
       </select>
       <BsChevronDown size={16} />
@@ -182,12 +186,23 @@ function Select({ children, onChange, required = false }) {
   );
 }
 
-function Time({ placeholder, name, required = false }) {
-  const [on, setOn] = useState(false);
+function Time({
+  placeholder,
+  name,
+  required = false,
+  defaultTime,
+  defaultState = false,
+}) {
+  const [on, setOn] = useState(defaultState);
   return (
     <TimeBox>
       {on ? (
-        <input type="time" name={name} required={required} />
+        <input
+          type="time"
+          name={name}
+          required={required}
+          defaultValue={defaultTime}
+        />
       ) : (
         <input
           type="text"
