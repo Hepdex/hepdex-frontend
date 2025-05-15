@@ -36,7 +36,12 @@ function Modal({ children }) {
 // Button
 function Open({ opens, children }) {
   const { open } = useModalContext();
-  return cloneElement(children, { onClick: () => open(opens) });
+  return cloneElement(children, {
+    onClick: (e) => {
+      open(opens);
+      children.props.onClick?.(e);
+    },
+  });
 }
 
 // Modal box

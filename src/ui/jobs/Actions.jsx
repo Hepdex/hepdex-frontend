@@ -1,5 +1,7 @@
 import Dropdown from "../../components/Dropdown";
 import styled from "styled-components";
+import Modal from "../../components/Modal";
+import CloseJobModal from "./CloseJobModal";
 import { useEffect, useRef, useState } from "react";
 import {
   BsCheckCircle,
@@ -113,53 +115,65 @@ export default function Actions({ id, index, active }) {
   }, [open]);
   return (
     <td className="sticky">
-      <ActionBox id={`action-menu__${index}`}>
-        <div className="action-menu__btn">
+      <ActionBox>
+        <div className="action-menu__btn" id={`action-menu__btn--${index}`}>
           <button ref={buttonRef} onClick={() => setOpen((s) => !s)}>
             <BsThreeDots />
           </button>
         </div>
-        {open &&
-          createPortal(
-            <Dropdown menuId={`action-menu__${index}`} close={close}>
-              <List className="actions-list" ref={menuRef}>
-                <li>
-                  <button>
-                    <BsListUl size={16} />
-                    <span>View job</span>
-                  </button>
-                </li>
-                <li>
-                  <Link to={`/edit-job/${id}`} onClick={close}>
-                    <BsPencil size={16} />
-                    <span>Edit job</span>
-                  </Link>
-                </li>
-                <li>
-                  <button>
+        <Modal>
+          {open &&
+            createPortal(
+              <Dropdown
+                menuId={`action-menu__${index}`}
+                close={close}
+                btnId={`action-menu__btn--${index}`}
+              >
+                <List
+                  className="actions-list"
+                  id={`action-menu__${index}`}
+                  ref={menuRef}
+                >
+                  <li>
+                    <button>
+                      <BsListUl size={16} />
+                      <span>View job</span>
+                    </button>
+                  </li>
+                  <li>
+                    <Link to={`/edit-job/${id}`} onClick={close}>
+                      <BsPencil size={16} />
+                      <span>Edit job</span>
+                    </Link>
+                  </li>
+
+                  <li>
                     {active ? (
-                      <>
-                        <BsXCircle size={16} />
-                        <span>Close job</span>
-                      </>
+                      <Modal.Open opens="close-job">
+                        <button onClick={close}>
+                          <BsXCircle size={16} />
+                          <span>Close job</span>
+                        </button>
+                      </Modal.Open>
                     ) : (
-                      <>
+                      <button>
                         <BsCheckCircle size={16} />
                         <span>Open job</span>
-                      </>
+                      </button>
                     )}
-                  </button>
-                </li>
-                <li>
-                  <button>
-                    <BsTrash size={16} />
-                    <span>Delete job</span>
-                  </button>
-                </li>
-              </List>
-            </Dropdown>,
-            document.body
-          )}
+                  </li>
+                  <li>
+                    <button>
+                      <BsTrash size={16} />
+                      <span>Delete job</span>
+                    </button>
+                  </li>
+                </List>
+              </Dropdown>,
+              document.body
+            )}
+          <CloseJobModal id={id} />
+        </Modal>
       </ActionBox>
     </td>
   );
