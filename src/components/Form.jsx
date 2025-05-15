@@ -56,12 +56,12 @@ const InputGroup = styled.div`
 const FormGroupDiv = styled.div`
   ${flex()}
   flex-direction: column;
-  row-gap: 8px;
+  row-gap: 4px;
   .label-error {
     min-height: 25px;
     span {
       font-weight: 500;
-      color: var(--color-grey-2);
+      color: #484646;
     }
     & > * {
       display: inline-block;

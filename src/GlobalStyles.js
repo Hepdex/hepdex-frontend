@@ -357,22 +357,49 @@ img{
       tr{
         cursor: pointer;
         &:hover{
-            background-color: #fcfcfc;
+          td{ 
+            background-color: #fcfcfc; 
+          }
+          
         }
         &:not(:last-child){
         border-bottom: 1px solid #e5e7eb;
         }
         td{
           padding: 8px 16px;
-      
         }
       }
     }
     tr{
       width: 100%;
+      .sticky{
+        position: sticky;
+        right: 0;
+        padding: 0px;
+        min-width: 64px;
+        width: 64px;
+        height: 100%;
+        & > * {
+          height: 100%;
+          box-shadow: 0 4px 12px 0 #e5e7eb;
+          min-width: 64px;
+          ${flex("center", "center")}
+        }
+      }
+
+      td{
+        &.sticky{
+          background-color: var(--color-white-1);
+                  height: 60px;
+        }
+      }
 
     th{
       padding: 0px 16px;
+      &.sticky{
+         background-color: #f7f7f7;
+         height: 56px;
+      }
     }
   }
 }

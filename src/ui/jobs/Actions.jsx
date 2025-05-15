@@ -40,11 +40,14 @@ const List = styled.ul`
   box-shadow: 0 7px 24px 0 #64646f33;
   border-radius: 8px;
   min-width: 200px;
-  padding: 4px;
-  gap: 2px;
+  padding: 1px 4px;
   flex-direction: column;
   ${flex("center")}
   li {
+    padding: 3px 0;
+    &:not(:last-child) {
+      border-bottom: 1px solid #e5e7eb;
+    }
     button,
     a {
       padding: 10px;
@@ -109,7 +112,7 @@ export default function Actions({ id, index, active }) {
     };
   }, [open]);
   return (
-    <td>
+    <td className="sticky">
       <ActionBox id={`action-menu__${index}`}>
         <div className="action-menu__btn">
           <button ref={buttonRef} onClick={() => setOpen((s) => !s)}>

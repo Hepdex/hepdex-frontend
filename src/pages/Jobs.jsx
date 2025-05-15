@@ -115,15 +115,6 @@ const JobsBox = styled.div`
     }
     // Jobs table
     table.jobs-table {
-      th:last-child,
-      td:last-child {
-        position: sticky;
-        right: 0;
-        background-color: var(--color-white-1);
-      }
-      th:last-child {
-        background-color: #f7f7f7;
-      }
       tbody {
         td {
           &::first-letter {
@@ -331,7 +322,9 @@ function JobsTable({ loading, jobs, searchParams }) {
               <th>Applications</th>
               <th>Department</th>
               <th>Created on</th>
-              <th></th>
+              <th className="sticky">
+                <div></div>
+              </th>
             </tr>
           </thead>
           <tbody>
