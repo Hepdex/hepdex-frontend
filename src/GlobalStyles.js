@@ -47,6 +47,8 @@ const GlobalStyles = createGlobalStyle`
     --color-primary-hover: #7c43b1;
     --color-secondary: #F5F1FF;
     --color-tertiary: #E7DDFF;
+    --color-error: #e24838;
+    --color-success:  #12b749;
     --color-grey-1: #F9FAFC;
     --color-grey-2: #5A5758;
     --color-grey-3: #D2D2D2;
@@ -470,13 +472,13 @@ img{
         &.success{
           background-color: #aee5c2;
           svg{
-            color: #12b749;
+            color: var(--color-success);
           }
         }
         &.error{
           background-color: #fad2ce;
           svg{
-            color: #ed6658;
+            color: var(--color-error);
           }
         }
       }

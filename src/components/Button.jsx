@@ -10,6 +10,14 @@ const colors = {
       background-color: var(--color-primary-hover);
     }
   `,
+  // Danger
+  error: css`
+    background-color: var(--color-error);
+    color: var(--color-white-1);
+    &:hover {
+      background-color: #d12f1e;
+    }
+  `,
   // Secondary
   secondary: css`
     background-color: var(--color-white-1);
