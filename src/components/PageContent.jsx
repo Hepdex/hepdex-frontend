@@ -1,12 +1,20 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { mq } from "../GlobalStyles";
 
-const Page = styled.div`
+// Page box
+const PageBox = styled.div`
   padding-top: 100px;
-
   & > section {
-    padding-top: 64px;
+    padding-top: 48px;
+    ${mq(
+      "sm",
+      css`
+        padding-top: 64px;
+      `
+    )}
   }
 `;
+
 export default function PageContent({ children }) {
-  return <Page>{children}</Page>;
+  return <PageBox>{children}</PageBox>;
 }

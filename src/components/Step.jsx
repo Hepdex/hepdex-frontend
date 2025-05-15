@@ -1,7 +1,10 @@
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 
-const Li = styled.li`
+// Step box
+const StepBox = styled.li`
+  ${flex("center", "stretch")}
+  column-gap: 16px;
   .icon {
     ${flex("center", "center")}
     min-height: 100%;
@@ -32,8 +35,6 @@ const Li = styled.li`
       flex: 1;
     }
   }
-  ${flex("center", "stretch")}
-  column-gap: 16px;
   ${mq(
     "sm",
     css`
@@ -61,7 +62,7 @@ const Li = styled.li`
 
 export default function Step({ number, title, text }) {
   return (
-    <Li>
+    <StepBox>
       <div className="icon">
         <div className="circle">{number}</div>
         <div className="arrow"></div>
@@ -70,6 +71,6 @@ export default function Step({ number, title, text }) {
         <h3 className="step-title">{title}</h3>
         <p className="text-md">{text}</p>
       </div>
-    </Li>
+    </StepBox>
   );
 }

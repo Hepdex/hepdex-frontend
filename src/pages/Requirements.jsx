@@ -1,6 +1,10 @@
-import styled, { css } from "styled-components";
-import Button from "../components/Button";
 import Container from "../components/Container";
+import Button from "../components/Button";
+import PageContent from "../components/PageContent";
+import Section from "../components/Section";
+import Step from "../components/Step";
+import useDocumentTitle from "../utils/TitleUpdater";
+import styled, { css } from "styled-components";
 import {
   Form,
   FormGroup,
@@ -9,17 +13,15 @@ import {
   Select,
   Textarea,
 } from "../components/Form";
-import PageContent from "../components/PageContent";
-import Section from "../components/Section";
-import Step from "../components/Step";
-import { mq } from "../GlobalStyles";
-import useDocumentTitle from "../utils/TitleUpdater";
+import { flex, mq } from "../GlobalStyles";
 
-const Div = styled.div`
+const Box = styled.div`
   .steps-box {
     background-color: var(--color-secondary);
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 32px 16px;
+    height: 100%;
+    ${flex("center", "center")}
     ul li {
       align-self: flex-start;
     }
@@ -38,17 +40,17 @@ const Div = styled.div`
 `;
 
 export default function Requirements() {
-
+  // Title
   useDocumentTitle("Hepdex - share requirement");
   return (
     <PageContent>
       <Section
-        title="It's Super Easy to Hire With HepDex"
+        title="Hire Smarter with HepDex"
         subtitle="From screening to onboarding, we'll help you hire remote talent in two weeks."
         animation={false}
         marginBottom={true}
       >
-        <Div>
+        <Box>
           <Container.Row>
             <Container.Col breakPoints={[{ name: "850px", width: 50 }]}>
               <div className="steps-box">
@@ -75,37 +77,37 @@ export default function Requirements() {
               <div className="requirement-box">
                 <Form $gap={18}>
                   <InputGroup>
-                    <FormGroup label="Name">
-                      <Input placeholder="Full Name" type="text" required />
+                    <FormGroup label="Full name">
+                      <Input placeholder="Full name" type="text" required />
                     </FormGroup>
-                    <FormGroup label="Email">
+                    <FormGroup label="Email address">
                       <Input
-                        placeholder="Email Address"
+                        placeholder="Email address"
                         type="email"
                         required
                       />
                     </FormGroup>
                   </InputGroup>
                   <InputGroup>
-                    <FormGroup label="Phone">
-                      <Input placeholder="Phone Number" type="text" required />
+                    <FormGroup label="Phone number">
+                      <Input placeholder="Phone number" type="text" required />
                     </FormGroup>
-                    <FormGroup label="Company">
-                      <Input placeholder="Company Name" type="text" required />
+                    <FormGroup label="Company name">
+                      <Input placeholder="Company name" type="text" required />
                     </FormGroup>
                   </InputGroup>
                   <InputGroup>
-                    <FormGroup label="Job Requirement">
+                    <FormGroup label="Requirement">
                       <Select>
-                        <option value="">Select Requirement</option>
+                        <option value="">Select requirement</option>
                         <option value="1">Looking for an employee</option>
                         <option value="2">Looking for a service</option>
                         <option value="3">Not sure</option>
                       </Select>
                     </FormGroup>
-                    <FormGroup label="Job Duration">
+                    <FormGroup label="Duration">
                       <Select>
-                        <option value="">Select Duration</option>
+                        <option value="">Select duration</option>
                         <option value="1">Less than 1 Month</option>
                         <option value="2">1 to 3 Months</option>
                         <option value="3">3 to 6 Months</option>
@@ -115,15 +117,15 @@ export default function Requirements() {
                       </Select>
                     </FormGroup>
                   </InputGroup>
-                  <FormGroup label="Work Requirements">
-                    <Textarea placeholder="Add Your Requirement" rows={6} />
+                  <FormGroup label="Requirement details">
+                    <Textarea placeholder="Requirement details" rows={5} />
                   </FormGroup>
-                  <Button className="cta">Submit Requirements</Button>
+                  <Button className="cta">Submit requirements</Button>
                 </Form>
               </div>
             </Container.Col>
           </Container.Row>
-        </Div>
+        </Box>
       </Section>
     </PageContent>
   );

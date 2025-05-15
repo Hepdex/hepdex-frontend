@@ -2,7 +2,8 @@ import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import { mq } from "../GlobalStyles";
 
-const LogoLink = styled(Link)`
+// Logo box
+const LogoBox = styled(Link)`
   .logo-img {
     height: 32px;
     ${mq(
@@ -13,14 +14,15 @@ const LogoLink = styled(Link)`
     )}
   }
 `;
-export default function Logo({ alt = false }) {
+
+export default function Logo({ alt = false, url = "/home", onClick }) {
   return (
-    <LogoLink className="logo" to={"/home"}>
+    <LogoBox className="logo" to={url} onClick={onClick}>
       <img
         className="logo-img"
         alt="logo"
         src={`${alt ? "/hepdex-white.svg" : "/hepdex.svg"}`}
       />
-    </LogoLink>
+    </LogoBox>
   );
 }

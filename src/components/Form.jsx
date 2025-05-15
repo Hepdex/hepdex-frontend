@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
-import { BsChevronDown } from "react-icons/bs";
+import { BsChevronDown, BsClock } from "react-icons/bs";
+import { useState } from "react";
 
 // Form
 const Form = styled.form`
@@ -55,11 +56,12 @@ const InputGroup = styled.div`
 const FormGroupDiv = styled.div`
   ${flex()}
   flex-direction: column;
-  row-gap: 8px;
-  & > div:first-child {
+  row-gap: 4px;
+  .label-error {
     min-height: 25px;
-    & > *:first-child {
-      margin-right: 8px;
+    span {
+      font-weight: 500;
+      color: #484646;
     }
     & > * {
       display: inline-block;
@@ -67,30 +69,37 @@ const FormGroupDiv = styled.div`
         text-transform: capitalize;
       }
     }
+    &:first-child {
+      margin-right: 8px;
+    }
   }
 `;
 
 // Input css
 const InputCss = css`
   border: 1px solid var(--color-grey-3);
-  padding: 0px 12px;
+  padding: 12px;
   height: 48px;
-  border-radius: 2px;
-  line-height: 48px;
+  border-radius: 8px;
+  line-height: 24px;
+  color: var(--color-grey-2);
   &::placeholder {
     font-weight: 400;
-    color: #989898;
+    color: var(--color-grey-4);
   }
 `;
 
 // Select
 const SelectBox = styled.div`
   position: relative;
+  color: var(--color-grey-2);
   & > * {
     cursor: pointer;
   }
   .select {
+    background-color: var(--color-white-1);
     ${() => InputCss}
+    padding-right: 40px;
     width: 100%;
     appearance: none;
     -moz-appearance: none;
@@ -100,7 +109,7 @@ const SelectBox = styled.div`
     position: absolute;
     top: 16px;
     right: 12px;
-    fill: #989898;
+    fill: var(--color-grey-4);
     pointer-events: none;
   }
 `;
@@ -114,7 +123,7 @@ const Input = styled.input`
 const Textarea = styled.textarea`
   ${() => InputCss}
   height: auto;
-  padding-top: 12px;
+  padding: 12px;
   line-height: 24px;
 `;
 
@@ -137,25 +146,96 @@ const ButtonGroup = styled.div`
   row-gap: 18px;
 `;
 
-function Select({ children }) {
+// Time box
+const TimeBox = styled.div`
+  ${() => InputCss}
+  cursor: pointer;
+  position: relative;
+  input::-webkit-calendar-picker-indicator,
+  svg {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  input {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    &::-webkit-calendar-picker-indicator {
+      opacity: 0;
+      cursor: pointer;
+      right: 8px;
+    }
+  }
+  svg {
+    pointer-events: none;
+    fill: var(--color-grey-2);
+  }
+`;
+
+function Select({ children, ...rest }) {
   return (
     <SelectBox>
-      <select className="select">{children}</select>
+      <select className="select" {...rest}>
+        {children}
+      </select>
       <BsChevronDown size={16} />
     </SelectBox>
+  );
+}
+
+function Time({
+  placeholder,
+  name,
+  required = false,
+  defaultTime,
+  defaultState = false,
+}) {
+  const [on, setOn] = useState(defaultState);
+  return (
+    <TimeBox>
+      {on ? (
+        <input
+          type="time"
+          name={name}
+          required={required}
+          defaultValue={defaultTime}
+        />
+      ) : (
+        <input
+          type="text"
+          onFocus={() => setOn(true)}
+          placeholder={placeholder}
+        />
+      )}
+      <BsClock size={16} />
+    </TimeBox>
   );
 }
 
 function FormGroup({ children, label, error }) {
   return (
     <FormGroupDiv>
-      <div>
-        {label && <span>{label}</span>}
-        {error && <Error>{error}</Error>}
-      </div>
+      {(label || error) && (
+        <div className="label-error">
+          {label && <span>{label}</span>}
+          {error && <Error>{error}</Error>}
+        </div>
+      )}
       {children}
     </FormGroupDiv>
   );
 }
 
-export { Form, Input, Textarea, FormGroup, InputGroup, ButtonGroup, Select };
+export {
+  Form,
+  Input,
+  Textarea,
+  FormGroup,
+  InputGroup,
+  ButtonGroup,
+  Select,
+  Time,
+};

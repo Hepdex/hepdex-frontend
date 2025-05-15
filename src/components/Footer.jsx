@@ -1,4 +1,5 @@
 import Container from "./Container";
+import Logo from "./Logo";
 import styled, { css } from "styled-components";
 import {
   FaFacebookF,
@@ -8,73 +9,74 @@ import {
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
-import Logo from "./Logo";
 
-const FooterDiv = styled.footer`
-  &.footer {
-    a {
-      transition: all.3s ease-in-out;
-      &:hover {
-        color: var(--color-white-1);
-      }
+// Footer box
+const FooterBox = styled.footer`
+  // Footer
+  a {
+    transition: all.3s ease-in-out;
+    &:hover {
+      color: var(--color-white-1);
     }
-    padding-top: 72px;
+  }
+  padding-top: 72px;
+  ${mq(
+    "lg",
+    css`
+      padding-top: 96px;
+    `
+  )}
+  background-color: var(--color-black-1);
+  color: var(--color-white-2);
+  // Top
+  .top {
+    padding-bottom: 48px;
+    border-bottom: 1px solid #e5e5e51a;
     ${mq(
       "lg",
       css`
-        padding-top: 96px;
+        padding-bottom: 64px;
       `
     )}
-    background-color: var(--color-black-1);
-    color: var(--color-white-2);
-    .top {
-      padding-bottom: 48px;
-      border-bottom: 1px solid #e5e5e51a;
-      ${mq(
-        "lg",
-        css`
-          padding-bottom: 64px;
-        `
-      )}
-      .footer-row {
-        row-gap: 32px;
-      }
-      #about {
-        .logo {
-          display: inline-block;
-          margin-bottom: 16px;
-        }
-      }
-      .footer-col {
-        .column-title {
-          font-size: 20px;
-          font-weight: 500;
-          line-height: 32px;
-          margin-bottom: 16px;
-          color: var(--color-white-1);
-        }
-        ul {
-          ${flex()}
-          flex-direction: column;
-          row-gap: 12px;
-        }
+    .footer-row {
+      row-gap: 32px;
+    }
+    #about {
+      .logo {
+        display: inline-block;
+        margin-bottom: 16px;
       }
     }
-    .bottom {
-      ${flex("space-between", "center")}
-      padding: 24px 0px;
-      flex-wrap: wrap;
-      gap: 18px;
-      .social-media {
-        ${flex(undefined, "center")}
-        column-gap: 12px;
+    .footer-col {
+      .column-title {
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 32px;
+        margin-bottom: 16px;
+        color: var(--color-white-1);
       }
+      ul {
+        ${flex()}
+        flex-direction: column;
+        row-gap: 12px;
+      }
+    }
+  }
+  // Bottom
+  .bottom {
+    ${flex("space-between", "center")}
+    padding: 24px 0px;
+    flex-wrap: wrap;
+    gap: 18px;
+    .social-media {
+      ${flex(undefined, "center")}
+      column-gap: 12px;
     }
   }
 `;
 export default function Footer() {
   return (
-    <FooterDiv className="footer">
+    <FooterBox className="footer">
       <Container>
         <div className="top">
           <Container.Row className="footer-row">
@@ -200,6 +202,6 @@ export default function Footer() {
           </ul>
         </div>
       </Container>
-    </FooterDiv>
+    </FooterBox>
   );
 }

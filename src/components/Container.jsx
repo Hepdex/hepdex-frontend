@@ -8,11 +8,14 @@ const ContainerDiv = styled.div`
   margin-left: auto;
   margin-right: auto;
   max-width: 100%;
-
   ${mq(
     "xl",
     css`
-      max-width: 1200px;
+      ${(props) =>
+        props.$mw &&
+        css`
+          max-width: ${props.$mw};
+        `}
     `
   )}
 `;
@@ -72,10 +75,12 @@ const ColDiv = styled.li`
     )}
 `;
 
-function Container({ children }) {
-  return <ContainerDiv>{children}</ContainerDiv>;
+// Container
+function Container({ children, mw = "1200px" }) {
+  return <ContainerDiv $mw={mw}>{children}</ContainerDiv>;
 }
 
+// Row
 function Row({ children, gap = 24, className = "", ...rest }) {
   return (
     <RowDiv $gap={gap} className={className} {...rest}>
@@ -84,6 +89,7 @@ function Row({ children, gap = 24, className = "", ...rest }) {
   );
 }
 
+// Column
 function Col({ children, breakPoints, defaultCols, className = "" }) {
   return (
     <ColDiv

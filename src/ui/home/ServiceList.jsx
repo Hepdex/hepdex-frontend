@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { services } from "../../data/services";
 import { Link } from "react-router-dom";
 
-const Div = styled.div`
+const Box = styled.div`
   margin-top: 32px;
   text-align: center;
   a {
@@ -26,10 +26,9 @@ export default function ServiceList() {
           ))}
         </Container.Row>
       </div>
-
-      <Div>
+      <Box>
         <Link>View all services</Link>
-      </Div>
+      </Box>
     </Section>
   );
 }
