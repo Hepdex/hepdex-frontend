@@ -91,18 +91,45 @@ const ModalBox = styled.div`
       padding: 20px;
       background-color: var(--color-grey-1);
     }
+    // Confirm
+    &.modal-confirm {
+      text-align: center;
+      .modal {
+        &-header {
+          border-bottom: none;
+        }
+        &-body {
+          padding-top: 0px;
+        }
+        &-footer {
+          background-color: var(--color-white-1);
+          padding: 0px 20px 40px 20px;
+        }
+      }
+      .confirm-content {
+        ${flex("center")}
+        flex-direction: column;
+        gap: 16px;
+        p {
+          color: var(--color-grey-2);
+          max-width: 400px;
+          width: 100%;
+          margin: 0 auto;
+        }
+      }
+    }
   }
 `;
 
 // Window
-function Window({ name, children, title, confirm }) {
+function Window({ name, children, title, confirm, alt = false }) {
   const { active, close } = useModalContext();
   if (name !== active) return null;
   return createPortal(
     <>
       <div className="overlay" onClick={close} />
       <ModalBox>
-        <div className="modal">
+        <div className={`modal ${alt ? "modal-confirm" : ""}`}>
           <div className="modal-header">
             <h3 className="modal-header__title icon-title">{title}</h3>
             <button onClick={close} className="close-btn">
@@ -112,7 +139,12 @@ function Window({ name, children, title, confirm }) {
 
           <div className="modal-body">{children}</div>
           <div className="modal-footer">
-            <Button size="sm" color="secondary" onClick={close}>
+            <Button
+              size="sm"
+              color="secondary"
+              className={`${alt ? "alternate" : ""}`}
+              onClick={close}
+            >
               Cancel
             </Button>
             {confirm && confirm}

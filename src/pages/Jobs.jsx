@@ -1,22 +1,13 @@
-import usePaginate from "../hooks/usePaginate";
-import Button from "../components/Button";
-import DashboardTitle from "../components/DashboardTitle";
-import Filter from "../components/Filter";
 import useQuery from "../hooks/useQuery";
-import Actions from "../ui/jobs/Actions";
+import DashboardTitle from "../components/DashboardTitle";
+import Button from "../components/Button";
+import JobsTable from "../ui/jobs/JobsTable";
 import styled, { css } from "styled-components";
-import {
-  BsBox,
-  BsCheckCircle,
-  BsChevronLeft,
-  BsChevronRight,
-  BsSearch,
-} from "react-icons/bs";
+import { BsBox, BsCheckCircle } from "react-icons/bs";
 import { Link, useSearchParams } from "react-router-dom";
-import { Select } from "../components/Form";
 import { flex, mq } from "../GlobalStyles";
+import { createContext, useContext } from "react";
 import { fetchJobs } from "../lib/apiJobs";
-import { capitalizeFirst, formatDate } from "../utils/helpers";
 
 const JobsBox = styled.div`
   .jobs {
@@ -95,6 +86,7 @@ const JobsBox = styled.div`
           padding-left: 36px;
           padding-right: 16px;
           width: 100%;
+          background-color: var(--color-white-1);
           border-radius: 4px;
           line-height: 40px;
           font-size: 15px;
@@ -113,70 +105,17 @@ const JobsBox = styled.div`
         }
       }
     }
-    // Jobs table
-    table.jobs-table {
-      tbody {
-        td {
-          &::first-letter {
-            text-transform: uppercase;
-          }
-          // Job title
-          .job-title {
-            ${flex("center")}
-            flex-direction: column;
-            &__name {
-              font-weight: 500;
-            }
-            &__details {
-              font-size: 14px;
-              line-height: 20px;
-              color: var(--color-grey-2);
-              ${flex(undefined, "center")}
-              gap: 8px;
-              li {
-                ${flex(undefined, "center")}
-                gap: 4px;
-                &:not(:first-child):before {
-                  content: "";
-                  display: block;
-                  width: 4px;
-                  height: 4px;
-                  border-radius: 50%;
-                  background-color: var(--color-grey-2);
-                }
-              }
-            }
-          }
-          // Job status
-          .status {
-            ${flex(undefined, "center")}
-            column-gap: 8px;
-            &-icon {
-              width: 12px;
-              height: 12px;
-              border-radius: 50%;
-              display: inline-block;
-              // Open
-              &.open {
-                background-color: #aee5c2;
-              }
-              // Closed
-              &.closed {
-                background-color: #999999;
-              }
-            }
-          }
-        }
-      }
-    }
   }
 `;
+
+// Jobs context
+const JobsContext = createContext(undefined);
 
 export default function Jobs() {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
   // Fetch jobs
-  const [jobs, loading] = useQuery(fetchJobs);
+  const [jobs, loading, setJobs] = useQuery(fetchJobs);
   // Selected tab
   const status = searchParams.get("active") ?? "";
   // Set params
@@ -254,143 +193,18 @@ export default function Jobs() {
             </li>
           </ul>
         </div>
-        <JobsTable
-          jobs={jobs?.jobs}
-          loading={loading}
-          searchParams={searchParams}
-        />
+        <JobsContext.Provider value={{ jobs: jobs?.jobs, setJobs, loading }}>
+          <JobsTable />
+        </JobsContext.Provider>
       </div>
     </JobsBox>
   );
 }
 
-function JobsTable({ loading, jobs, searchParams }) {
-  // Page
-  const page = Number(searchParams.get("page") ?? 1);
-  // Use paginate
-  const { dataNum, pageStart, pageEnd, currentData, next, previous, search } =
-    usePaginate(10, page, jobs, "jobTitle");
-  // Country options
-  const countries = [
-    ...new Set(jobs?.map((job) => job.country.toLowerCase()) ?? []),
-  ];
-  // Department options
-  const departments = [
-    ...new Set(jobs?.map((job) => job.department.toLowerCase()) ?? []),
-  ];
-  return (
-    <div className="table-box">
-      <div className="search-filter">
-        <div className="search-box">
-          <input
-            placeholder="Search"
-            type="search"
-            className="search-box__input"
-            onChange={(e) => search("jobTitle", e.target.value)}
-          />
-          <BsSearch size={16} />
-        </div>
-        <Filter id="jobs-filter" fields={["country", "department"]}>
-          <Select name="country" defaultValue={searchParams.get("country")}>
-            <option value="">Select country</option>
-            {countries.map((item, index) => (
-              <option value={item} key={index}>
-                {capitalizeFirst(item)}
-              </option>
-            ))}
-          </Select>
-          <Select
-            name="department"
-            defaultValue={searchParams.get("department")}
-          >
-            <option value="">Select department</option>
-            {departments.map((item, index) => (
-              <option value={item} key={index}>
-                {capitalizeFirst(item)}
-              </option>
-            ))}
-          </Select>
-        </Filter>
-      </div>
-      <div className="table-container">
-        {loading && <div>Loading...</div>}
-        <table className="table jobs-table">
-          <thead>
-            <tr>
-              <th>Jobs</th>
-              <th>Status</th>
-              <th>Applications</th>
-              <th>Department</th>
-              <th>Created on</th>
-              <th className="sticky">
-                <div></div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item, index) => (
-              <tr key={index}>
-                <td>
-                  <div className="job-title">
-                    <p className="job-title__name">{item.jobTitle}</p>
-                    <ul className="job-title__details">
-                      <li>{capitalizeFirst(item.country)}</li>
-                      <li>{capitalizeFirst(item.jobType)}</li>
-                    </ul>
-                  </div>
-                </td>
-                <td>
-                  <div className="status">
-                    <i
-                      className={`status-icon ${
-                        item.active ? "open" : "closed"
-                      }`}
-                    />
-                    Open
-                  </div>
-                </td>
-                <td>{item.applicants.length}</td>
-                <td>{item.department}</td>
-                <td>{formatDate(item.createdAt)}</td>
-                <Actions id={item._id} index={index} active={item.active} />
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {currentData.length === 0 && !loading && <div>No results found</div>}
-      </div>
-      {!loading && (
-        <div className="pagination">
-          {currentData.length > 0 && (
-            <>
-              <div className="pagination-info">
-                Showing
-                <span className="font-medium">{` ${pageStart} - ${pageEnd} `}</span>
-                {`of `}
-                <span className="font-medium"> {dataNum}</span> records
-              </div>
-              <div className="pagination-controls">
-                <Button
-                  size="sm"
-                  color="secondary"
-                  className="alternate"
-                  onClick={previous}
-                >
-                  <BsChevronLeft size={14} />
-                </Button>
-                <Button
-                  size="sm"
-                  color="secondary"
-                  className="alternate"
-                  onClick={next}
-                >
-                  <BsChevronRight size={14} />
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
+// Use jobs context
+export const useJobsContext = () => {
+  const context = useContext(JobsContext);
+  if (context === undefined)
+    throw new Error("JobsContext was used outside provider");
+  return context;
+};

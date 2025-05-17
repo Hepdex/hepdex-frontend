@@ -1,8 +1,12 @@
+import CloseJobModal from "./CloseJobModal";
+import DeleteJobModal from "./DeleteJobModal";
 import Dropdown from "../../components/Dropdown";
 import styled from "styled-components";
 import Modal from "../../components/Modal";
-import CloseJobModal from "./CloseJobModal";
+import useMutate from "../../hooks/useMutate";
+import useSetPageParam from "../../hooks/useSetPageParam";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   BsCheckCircle,
   BsListUl,
@@ -13,7 +17,9 @@ import {
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { flex } from "../../GlobalStyles";
-import { createPortal } from "react-dom";
+import { updateJobStatus } from "../../lib/apiJobs";
+import { notify } from "../../utils/helpers";
+import { useJobsContext } from "../../pages/Jobs";
 
 const ActionBox = styled.div`
   & > div {
@@ -68,14 +74,19 @@ const List = styled.ul`
   }
 `;
 
-export default function Actions({ id, index, active }) {
+export default function Actions({ jobID, index, active, currentDataLength }) {
+  // Jobs context
+  const { setJobs } = useJobsContext();
+  // Set page param
+  const setPageParam = useSetPageParam(currentDataLength);
   // Button ref
   const buttonRef = useRef(null);
   // Menu ref
   const menuRef = useRef(null);
   // Dropdown state
   const [open, setOpen] = useState(false);
-
+  // Open job
+  const [openJob] = useMutate(updateJobStatus);
   // Close
   const close = () => setOpen(false);
 
@@ -95,6 +106,36 @@ export default function Actions({ id, index, active }) {
       }
       menu.style.top = top;
       menu.style.left = left;
+    }
+  };
+
+  // Handle open job
+  const handleOpenJob = async () => {
+    // Close menu
+    close();
+    // Send request
+    const response = await openJob({ jobID, active: true });
+    // Check response
+    if (response === 200) {
+      // Update jobs state
+      setJobs((data) => {
+        const jobs = data.jobs;
+        // Updated job
+        const updatedJob = jobs.find((job) => job._id === jobID);
+        // Check if job exists
+        if (!updatedJob) return data;
+        // Set job status
+        updatedJob.active = true;
+        // Update jobs
+        return { jobs };
+      });
+      // Change page param if jobs length is one
+      setPageParam();
+      // Display message
+      notify("Job successfully opened", "success");
+    } else {
+      // Display error
+      notify(response, "error");
     }
   };
 
@@ -135,18 +176,17 @@ export default function Actions({ id, index, active }) {
                   ref={menuRef}
                 >
                   <li>
-                    <button>
+                    <Link to={`/view-job/${jobID}`} onClick={close}>
                       <BsListUl size={16} />
                       <span>View job</span>
-                    </button>
+                    </Link>
                   </li>
                   <li>
-                    <Link to={`/edit-job/${id}`} onClick={close}>
+                    <Link to={`/edit-job/${jobID}`} onClick={close}>
                       <BsPencil size={16} />
                       <span>Edit job</span>
                     </Link>
                   </li>
-
                   <li>
                     {active ? (
                       <Modal.Open opens="close-job">
@@ -156,23 +196,26 @@ export default function Actions({ id, index, active }) {
                         </button>
                       </Modal.Open>
                     ) : (
-                      <button>
+                      <button onClick={handleOpenJob}>
                         <BsCheckCircle size={16} />
                         <span>Open job</span>
                       </button>
                     )}
                   </li>
                   <li>
-                    <button>
-                      <BsTrash size={16} />
-                      <span>Delete job</span>
-                    </button>
+                    <Modal.Open opens="delete-job">
+                      <button onClick={close}>
+                        <BsTrash size={16} />
+                        <span>Delete job</span>
+                      </button>
+                    </Modal.Open>
                   </li>
                 </List>
               </Dropdown>,
               document.body
             )}
-          <CloseJobModal id={id} />
+          <CloseJobModal jobID={jobID} currentDataLength={currentDataLength} />
+          <DeleteJobModal jobID={jobID} currentDataLength={currentDataLength} />
         </Modal>
       </ActionBox>
     </td>
