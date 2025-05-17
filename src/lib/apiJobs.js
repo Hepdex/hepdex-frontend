@@ -19,7 +19,7 @@ export const deleteJob = apiFetcher("delete-job", "DELETE", "statusCode");
 export const updateJobStatus = apiFetcher(
   "update-job-active-status",
   "PUT",
-  "data"
+  "statusCode"
 );
 
 // Search jobs

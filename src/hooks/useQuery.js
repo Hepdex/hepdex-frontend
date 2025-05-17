@@ -19,5 +19,5 @@ export default function useQuery(api, query = undefined) {
     })();
   }, [api, query]);
   // Return data
-  return [data, loading];
+  return [data, loading, setData];
 }

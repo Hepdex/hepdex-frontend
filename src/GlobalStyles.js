@@ -1,4 +1,4 @@
-import { createGlobalStyle, css, keyframes } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 
 // Flex helper
 export const flex = (justify, align) => css`
@@ -22,13 +22,6 @@ export const sizes = {
   xl: "1200px",
   xxl: "1400px",
 };
-
-// Animations
-export const rotate = keyframes`
-  to {
-    transform: rotate(1turn)
-  }
-`;
 
 // Media query helper
 export const mq = (size, inner) => css`
@@ -337,12 +330,15 @@ img{
   .table-container{
     overflow-x: auto;
     display: grid;
+    width: 100%;
+    max-width: 100%;
     grid-template-columns: repeat(1, minmax(0,1fr));
     .table{
     border-spacing: 0;
     text-align: left;
     border-collapse: collapse;
     white-space: nowrap;
+    width: 100%;
     thead{
       letter-spacing: 0px;
       line-height: 56px;
@@ -380,10 +376,11 @@ img{
         padding: 0px;
         min-width: 64px;
         width: 64px;
+        overflow-y: clip;
         height: 100%;
         & > * {
           height: 100%;
-          box-shadow: 0 4px 12px 0 #e5e7eb;
+          box-shadow: -2px 0 10px 0 #e5e7eb;
           min-width: 64px;
           ${flex("center", "center")}
         }
@@ -569,7 +566,32 @@ img{
     }
   }
 
+// Animations
+@keyframes skeletonLoader {
+  0% {
+      background-color: hsl(200, 20%, 86%)
+  }
+  100%{
+    background-color: hsl(200, 20%, 95%)
+  }
+}
+
+@keyframes rotate {
+ to {
+    transform: rotate(1turn)
+  }
+}
+
 // Animation classes
+.skeleton{
+  opacity: 0.7;
+  animation: skeletonLoader 1s linear infinite alternate;
+}
+
+.rotate{
+  animation: rotate 1.5s infinite linear;
+}
+
 .custom-fade-right{
   opacity: 0;
   transform: translateX(-50%);

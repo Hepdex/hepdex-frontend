@@ -1,23 +1,22 @@
-:root{
-    --color-white-1: #ffffff;
-    --color-white-2: #fff9;
-    --color-black-1: #111827;
-    --color-primary: #915DC2;
-    --color-primary-hover: #7c43b1;
-    --color-secondary: #F5F1FF;
-    --color-tertiary: #E7DDFF;
-    --color-grey-1: #F9FAFC;
-    --color-grey-2: #5A5758;
-    --color-grey-3: #D2D2D2;
+:root {
+  --color-white-1: #ffffff;
+  --color-white-2: #fff9;
+  --color-black-1: #111827;
+  --color-primary: #915dc2;
+  --color-primary-hover: #7c43b1;
+  --color-secondary: #f5f1ff;
+  --color-tertiary: #e7ddff;
+  --color-grey-1: #f9fafc;
+  --color-grey-2: #5a5758;
+  --color-grey-3: #d2d2d2;
 }
-*{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
-body{
-    font-family: "Outfit", sans-serif;
+body {
+  font-family: "Outfit", sans-serif;
 }
-button{
-    border: none;
+button {
+  border: none;
 }
-

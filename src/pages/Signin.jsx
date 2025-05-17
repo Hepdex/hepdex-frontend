@@ -1,3 +1,7 @@
+import useMutate from "../hooks/useMutate";
+import Preloader from "../components/Preloader";
+import useDocumentTitle from "../utils/TitleUpdater";
+import formStyles from "../styles/FormStyles.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FormBox,
@@ -6,13 +10,9 @@ import {
   InputField,
   PasswordField,
 } from "../components/FormElements";
-import Preloader from "../components/Preloader";
 import { Toastify } from "../components/Toastify";
 import { useUserContext } from "../context/UserContext";
-import useMutate from "../hooks/useMutate";
 import { login } from "../lib/apiAuth";
-import formStyles from "../styles/FormStyles.module.css";
-import useDocumentTitle from "../utils/TitleUpdater";
 
 const Signin = () => {
   useDocumentTitle("Hepdex - Login");

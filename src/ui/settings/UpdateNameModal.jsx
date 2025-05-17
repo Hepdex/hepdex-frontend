@@ -15,7 +15,6 @@ export default function UpdateNameModal() {
   const { close } = useModalContext();
   // Update profile
   const [updateUser, loading] = useMutate(updateProfile(user.role));
-
   // Update name
   async function updateName(e) {
     // Prevent default submit

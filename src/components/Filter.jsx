@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsSliders, BsX, BsXLg } from "react-icons/bs";
 import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
@@ -23,14 +23,13 @@ const FilterBox = styled.div`
     }
     // Dropdown
     &-dropdown {
-      position: absolute;
-      top: calc(100% + 12px);
-      min-width: 280px;
-      width: 100%;
-      z-index: 10;
+      position: fixed;
+      //top: calc(100% + 12px);
+      min-width: 250px;
+      z-index: 4;
       background-color: var(--color-white-1);
       box-shadow: 0 7px 24px 0 #64646f33;
-      left: 0;
+      //left: 0;
       border-radius: 8px;
       padding: 16px;
       // Form
@@ -84,6 +83,10 @@ export default function Filter({ children, id, fields }) {
   const [open, setOpen] = useState(false);
   // Close
   const close = () => setOpen(false);
+  // Button ref
+  const buttonRef = useRef(null);
+  // Menu ref
+  const menuRef = useRef(null);
 
   // Set filter
   const setFilter = (e) => {
@@ -103,6 +106,28 @@ export default function Filter({ children, id, fields }) {
     setSearchParams(params);
     // Close window
     close();
+  };
+
+  // Update position
+  const updatePosition = () => {
+    if (buttonRef.current && menuRef.current) {
+      // Get button position
+      const rect = buttonRef.current.getBoundingClientRect();
+      // Menu
+      const menu = menuRef.current;
+      // Set menu position
+      let top = `${rect.bottom + 12}px`;
+      let left = `${rect.left}px`;
+      // Check if menu is close to right edge
+      if (rect.left + menu.offsetWidth + 20 > window.innerWidth) {
+        left = `${
+          rect.left - (menu.offsetWidth - buttonRef.current.offsetWidth)
+        }px`;
+      }
+      // Position menu
+      menu.style.top = top;
+      menu.style.left = left;
+    }
   };
 
   // Reset filter
@@ -134,6 +159,22 @@ export default function Filter({ children, id, fields }) {
     params.delete(key);
     setSearchParams(params);
   };
+
+  // Listener
+  useEffect(() => {
+    if (open) {
+      // Update position
+      updatePosition();
+      window.addEventListener("scroll", updatePosition);
+      window.addEventListener("resize", updatePosition);
+    }
+
+    // Clean up function
+    return () => {
+      window.removeEventListener("scroll", updatePosition);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open]);
   return (
     <FilterBox className="filter" id={id}>
       <Button
@@ -142,6 +183,7 @@ export default function Filter({ children, id, fields }) {
         color="secondary"
         id={`${id}__btn`}
         onClick={() => setOpen((s) => !s)}
+        ref={buttonRef}
       >
         <BsSliders size={16} />
         Filter
@@ -163,7 +205,7 @@ export default function Filter({ children, id, fields }) {
       )}
       {open && (
         <Dropdown close={close} menuId={id}>
-          <div className="filter-dropdown">
+          <div className="filter-dropdown" ref={menuRef}>
             <Form $gap={16} onSubmit={setFilter}>
               {children}
               <div className="btn-box">

@@ -13,7 +13,7 @@ export default function EditCompany() {
     <div className="form-box">
       <div className="form-box__content">
         <h3 className="heading-md">Edit company bio</h3>
-        <p className="text-md">Update details about company.</p>
+        <p className="text-md">Update company details.</p>
       </div>
       <EditCompanyForm />
     </div>
