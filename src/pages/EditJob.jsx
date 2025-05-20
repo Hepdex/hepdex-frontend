@@ -21,14 +21,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getTimezomes, notify } from "../utils/helpers";
 
 export default function EditJob() {
-  const { id } = useParams();
+  const { jobID } = useParams();
   // Fetch job
-  const [job, loading] = useQuery(getJob, `?jobID=${id}`);
+  const [job, loading] = useQuery(getJob, `?jobID=${jobID}`);
   return (
     <div className="form-box">
       <div className="form-box__content">
         <h3 className="heading-md">Edit job</h3>
-        <p className="text-md">Update details about the job.</p>
+        <p className="text-md">Update details about job.</p>
       </div>
       {loading && <div>Loading...</div>}
       {job && <EditJobForm job={job.job} />}

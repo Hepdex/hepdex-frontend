@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { flex } from "../GlobalStyles";
 
 // Colors
 const colors = {
@@ -30,7 +31,7 @@ const colors = {
     }
     &.alternate {
       &:hover {
-        background-color: var(--color-grey-1);
+        background-color: #f3f4f6;
         border: 1px solid #757575;
       }
     }
@@ -69,8 +70,24 @@ const sizes = {
     font-weight: 400;
     min-height: 40px;
     max-height: 40px;
-    min-width: 96px;
+    min-width: 88px;
     border-radius: 4px;
+  `,
+  // xs
+  xs: css`
+    font-size: 15px;
+    border-radius: 4px;
+    padding: 0px 16px;
+    line-height: 20px;
+    min-height: 32px;
+    font-weight: 400;
+    // Spinner
+    .spinner {
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
   `,
 };
 
@@ -98,6 +115,7 @@ const Button = styled.button`
     `}
   // Spinner
   .spinner {
+    ${flex("center", "center")}
     position: absolute;
     left: 50%;
     top: 50%;

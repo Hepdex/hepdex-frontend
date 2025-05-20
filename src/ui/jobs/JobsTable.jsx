@@ -73,11 +73,10 @@ export default function JobsTable() {
   const [searchParams] = useSearchParams();
   // Jobs context
   const { jobs, loading } = useJobsContext();
-  // Page
-  const page = Number(searchParams.get("page") ?? 1);
+
   // Use paginate
   const { dataNum, pageStart, pageEnd, currentData, next, previous, search } =
-    usePaginate(10, page, jobs, "jobTitle");
+    usePaginate(10, jobs, "jobTitle");
   // Country options
   const countries = [
     ...new Set(jobs?.map((job) => job.country.toLowerCase()) ?? []),

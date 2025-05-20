@@ -5,33 +5,14 @@ import Modal from "../components/Modal";
 import UpdateEmailModal from "../ui/settings/UpdateEmailModal";
 import UpdateNameModal from "../ui/settings/UpdateNameModal";
 import UpdatePasswordModal from "../ui/settings/UpdatePasswordModal";
-import { BsFileEarmarkText, BsPencil } from "react-icons/bs";
-import { flex } from "../GlobalStyles";
 import { useUserContext } from "../context/UserContext";
+import { BsFileEarmarkText, BsPencil } from "react-icons/bs";
 import { capitalizeFirst } from "../utils/helpers";
 
 // Settings box
 const SettingsBox = styled.div`
   // Avatar box
   .avatar-box {
-    // Image
-    &__image {
-      border-radius: 50%;
-      width: 64px;
-      height: 64px;
-      overflow: hidden;
-      // No image
-      .no-image {
-        text-transform: uppercase;
-        ${flex("center", "center")}
-        background-color: var(--color-tertiary);
-        font-family: sans-serif;
-        font-weight: 600;
-        font-size: 22px;
-        height: 100%;
-        width: 100%;
-      }
-    }
     // Name
     &__name {
       text-transform: capitalize;

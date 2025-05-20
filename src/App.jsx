@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { fetchUser } from "./lib/apiUser";
 import { useUserContext } from "./context/UserContext";
 import { ToastContainer } from "react-toastify";
+import ViewJob from "./pages/ViewJob";
 export default function App() {
   const location = useLocation();
   const [user, pending] = useQuery(fetchUser);
@@ -67,10 +68,11 @@ export default function App() {
           <Route path="home" element={<Dashboard />} />
           <Route path="settings" element={<Settings />} />
           <Route path="company-bio" element={<Company />} />
+          <Route path="jobs/:jobID" element={<ViewJob />} />
         </Route>
         <Route element={<AltLayout />}>
           <Route element={<AddJob />} path="post-a-job" />
-          <Route element={<EditJob />} path="edit-job/:id" />
+          <Route element={<EditJob />} path="edit-job/:jobID" />
           <Route element={<EditCompany />} path="edit-company" />
         </Route>
         <Route path="login" element={<Signin />} />

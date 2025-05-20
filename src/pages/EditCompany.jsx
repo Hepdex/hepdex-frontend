@@ -41,7 +41,7 @@ function EditCompanyForm() {
     if (response === 200) {
       // Update user
       setUser((user) => ({ ...user, ...data }));
-      notify("Company updated successfully", "success");
+      notify("Company bio updated successfully", "success");
       // Navigate to jobs page
       setTimeout(() => {
         navigate("/dashboard/company-bio");
