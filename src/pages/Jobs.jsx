@@ -79,31 +79,6 @@ const JobsBox = styled.div`
           `
         )}
       }
-      .search-box {
-        position: relative;
-        max-width: 160px;
-        &__input {
-          padding-left: 36px;
-          padding-right: 16px;
-          width: 100%;
-          background-color: var(--color-white-1);
-          border-radius: 4px;
-          line-height: 40px;
-          font-size: 15px;
-          max-height: 40px;
-          border: 1px solid var(--color-grey-3);
-          transition: border 0.4s ease-in-out;
-          &:focus {
-            border-color: #757575;
-          }
-        }
-        svg {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-          fill: #757575;
-        }
-      }
     }
   }
 `;

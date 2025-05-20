@@ -305,28 +305,7 @@ img{
 .table-box{
   ${flex("center")}
   flex-direction: column;
-  // Pagination
-  .pagination{
-    background-color: var(--color-white-1);
-    border-top: 1px solid #e5e7eb;
-    padding: 18px 16px;
-    font-size: 15px;
-    line-height: 20px;
-    min-height: 64px;
-    max-height: 64px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    ${flex("space-between", "center")}
-    &-controls{
-      ${flex(undefined, "center")}
-      gap: 4px;
-      button{
-        min-height: 32px;
-        min-width: 32px;
-        padding: 0px;
-      }
-    }
-  }
+
   .table-container{
     overflow-x: auto;
     display: grid;
@@ -334,11 +313,11 @@ img{
     max-width: 100%;
     grid-template-columns: repeat(1, minmax(0,1fr));
     .table{
+    table-layout: auto;
     border-spacing: 0;
-    text-align: left;
     border-collapse: collapse;
-    white-space: nowrap;
-    width: 100%;
+    min-width: 100%;
+    width: max-content;
     thead{
       letter-spacing: 0px;
       line-height: 56px;
@@ -384,6 +363,11 @@ img{
           min-width: 64px;
           ${flex("center", "center")}
         }
+      }
+
+      td, th{
+        text-align: left;
+        white-space: nowrap;
       }
 
       td{
@@ -565,6 +549,75 @@ img{
       gap: 16px;
     }
   }
+
+  // Search box
+      .search-box {
+        position: relative;
+        max-width: 160px;
+        &__input {
+          padding-left: 36px;
+          padding-right: 16px;
+          width: 100%;
+          background-color: var(--color-white-1);
+          border-radius: 4px;
+          line-height: 40px;
+          font-size: 15px;
+          max-height: 40px;
+          border: 1px solid var(--color-grey-3);
+          transition: border 0.4s ease-in-out;
+          &:focus {
+            border-color: #757575;
+          }
+        }
+        svg {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          fill: #757575;
+        }
+      }
+
+      // Avatar box image
+    .avatar-box__image {
+      border-radius: 50%;
+      width: 64px;
+      height: 64px;
+      overflow: hidden;
+      // No image
+      .no-image {
+        text-transform: uppercase;
+        ${flex("center", "center")}
+        background-color: var(--color-tertiary);
+        font-family: sans-serif;
+        font-weight: 600;
+        font-size: 22px;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+   // Pagination
+  .pagination{
+    background-color: var(--color-white-1);
+    border-top: 1px solid #e5e7eb;
+    padding: 16px;
+    font-size: 15px;
+    line-height: 20px;
+    min-height: 64px;
+    max-height: 64px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    ${flex("space-between", "center")}
+    &-controls{
+      ${flex(undefined, "center")}
+      gap: 4px;
+      button{
+        min-height: 32px;
+        min-width: 32px;
+        padding: 0px;
+      }
+    }
+  } 
 
 // Animations
 @keyframes skeletonLoader {

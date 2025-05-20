@@ -1,9 +1,9 @@
-import Container from "../components/Container";
-import Button from "../components/Button";
 import PageContent from "../components/PageContent";
+import Container from "../components/Container";
+import useDocumentTitle from "../utils/TitleUpdater";
+import Button from "../components/Button";
 import Section from "../components/Section";
 import Step from "../components/Step";
-import useDocumentTitle from "../utils/TitleUpdater";
 import styled, { css } from "styled-components";
 import {
   Form,

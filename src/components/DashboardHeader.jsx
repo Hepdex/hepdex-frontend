@@ -1,12 +1,15 @@
+import useMutate from "../hooks/useMutate";
 import Logo from "./Logo";
 import Dropdown from "./Dropdown";
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import { BsBell, BsList, BsQuestionCircle } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logout as logoutApi } from "../lib/apiAuth";
 import { flex, mq } from "../GlobalStyles";
 import { useDashboardContext } from "../context/DashboardContext";
 import { useUserContext } from "../context/UserContext";
+import { notify } from "../utils/helpers";
 
 // Dashboard header
 const Header = styled.header`
@@ -111,7 +114,7 @@ const Header = styled.header`
           text-transform: uppercase;
           pointer-events: none;
         }
-        button {
+        & > button {
           ${flex("center", "center")}
           height: 40px;
           width: 40px;
@@ -119,6 +122,7 @@ const Header = styled.header`
           margin-left: 4px;
           font-weight: 600;
           font-size: 15px;
+          letter-spacing: 0px;
           background-color: var(--color-tertiary);
           border-radius: 50%;
         }
@@ -139,11 +143,13 @@ const Header = styled.header`
             &:not(:last-child) {
               border-bottom: 1px solid #e5e7eb;
             }
-            a {
+            a,
+            button {
               ${flex(undefined, "center")}
               padding: 10px;
               border-radius: 4px;
               display: inline-flex;
+              background-color: var(--color-white-1);
               width: 100%;
               font-size: 15px;
               line-height: 20px;
@@ -171,11 +177,34 @@ export default function DashboardHeader() {
   // Get dashboard context
   const { toggleNav, toggleMobileNav } = useDashboardContext();
   // Get user context
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
+  // Navigate hook
+  const navigate = useNavigate();
+  // Logout
+  const [logout] = useMutate(logoutApi);
   // Dropdown state
   const [open, setOpen] = useState(false);
   // Close
   const close = () => setOpen(false);
+
+  // Handle logout
+  const handleLogout = async () => {
+    // Close dropdown
+    close();
+    // Send request
+    const response = await logout();
+    // Check response
+    if (response === 200) {
+      // Clear user state
+      setUser(null);
+      // Navigate to home page
+      await navigate("/home");
+    } else {
+      // Display error message
+      notify(response, "error");
+    }
+  };
+
   return (
     <Header>
       <div className="left">
@@ -242,7 +271,12 @@ export default function DashboardHeader() {
                     </Link>
                   </li>
                   <li className="dropdown-menu__item">
-                    <Link className="dropdown-menu__item--link">Log out</Link>
+                    <button
+                      onClick={handleLogout}
+                      className="dropdown-menu__item--link"
+                    >
+                      Log out
+                    </button>
                   </li>
                 </ul>
               </Dropdown>

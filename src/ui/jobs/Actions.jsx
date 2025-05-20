@@ -176,7 +176,7 @@ export default function Actions({ jobID, index, active, currentDataLength }) {
                   ref={menuRef}
                 >
                   <li>
-                    <Link to={`/view-job/${jobID}`} onClick={close}>
+                    <Link to={`/dashboard/jobs/${jobID}`} onClick={close}>
                       <BsListUl size={16} />
                       <span>View job</span>
                     </Link>

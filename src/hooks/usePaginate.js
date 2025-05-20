@@ -1,13 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 
-export default function usePaginate(
-  pageSize = 10,
-  page,
-  data = [],
-  searchField
-) {
+export default function usePaginate(pageSize = 10, data = [], searchField) {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
+  // Page
+  const page = Number(searchParams.get("page") ?? 1);
   // Get fields for filter
   const fields = Object.fromEntries(searchParams.entries());
   // Delete page and search field
