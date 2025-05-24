@@ -14,7 +14,7 @@ const NoResults = styled.div`
     h3 {
       font-weight: 500;
       font-size: 22px;
-      line-height: 24px;
+      line-height: 28px;
       margin-bottom: 8px;
     }
     p {

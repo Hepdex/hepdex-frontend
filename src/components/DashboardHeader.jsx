@@ -177,7 +177,7 @@ export default function DashboardHeader() {
   // Get dashboard context
   const { toggleNav, toggleMobileNav } = useDashboardContext();
   // Get user context
-  const { user, setUser } = useUserContext();
+  const { user, setUser, setIsLoggedIn } = useUserContext();
   // Navigate hook
   const navigate = useNavigate();
   // Logout
@@ -195,8 +195,12 @@ export default function DashboardHeader() {
     const response = await logout();
     // Check response
     if (response === 200) {
+      // Set logged in state
+      setIsLoggedIn(false);
       // Clear user state
-      setUser(null);
+      setTimeout(() => {
+        setUser(null);
+      }, 1000);
       // Navigate to home page
       await navigate("/home");
     } else {

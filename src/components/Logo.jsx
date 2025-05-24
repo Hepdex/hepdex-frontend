@@ -1,10 +1,12 @@
+import LogoSvg from "../assets/logo/hepdex.svg?react";
+import LogoSvgWhite from "../assets/logo/hepdex-white.svg?react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import { mq } from "../GlobalStyles";
 
 // Logo box
 const LogoBox = styled(Link)`
-  .logo-img {
+  svg {
     height: 32px;
     ${mq(
       "sm",
@@ -18,11 +20,7 @@ const LogoBox = styled(Link)`
 export default function Logo({ alt = false, url = "/home", onClick }) {
   return (
     <LogoBox className="logo" to={url} onClick={onClick}>
-      <img
-        className="logo-img"
-        alt="logo"
-        src={`${alt ? "/hepdex-white.svg" : "/hepdex.svg"}`}
-      />
+      {alt ? <LogoSvgWhite /> : <LogoSvg />}
     </LogoBox>
   );
 }

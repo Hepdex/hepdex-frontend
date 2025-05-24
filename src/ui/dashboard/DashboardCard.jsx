@@ -81,11 +81,8 @@ export default function DashboardCard({
       ]}
     >
       <CardBox className="dashboard-card">
-        {icon && (
-          <div className="dashboard-card__icon box-icon">
-            <img src={`/icons/${icon}`} alt="card-img" />
-          </div>
-        )}
+        {icon && <div className="dashboard-card__icon box-icon">{icon}</div>}
+
         {title && <h3 className="dashboard-card__title">{title}</h3>}
         {text && <p className="dashboard-card__text">{text}</p>}
         {features && (

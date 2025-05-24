@@ -1,6 +1,7 @@
 import countryList from "react-select-country-list";
 import Button from "../components/Button";
 import ct from "countries-and-timezones";
+import ContentLoader from "../components/ContentLoader";
 import useMutate from "../hooks/useMutate";
 import useQuery from "../hooks/useQuery";
 import Spinner from "../components/Spinner";
@@ -26,12 +27,17 @@ export default function EditJob() {
   const [job, loading] = useQuery(getJob, `?jobID=${jobID}`);
   return (
     <div className="form-box">
-      <div className="form-box__content">
-        <h3 className="heading-md">Edit job</h3>
-        <p className="text-md">Update details about job.</p>
-      </div>
-      {loading && <div>Loading...</div>}
-      {job && <EditJobForm job={job.job} />}
+      {loading ? (
+        <ContentLoader />
+      ) : (
+        <>
+          <div className="form-box__content">
+            <h3 className="heading-md">Edit job</h3>
+            <p className="text-md">Update details about job.</p>
+          </div>
+          {job && <EditJobForm job={job.job} />}
+        </>
+      )}
     </div>
   );
 }

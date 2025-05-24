@@ -21,26 +21,6 @@ import { updateJobStatus } from "../../lib/apiJobs";
 import { notify } from "../../utils/helpers";
 import { useJobsContext } from "../../pages/Jobs";
 
-const ActionBox = styled.div`
-  & > div {
-    button {
-      height: 36px;
-      width: 36px;
-      position: sticky;
-      ${flex("center", "center")}
-      border-radius: 50%;
-      background-color: transparent;
-      transition: background-color 0.4s ease-in-out;
-      svg {
-        pointer-events: none;
-      }
-      &:hover {
-        background-color: #f3f4f6;
-      }
-    }
-  }
-`;
-
 const List = styled.ul`
   position: fixed;
   background-color: var(--color-white-1);
@@ -156,9 +136,13 @@ export default function Actions({ jobID, index, active, currentDataLength }) {
   }, [open]);
   return (
     <td className="sticky">
-      <ActionBox>
+      <div>
         <div className="action-menu__btn" id={`action-menu__btn--${index}`}>
-          <button ref={buttonRef} onClick={() => setOpen((s) => !s)}>
+          <button
+            className="sticky-btn"
+            ref={buttonRef}
+            onClick={() => setOpen((s) => !s)}
+          >
             <BsThreeDots />
           </button>
         </div>
@@ -217,7 +201,7 @@ export default function Actions({ jobID, index, active, currentDataLength }) {
           <CloseJobModal jobID={jobID} currentDataLength={currentDataLength} />
           <DeleteJobModal jobID={jobID} currentDataLength={currentDataLength} />
         </Modal>
-      </ActionBox>
+      </div>
     </td>
   );
 }

@@ -7,13 +7,13 @@ import JobDetail from "../ui/viewJob/JobDetail";
 import { flex } from "../GlobalStyles";
 import { getJob } from "../lib/apiJobs";
 import { useParams } from "react-router-dom";
+import ContentLoader from "../components/ContentLoader";
 
 const ViewJobBox = styled.div`
   // Page card
   .page-card {
-    height: 100%;
     background-color: var(--color-white-1);
-    padding: 28px 24px;
+    padding: 28px 24px 32px 24px;
     border-radius: 8px;
     // Title
     &__title {
@@ -44,12 +44,17 @@ export default function ViewJob() {
         subtitle="Job details and applications"
         links={[{ name: "Jobs", url: "/dashboard/jobs" }, { name: "View job" }]}
       />
-      {loading && <div>Loading...</div>}
-      {job && !loading && (
-        <Container.Row>
-          <JobDetail job={job} />
-          <ApplicationsBox job={job} />
-        </Container.Row>
+      {loading ? (
+        <ContentLoader />
+      ) : (
+        <>
+          {job && (
+            <Container.Row>
+              <JobDetail job={job} />
+              <ApplicationsBox job={job} />
+            </Container.Row>
+          )}
+        </>
       )}
     </ViewJobBox>
   );
