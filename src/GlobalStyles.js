@@ -301,93 +301,6 @@ img{
   z-index: 8;
 }
 
-// Table box
-.table-box{
-  ${flex("center")}
-  flex-direction: column;
-
-  .table-container{
-    overflow-x: auto;
-    display: grid;
-    width: 100%;
-    max-width: 100%;
-    grid-template-columns: repeat(1, minmax(0,1fr));
-    .table{
-    table-layout: auto;
-    border-spacing: 0;
-    border-collapse: collapse;
-    min-width: 100%;
-    width: max-content;
-    thead{
-      letter-spacing: 0px;
-      line-height: 56px;
-      background-color: #f7f7f7;
-      color: var(--color-grey-2);
-      th{
-        text-transform: uppercase;
-        font-weight: 500;
-        font-size: 12px;
-      }
-    }
-    tbody{
-      background-color: var(--color-white-1);
-      tr{
-        cursor: pointer;
-        &:hover{
-          td{ 
-            background-color: #fcfcfc; 
-          }
-          
-        }
-        &:not(:last-child){
-        border-bottom: 1px solid #e5e7eb;
-        }
-        td{
-          padding: 8px 16px;
-        }
-      }
-    }
-    tr{
-      width: 100%;
-      .sticky{
-        position: sticky;
-        right: 0;
-        padding: 0px;
-        min-width: 64px;
-        width: 64px;
-        overflow-y: clip;
-        height: 100%;
-        & > * {
-          height: 100%;
-          box-shadow: -2px 0 10px 0 #e5e7eb;
-          min-width: 64px;
-          ${flex("center", "center")}
-        }
-      }
-
-      td, th{
-        text-align: left;
-        white-space: nowrap;
-      }
-
-      td{
-        &.sticky{
-          background-color: var(--color-white-1);
-                  height: 60px;
-        }
-      }
-
-    th{
-      padding: 0px 16px;
-      &.sticky{
-         background-color: #f7f7f7;
-         height: 56px;
-      }
-    }
-  }
-}
-  }
-}
 
 // Tabs
 .tabs{
@@ -556,7 +469,7 @@ img{
         max-width: 160px;
         &__input {
           padding-left: 36px;
-          padding-right: 16px;
+          padding-right: 12px;
           width: 100%;
           background-color: var(--color-white-1);
           border-radius: 4px;
@@ -593,6 +506,7 @@ img{
         font-size: 22px;
         height: 100%;
         width: 100%;
+        letter-spacing: 0px;
       }
     }
 

@@ -6,11 +6,16 @@ const UserContext = createContext(undefined);
 export default function UserContextProvider({ children }) {
   // User state
   const [user, setUser] = useState(null);
+  // Is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <UserContext.Provider
       value={{
         user,
         setUser,
+        isLoggedIn,
+        setIsLoggedIn,
       }}
     >
       {children}

@@ -1,9 +1,9 @@
+import Logo from "../components/Logo";
 import styled, { css } from "styled-components";
+import Container from "../components/Container";
+import { BsXLg } from "react-icons/bs";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
-import Container from "../components/Container";
-import Logo from "../components/Logo";
-import { BsXLg } from "react-icons/bs";
 import { useUserContext } from "../context/UserContext";
 
 const LayoutBox = styled.main`
@@ -108,17 +108,20 @@ export default function AltLayout() {
   // Hooks
   const navigate = useNavigate();
   const location = useLocation();
+
   return (
     <LayoutBox>
-      <Container mw="1400px">
-        <div className="header">
-          <Logo url={location.pathname} />
-          <button onClick={() => navigate(-1)} className="close-page">
-            <BsXLg size={18} />
-          </button>
-        </div>
-        {user && <Outlet />}
-      </Container>
+      {user && (
+        <Container mw="1400px">
+          <div className="header">
+            <Logo url={location.pathname} />
+            <button onClick={() => navigate(-1)} className="close-page">
+              <BsXLg size={18} />
+            </button>
+          </div>
+          <Outlet />
+        </Container>
+      )}
     </LayoutBox>
   );
 }

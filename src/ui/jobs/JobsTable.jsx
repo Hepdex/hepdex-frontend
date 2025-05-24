@@ -5,6 +5,7 @@ import Filter from "../../components/Filter";
 import Button from "../../components/Button";
 import NoResultsTable from "../../components/NoResultsTable";
 import TableLoader from "../../components/TableLoader";
+import TableBox from "../../components/TableBox";
 import { BsChevronLeft, BsChevronRight, BsSearch } from "react-icons/bs";
 import { Select } from "../../components/Form";
 import { useJobsContext } from "../../pages/Jobs";
@@ -12,38 +13,12 @@ import { capitalizeFirst, formatDate } from "../../utils/helpers";
 import { useSearchParams } from "react-router-dom";
 import { flex } from "../../GlobalStyles";
 
+// Jobs table
 const Table = styled.table`
   tbody {
     td {
       &::first-letter {
         text-transform: uppercase;
-      }
-      // Job title
-      .job-title {
-        ${flex("center")}
-        flex-direction: column;
-        &__name {
-          font-weight: 500;
-        }
-        &__details {
-          font-size: 14px;
-          line-height: 20px;
-          color: var(--color-grey-2);
-          ${flex(undefined, "center")}
-          gap: 8px;
-          li {
-            ${flex(undefined, "center")}
-            gap: 4px;
-            &:not(:first-child):before {
-              content: "";
-              display: block;
-              width: 4px;
-              height: 4px;
-              border-radius: 50%;
-              background-color: var(--color-grey-2);
-            }
-          }
-        }
       }
       // Job status
       .status {
@@ -86,7 +61,7 @@ export default function JobsTable() {
     ...new Set(jobs?.map((job) => job.department.toLowerCase()) ?? []),
   ];
   return (
-    <div className="table-box">
+    <TableBox>
       <div className="search-filter">
         <div className="search-box">
           <input
@@ -141,9 +116,9 @@ export default function JobsTable() {
               {currentData.map((item, index) => (
                 <tr key={index}>
                   <td>
-                    <div className="job-title">
-                      <p className="job-title__name">{item.jobTitle}</p>
-                      <ul className="job-title__details">
+                    <div className="cell-box">
+                      <p className="cell-box__name">{item.jobTitle}</p>
+                      <ul className="cell-box__details">
                         <li>{capitalizeFirst(item.country)}</li>
                         <li>{capitalizeFirst(item.jobType)}</li>
                       </ul>
@@ -166,7 +141,7 @@ export default function JobsTable() {
                     jobID={item._id}
                     index={index}
                     active={item.active}
-                    currentDataLength={currentData.length}
+                    currentDataLength={dataNum}
                   />
                 </tr>
               ))}
@@ -174,9 +149,9 @@ export default function JobsTable() {
           )}
         </Table>
       </div>
-      {currentData.length === 0 && !loading && <NoResultsTable />}
+      {dataNum === 0 && !loading && <NoResultsTable />}
       <div className="pagination">
-        {!loading && currentData.length > 0 && (
+        {!loading && dataNum > 0 && (
           <>
             <div className="pagination-info">
               Showing
@@ -205,6 +180,6 @@ export default function JobsTable() {
           </>
         )}
       </div>
-    </div>
+    </TableBox>
   );
 }

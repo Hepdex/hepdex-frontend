@@ -16,6 +16,11 @@ import { useUserContext } from "../context/UserContext";
 // Employer menu
 const employerMenu = [
   {
+    text: "Dashboard",
+    icon: <BsPieChartFill />,
+    link: "/dashboard/home",
+  },
+  {
     text: "Jobs",
     icon: <BsBriefcaseFill />,
     link: "/dashboard/jobs",
@@ -23,7 +28,7 @@ const employerMenu = [
   {
     text: "Sourcing",
     icon: <BsShareFill />,
-    link: "/dashboard/talent",
+    link: "/dashboard/browse-talent",
   },
   {
     text: "Company",
@@ -35,7 +40,7 @@ const employerMenu = [
 // Candidate menu
 const candidateMenu = [
   {
-    text: "Jobs",
+    text: "Find jobs",
     icon: <BsBriefcaseFill />,
     link: "/dashboard/browse-jobs",
   },
@@ -166,12 +171,6 @@ export default function DashboardSideBar() {
       <Dropdown close={close} btnId="side-nav__btn" menuId="dashboard-sidebar">
         <aside id="dashboard-sidebar">
           <ul className="sidebar-nav">
-            <li>
-              <NavLink to="/dashboard/home" onClick={close}>
-                <BsPieChartFill />
-                <span className="link-text">Dashboard</span>
-              </NavLink>
-            </li>
             {user.role === "employer" &&
               employerMenu.map((item, index) => (
                 <li key={index}>

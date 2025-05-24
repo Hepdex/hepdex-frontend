@@ -62,24 +62,6 @@ const JobsBox = styled.div`
         }
       }
     }
-    // Search filter
-    .search-filter {
-      border-top-right-radius: 8px;
-      border-top-left-radius: 8px;
-      gap: 12px;
-      background-color: var(--color-white-1);
-      ${flex(undefined, "center")}
-      padding: 12px 16px;
-      flex-wrap: wrap;
-      & > * {
-        ${mq(
-          "360px",
-          css`
-            width: auto;
-          `
-        )}
-      }
-    }
   }
 `;
 
@@ -123,7 +105,7 @@ export default function Jobs() {
                 }`}
                 onClick={() => handleSetParams("active", "")}
               >
-                All jobs {jobs?.jobs.length ? `(${jobs.jobs.length})` : ""}
+                All jobs {loading ? "" : `(${jobs?.jobs.length ?? 0})`}
               </Button>
             </li>
             <li className="status-bar__item">
@@ -140,9 +122,11 @@ export default function Jobs() {
               >
                 <BsCheckCircle size={16} />
                 Open
-                {jobs?.jobs.length
-                  ? ` (${jobs.jobs.filter((item) => item.active).length})`
-                  : ""}
+                {loading
+                  ? ""
+                  : ` (${
+                      jobs?.jobs.filter((item) => item.active).length ?? 0
+                    })`}
               </Button>
             </li>
             <li className="status-bar__item">
@@ -156,9 +140,11 @@ export default function Jobs() {
               >
                 <BsBox size={16} />
                 Closed
-                {jobs?.jobs.length
-                  ? ` (${jobs.jobs.filter((item) => !item.active).length})`
-                  : ""}
+                {loading
+                  ? ""
+                  : ` (${
+                      jobs?.jobs.filter((item) => !item.active).length ?? 0
+                    })`}
               </Button>
             </li>
             <li className="status-bar__item" id="add-job">

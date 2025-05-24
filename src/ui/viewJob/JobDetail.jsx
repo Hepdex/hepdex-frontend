@@ -34,10 +34,6 @@ const JobDetailBox = styled.div`
         color: var(--color-white-1);
       }
     }
-    // Post date
-    .post-date {
-      color: var(--color-grey-2);
-    }
   }
   // Job details
   .job-details {
@@ -68,9 +64,6 @@ const JobDetailBox = styled.div`
     &__more {
       padding-left: 0px !important;
       margin-top: 24px;
-      li:last-child {
-        border-bottom: none;
-      }
     }
   }
 `;

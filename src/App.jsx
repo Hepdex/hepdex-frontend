@@ -6,28 +6,29 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Requirements from "./pages/Requirements";
 import DashboardLayout from "./layouts/DashboardLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import AddJob from "./pages/AddJob";
 import Jobs from "./pages/Jobs";
 import Signin from "./pages/Signin";
 import ForgotPassword from "./pages/Forgotpassword";
-import useQuery from "./hooks/useQuery";
 import AltLayout from "./layouts/AltLayout";
 import EditJob from "./pages/EditJob";
 import EditCompany from "./pages/EditCompany";
 import Company from "./pages/Company";
+import ViewJob from "./pages/ViewJob";
+import Sourcing from "./pages/Sourcing";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUser } from "./lib/apiUser";
 import { useUserContext } from "./context/UserContext";
 import { ToastContainer } from "react-toastify";
-import ViewJob from "./pages/ViewJob";
+
 export default function App() {
   const location = useLocation();
-  const [user, pending] = useQuery(fetchUser);
   const [loading, setLoading] = useState(true);
-  const { setUser } = useUserContext();
+  const { setUser, setIsLoggedIn } = useUserContext();
   // Set animation library
   useEffect(() => {
     AOS.init({
@@ -43,14 +44,25 @@ export default function App() {
   }, [location.pathname, loading]);
   // Fetch user
   useEffect(() => {
-    // Set user state
-    if (user) setUser(user.user);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, [user, setUser]);
-  if (pending || loading) return <div>Loading...</div>;
+    // Send request
+    (async () => {
+      try {
+        // Set loading state
+        setLoading(true);
+        const response = await fetchUser();
+        // Set user state
+        if (response?.user) {
+          setUser(response.user);
+          setIsLoggedIn(true);
+        }
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [setIsLoggedIn, setUser]);
+  if (loading) return <div></div>;
   return (
     <div>
       <GlobalStyles />
@@ -62,15 +74,29 @@ export default function App() {
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
         </Route>
-        <Route element={<DashboardLayout />} path="dashboard">
+        <Route
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+          path="dashboard"
+        >
           <Route index element={<Navigate replace to="home" />} />
           <Route path="jobs" element={<Jobs />} />
           <Route path="home" element={<Dashboard />} />
           <Route path="settings" element={<Settings />} />
           <Route path="company-bio" element={<Company />} />
           <Route path="jobs/:jobID" element={<ViewJob />} />
+          <Route path="browse-talent" element={<Sourcing />} />
         </Route>
-        <Route element={<AltLayout />}>
+        <Route
+          element={
+            <ProtectedRoute>
+              <AltLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route element={<AddJob />} path="post-a-job" />
           <Route element={<EditJob />} path="edit-job/:jobID" />
           <Route element={<EditCompany />} path="edit-company" />

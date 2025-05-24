@@ -11,13 +11,13 @@ export default function DashboardLayout() {
   return (
     <DashboardContextProvider>
       {user && (
-        <div>
+        <>
           <DashboardSideBar />
           <DashboardHeader />
           <DashboardContent>
             <Outlet />
           </DashboardContent>
-        </div>
+        </>
       )}
     </DashboardContextProvider>
   );

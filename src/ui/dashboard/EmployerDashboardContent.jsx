@@ -1,10 +1,13 @@
 import Container from "../../components/Container";
 import DashboardCard from "./DashboardCard";
+import AddJob from "../../assets/icons/add-job.svg?react";
+import SearchTalent from "../../assets/icons/search-talent.svg?react";
+import SendRequirement from "../../assets/icons/send-requirement.svg?react";
 
 // Employer cards
 const employerCards = [
   {
-    icon: "add-job.svg",
+    icon: <AddJob />,
     title: "Post a Job",
     text: "Designed to make hiring effortless",
     features: [
@@ -16,7 +19,7 @@ const employerCards = [
     url: "/post-a-job",
   },
   {
-    icon: "search-talent.svg",
+    icon: <SearchTalent />,
     title: "Find Remote Talent",
     text: "Access top professionals worldwide",
     features: [
@@ -25,10 +28,10 @@ const employerCards = [
       "Streamlined onboarding support",
     ],
     btnText: "Find remote talent",
-    url: "/dashboard/talent",
+    url: "/dashboard/browse-talent",
   },
   {
-    icon: "send-requirement.svg",
+    icon: <SendRequirement />,
     title: "Submit Requirements",
     text: "Let's help you build your team",
     features: [
