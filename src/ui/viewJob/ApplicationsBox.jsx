@@ -1,19 +1,26 @@
 import Container from "../../components/Container";
 import Button from "../../components/Button";
-import styled, { css } from "styled-components";
 import usePaginate from "../../hooks/usePaginate";
-import Spinner from "../../components/Spinner";
-import useMutate from "../../hooks/useMutate";
-import { BsChevronLeft, BsChevronRight, BsSearch } from "react-icons/bs";
+import styled, { css } from "styled-components";
+import {
+  BsChevronLeft,
+  BsChevronRight,
+  BsPersonFill,
+  BsSearch,
+} from "react-icons/bs";
 import { flex, mq } from "../../GlobalStyles";
 import { Link, useSearchParams } from "react-router-dom";
-import { formatDate, notify } from "../../utils/helpers";
+import { formatDate } from "../../utils/helpers";
+
+import ViewResume from "../../components/ViewResume";
 import { getResume } from "../../lib/apiResume";
+import useMutate from "../../hooks/useMutate";
 
 // Applications
 const Applications = styled.div`
   &#applications-card {
     ${flex()}
+    min-height: 300px;
     flex-direction: column;
     padding-bottom: 0px;
     .pagination {
@@ -50,6 +57,7 @@ const Applications = styled.div`
               .no-image {
                 font-size: 18px;
                 background-color: #f3f4f6;
+                color: #757575;
               }
             }
             &__profile {
@@ -94,13 +102,15 @@ const Applications = styled.div`
       }
       p {
         color: var(--color-grey-2);
-        margin-bottom: 12px;
+        margin-bottom: 16px;
       }
     }
   }
 `;
 
 export default function ApplicationsBox({ job }) {
+  // Get resume
+  const [fetchResume, loading] = useMutate(getResume);
   // Search params
   const [searchParams] = useSearchParams();
   // Applicants
@@ -108,28 +118,10 @@ export default function ApplicationsBox({ job }) {
     ...item,
     fullName: `${item.firstName} ${item.lastName}`,
   }));
-  // Get resume
-  const [fetchResume, loading] = useMutate(getResume);
 
   // Use paginate
   const { dataNum, pageStart, pageEnd, currentData, next, previous, search } =
     usePaginate(4, applicants, "fullName");
-
-  // Handle get resume
-  async function handleGetResume(resumePath) {
-    // Check for path
-    if (!resumePath) return;
-    // Send request
-    const response = await fetchResume(undefined, `?resumePath=${resumePath}`);
-    // Check for resume url
-    if (response.signedUrl) {
-      // Navigate to url
-      window.open(response.signedUrl, "_blank", "noopener,noreferrer");
-    } else {
-      // Display error message
-      notify(response, "error");
-    }
-  }
 
   return (
     <Container.Col breakPoints={[{ name: "1200px", width: 60 }]}>
@@ -150,7 +142,7 @@ export default function ApplicationsBox({ job }) {
           <div className="no-candidates">
             <h3 className="heading-sm">No candidates found</h3>
             <p>When a candidate applies, they'll appear here.</p>
-            <Button size="sm" as={Link} to="/dashboard/talent">
+            <Button size="sm" as={Link} to="/dashboard/browse-talent">
               Source candidates
             </Button>
           </div>
@@ -163,10 +155,9 @@ export default function ApplicationsBox({ job }) {
                     <div className="candidate-info">
                       <div className="candidate-info__profile">
                         <div className="avatar-box__image">
-                          <span className="no-image">{`${item.firstName.slice(
-                            0,
-                            1
-                          )}${item.lastName.slice(0, 1)}`}</span>
+                          <span className="no-image">
+                            <BsPersonFill size={28} />
+                          </span>
                         </div>
                         <div className="candidate-info__profile--details">
                           <h3 className="name">{item.fullName}</h3>
@@ -176,16 +167,11 @@ export default function ApplicationsBox({ job }) {
                       <p className="applied">
                         Applied {formatDate(item.createdAt)}
                       </p>
-                      <Button
-                        size="xs"
-                        $loading={loading}
-                        onClick={() => {
-                          handleGetResume(item.resumePath);
-                        }}
-                      >
-                        <span>View</span>
-                        {loading && <Spinner />}
-                      </Button>
+                      <ViewResume
+                        resumePath={item.resumePath}
+                        fetchResume={fetchResume}
+                        loading={loading}
+                      />
                     </div>
                   </li>
                 ))}

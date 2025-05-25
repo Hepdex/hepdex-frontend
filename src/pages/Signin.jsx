@@ -18,7 +18,7 @@ const Signin = () => {
   useDocumentTitle("Hepdex - Login");
   const navigate = useNavigate();
   const [userLogin, loading] = useMutate(login);
-  const { setUser } = useUserContext();
+  const { setUser, setIsLoggedIn } = useUserContext();
 
   // handle user signin form
   const signInHandler = async (e) => {
@@ -38,7 +38,12 @@ const Signin = () => {
       const response = await userLogin(data);
       if (response?.user) {
         setUser(response.user);
-        navigate("/dashboard/home");
+        setIsLoggedIn(true);
+        // Redirect employer
+        if (response.user.role === "employer") navigate("/dashboard/home");
+        // Redirect candidate
+        if (response.user.role === "candidate")
+          navigate("/dashboard/browse-jobs");
       } else {
         Toastify(response);
       }

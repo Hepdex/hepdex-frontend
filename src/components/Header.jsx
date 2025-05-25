@@ -218,12 +218,21 @@ export default function Header() {
 // Auth menu
 const AuthMenu = ({ className, close }) => {
   // Get user context
-  const { user } = useUserContext();
+  const { user, isLoggedIn } = useUserContext();
   return (
     <ul className={className}>
-      {user ? (
+      {user && isLoggedIn ? (
         <li className="account-item">
-          <Button as={Link} to="/dashboard/home">
+          <Button
+            as={Link}
+            to={`${
+              user.role === "employer"
+                ? "/dashboard/home"
+                : user.role === "candidate"
+                ? "/dashboard/browse-jobs"
+                : ""
+            }`}
+          >
             My Account
           </Button>
         </li>
@@ -235,7 +244,7 @@ const AuthMenu = ({ className, close }) => {
             </Link>
           </li>
           <li>
-            <Button as={Link} to="/dashboard/home" onClick={close}>
+            <Button as={Link} to="/signup" onClick={close}>
               Sign Up
             </Button>
           </li>

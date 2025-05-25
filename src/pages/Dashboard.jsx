@@ -1,6 +1,5 @@
 import DashboardTitle from "../components/DashboardTitle";
 import EmployerDashboardContent from "../ui/dashboard/EmployerDashboardContent";
-import CandidateDashboardContent from "../ui/dashboard/CandidateDashboardContent";
 import { useUserContext } from "../context/UserContext";
 import { capitalizeFirst } from "../utils/helpers";
 
@@ -18,7 +17,6 @@ export default function Dashboard() {
           links={[{ name: "Dashboard" }]}
         />
         {user.role === "employer" && <EmployerDashboardContent />}
-        {user.role === "candidate" && <CandidateDashboardContent />}
       </div>
     </div>
   );
