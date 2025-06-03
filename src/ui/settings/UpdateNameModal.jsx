@@ -1,58 +1,66 @@
 import Button from "../../components/Button";
 import useMutate from "../../hooks/useMutate";
 import Spinner from "../../components/Spinner";
+import IconTitle from "../../components/IconTitle";
 import Modal, { useModalContext } from "../../components/Modal";
 import { Form, FormGroup, Input } from "../../components/Form";
 import { BsPerson } from "react-icons/bs";
 import { useUserContext } from "../../context/UserContext";
-import { updateProfile } from "../../lib/apiUser";
+import { updateProfile } from "../../services/apiUser";
 import { notify } from "../../utils/helpers";
 
 export default function UpdateNameModal() {
   // User context
   const { user, setUser } = useUserContext();
+
   // Modal context
   const { close } = useModalContext();
+
   // Update profile
   const [updateUser, loading] = useMutate(updateProfile(user.role));
+
   // Update name
   async function updateName(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form data
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
-    // Update name
+    const data = Object.fromEntries(new FormData(e.target));
+
+    // Send request
     const response = await updateUser(data);
+
+    // Check response
     if (response === 200) {
       // Close modal
       close();
-      // Update state
+
+      // Update user state
       setUser((user) => ({
         ...user,
         firstName: data.firstName,
         lastName: data.lastName,
       }));
-      // Success message
+
+      // Success
       notify("Name updated successfully", "success");
     } else {
-      // Error message
+      // Error
       notify(response, "error");
     }
   }
   return (
     <Modal.Window
       name="name"
-      title={
-        <>
-          <span className="icon">
-            <BsPerson />
-          </span>
-          Change name
-        </>
-      }
+      title={<IconTitle title="Change name" icon={<BsPerson size={18} />} />}
       confirm={
-        <Button size="sm" form="update-name" type="submit" $loading={loading}>
+        <Button
+          size="sm"
+          form="update-name"
+          type="submit"
+          $loading={loading}
+          disabled={loading}
+        >
           <span>Save new name</span>
           {loading && <Spinner />}
         </Button>

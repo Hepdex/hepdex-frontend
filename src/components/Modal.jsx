@@ -1,9 +1,6 @@
 import Button from "./Button";
 import styled, { css } from "styled-components";
-import { useState } from "react";
-import { cloneElement } from "react";
-import { useContext } from "react";
-import { createContext } from "react";
+import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { BsXLg } from "react-icons/bs";
 import { flex, mq } from "../GlobalStyles";
@@ -14,18 +11,24 @@ const ModalContext = createContext();
 // Use context
 export const useModalContext = () => {
   const context = useContext(ModalContext);
+
   if (context === undefined)
     throw new Error("ModalContext was used outside provider");
+
   return context;
 };
 
 // Modal
 function Modal({ children }) {
+  // Active state
   const [active, setActive] = useState(null);
-  // Close
+
+  // Close modal
   const close = () => setActive(null);
-  // Open
+
+  // Open modal
   const open = setActive;
+
   return (
     <ModalContext.Provider value={{ active, close, open, setActive }}>
       {children}
@@ -35,7 +38,10 @@ function Modal({ children }) {
 
 // Button
 function Open({ opens, children }) {
+  // Get context
   const { open } = useModalContext();
+
+  // Clone child with onClick event
   return cloneElement(children, {
     onClick: (e) => {
       open(opens);
@@ -44,8 +50,8 @@ function Open({ opens, children }) {
   });
 }
 
-// Modal box
-const ModalBox = styled.div`
+// Window styles
+const StyledWindow = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -54,27 +60,30 @@ const ModalBox = styled.div`
   padding: 0 16px;
   width: 100%;
   max-width: 570px;
+
   .modal {
     background-color: var(--color-white-1);
     border-radius: 8px;
     overflow: hidden;
-    // Header
-    &-header {
+
+    &--header {
       padding: 20px;
       ${flex("space-between", "center")}
       border-bottom: 1px solid #e5e7eb;
-      // Close
-      .close-btn {
+
+      // Close button
+      &__close {
         height: 32px;
         ${flex("center", "center")}
         background-color: transparent;
+
         svg {
           fill: var(--color-grey-2);
         }
       }
     }
-    // Body
-    &-body {
+
+    &--body {
       padding: 28px 20px;
       ${mq(
         "sm",
@@ -83,33 +92,40 @@ const ModalBox = styled.div`
         `
       )}
     }
-    // Footer
-    &-footer {
-      flex-wrap: wrap;
+
+    &--footer {
       ${flex("center", "center")}
+      flex-wrap: wrap;
       gap: 16px;
       padding: 20px;
       background-color: var(--color-grey-1);
     }
-    // Confirm
+
+    // Confirm modal
     &.modal-confirm {
       text-align: center;
+
       .modal {
-        &-header {
+        &--header {
           border-bottom: none;
+          justify-content: end;
         }
-        &-body {
+
+        &--body {
           padding-top: 0px;
         }
-        &-footer {
+
+        &--footer {
           background-color: var(--color-white-1);
           padding: 0px 20px 40px 20px;
         }
       }
+
       .confirm-content {
         ${flex("center")}
         flex-direction: column;
-        gap: 16px;
+        gap: 12px;
+
         p {
           color: var(--color-grey-2);
           max-width: 400px;
@@ -123,22 +139,25 @@ const ModalBox = styled.div`
 
 // Window
 function Window({ name, children, title, confirm, alt = false }) {
+  // Get context
   const { active, close } = useModalContext();
+
+  // Check if window is active
   if (name !== active) return null;
+
   return createPortal(
     <>
       <div className="overlay" onClick={close} />
-      <ModalBox>
+      <StyledWindow>
         <div className={`modal ${alt ? "modal-confirm" : ""}`}>
-          <div className="modal-header">
-            <h3 className="modal-header__title icon-title">{title}</h3>
-            <button onClick={close} className="close-btn">
+          <div className="modal--header">
+            {title && title}
+            <button onClick={close} className="modal--header__close">
               <BsXLg size={16} />
             </button>
           </div>
-
-          <div className="modal-body">{children}</div>
-          <div className="modal-footer">
+          <div className="modal--body">{children}</div>
+          <div className="modal--footer">
             <Button
               size="sm"
               color="secondary"
@@ -150,7 +169,7 @@ function Window({ name, children, title, confirm, alt = false }) {
             {confirm && confirm}
           </div>
         </div>
-      </ModalBox>
+      </StyledWindow>
     </>,
     document.body
   );

@@ -71,12 +71,10 @@ const sizes = {
     min-height: 40px;
     max-height: 40px;
     min-width: 88px;
-    border-radius: 4px;
   `,
   // xs
   xs: css`
     font-size: 15px;
-    border-radius: 4px;
     padding: 0px 16px;
     line-height: 20px;
     min-height: 32px;

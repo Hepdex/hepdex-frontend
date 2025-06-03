@@ -17,7 +17,7 @@ import {
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { flex } from "../../GlobalStyles";
-import { updateJobStatus } from "../../lib/apiJobs";
+import { updateJobStatus } from "../../services/apiJobs";
 import { notify } from "../../utils/helpers";
 import { useJobsContext } from "../../pages/Jobs";
 
@@ -141,7 +141,9 @@ export default function Actions({ jobID, index, active, currentDataLength }) {
           <button
             className="sticky-btn"
             ref={buttonRef}
-            onClick={() => setOpen((s) => !s)}
+            onClick={() => {
+              setOpen((s) => !s);
+            }}
           >
             <BsThreeDots />
           </button>

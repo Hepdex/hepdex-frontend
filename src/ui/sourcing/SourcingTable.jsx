@@ -1,13 +1,11 @@
-import useMutate from "../../hooks/useMutate";
 import usePaginate from "../../hooks/usePaginate";
 import TableLoader from "../../components/TableLoader";
-import ViewResume from "../../components/ViewResume";
 import NoResultsTable from "../../components/NoResultsTable";
 import TableBox from "../../components/TableBox";
 import Button from "../../components/Button";
 import Filter from "../../components/Filter";
+import EyeIcon from "../../assets/icons/eye.svg?react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getResume } from "../../lib/apiResume";
 import { useState } from "react";
 import {
   BsArrowRight,
@@ -16,44 +14,37 @@ import {
   BsX,
 } from "react-icons/bs";
 import { Form, FormGroup, Input, Select } from "../../components/Form";
-import { capitalizeFirst } from "../../utils/helpers";
+import { capitalizeFirst, formatDate } from "../../utils/helpers";
+import { countries } from "../../data/countries";
 
-export default function SourcingTable({
-  search,
-  setSearch,
-  loading,
-  candidates,
-  setCandidates,
-}) {
-  // Get resume
-  const [fetchResume, pending] = useMutate(getResume);
+export default function SourcingTable({ loading, candidates, setCandidates }) {
   // Search params
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   // Navigate hook
   const navigate = useNavigate();
+  // Search
+  const search = searchParams.get("jobTitle") ?? "";
   // Search input
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(search || "");
   // Clear params and candidates
   const clearParams = () => {
     setCandidates(undefined);
     navigate(window.location.pathname);
   };
+  // Set params
+  const setParams = (value) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("jobTitle", value);
+    setSearchParams(params);
+  };
 
-  // Country options
-  const countries = [
-    ...new Set(
-      candidates?.map((candidate) => candidate.country.toLowerCase()) ?? []
-    ),
-  ];
   // Job type options
-  const jobTypes = [
-    ...new Set(
-      candidates?.map((candidate) => candidate.jobType.toLowerCase()) ?? []
-    ),
-  ];
+  const jobTypes = ["full-time", "part-time", "contractor"];
+
   // Use paginate
   const { pageEnd, pageStart, next, previous, currentData, dataNum } =
     usePaginate(10, candidates);
+
   // Handle form search
   function handleFormSearch(e) {
     // Prevent default submit
@@ -64,23 +55,21 @@ export default function SourcingTable({
     if (search) {
       // Set input value
       setInputValue(search);
-      setSearch(search);
+      setParams(search);
     }
   }
   return (
     <TableBox>
       <div className="search-filter">
         <div className="search-talent">
-          <input
+          <Input
             type="text"
             placeholder="Search candidates"
             className="search-talent__input"
+            $sm={true}
             value={inputValue}
             onChange={(e) => {
-              if (e.target.value === "") {
-                setSearch("");
-                clearParams();
-              }
+              if (e.target.value === "") clearParams();
               setInputValue(e.target.value);
             }}
           />
@@ -88,7 +77,7 @@ export default function SourcingTable({
             size="sm"
             className="search-talent__btn"
             onClick={() => {
-              if (inputValue) setSearch(inputValue);
+              if (inputValue) setParams(inputValue);
             }}
           >
             <BsArrowRight size={20} />
@@ -99,7 +88,6 @@ export default function SourcingTable({
               onClick={() => {
                 setInputValue("");
                 clearParams();
-                setSearch("");
               }}
             >
               <BsX size={20} />
@@ -108,15 +96,23 @@ export default function SourcingTable({
         </div>
         {search && (
           <Filter id="sourcing-filter" fields={["country", "jobType"]}>
-            <Select name="country" defaultValue={searchParams.get("country")}>
+            <Select
+              name="country"
+              defaultValue={searchParams.get("country")}
+              alt={true}
+            >
               <option value="">Select country</option>
-              {countries.map((item, index) => (
-                <option value={item} key={index}>
-                  {capitalizeFirst(item)}
+              {countries.map((country, index) => (
+                <option key={index} value={country.name}>
+                  {`${country.flag} ${country.name}`}
                 </option>
               ))}
             </Select>
-            <Select name="jobType" defaultValue={searchParams.get("jobType")}>
+            <Select
+              name="jobType"
+              defaultValue={searchParams.get("jobType")}
+              alt={true}
+            >
               <option value="">Select job type</option>
               {jobTypes.map((item, index) => (
                 <option value={item} key={index}>
@@ -134,6 +130,7 @@ export default function SourcingTable({
               <th>Candidates</th>
               <th>Location</th>
               <th>Email</th>
+              <th>Join Date</th>
               <th className="sticky">
                 <div></div>
               </th>
@@ -142,13 +139,18 @@ export default function SourcingTable({
           {search && (
             <>
               {loading ? (
-                <TableLoader columnLength={4} />
+                <TableLoader columnLength={5} />
               ) : (
                 <>
                   {dataNum > 0 && (
                     <tbody>
                       {currentData.map((item, index) => (
-                        <tr key={index}>
+                        <tr
+                          key={index}
+                          onClick={() =>
+                            navigate(`/dashboard/candidates/${item._id}`)
+                          }
+                        >
                           <td>
                             <div className="cell-box">
                               <p className="cell-box__name">{`${item.firstName} ${item.lastName}`}</p>
@@ -160,13 +162,12 @@ export default function SourcingTable({
                           </td>
                           <td>{capitalizeFirst(item.country)}</td>
                           <td>{item.email}</td>
+                          <td>{formatDate(item.createdAt)}</td>
                           <td className="sticky">
                             <div>
-                              <ViewResume
-                                loading={pending}
-                                resumePath={item.resumePath}
-                                fetchResume={fetchResume}
-                              />
+                              <button className="sticky-btn">
+                                <EyeIcon width={20} height={20} />
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -192,7 +193,7 @@ export default function SourcingTable({
             <div className="no-search__box--formbox">
               <Form $gap={24} onSubmit={handleFormSearch}>
                 <FormGroup>
-                  <Input placeholder="Enter job title" name="search" />
+                  <Input placeholder="Search job title" name="search" />
                 </FormGroup>
                 <div>
                   <Button type="submit">Start search</Button>
@@ -202,7 +203,7 @@ export default function SourcingTable({
           </div>
         </div>
       )}
-      {search && !loading && candidates?.length === 0 && <NoResultsTable />}
+      {search && !loading && dataNum === 0 && <NoResultsTable />}
       <div className="pagination">
         {search && !loading && dataNum > 0 && (
           <>

@@ -1,24 +1,29 @@
 import Button from "../../components/Button";
 import useMutate from "../../hooks/useMutate";
 import Spinner from "../../components/Spinner";
+import IconTitle from "../../components/IconTitle";
 import Modal, { useModalContext } from "../../components/Modal";
 import VerifyOtp, { VerifyButton } from "./VerifyOtp";
 import { BsEnvelope } from "react-icons/bs";
-import { Form, FormGroup, Input } from "../../components/Form";
+import { Form, FormGroup, Input, Password } from "../../components/Form";
 import { useUserContext } from "../../context/UserContext";
 import { notify } from "../../utils/helpers";
-import { updateEmail, verifyUpdate } from "../../lib/apiUser";
+import { updateEmail, verifyUpdate } from "../../services/apiUser";
 import { useRef } from "react";
 
 export default function UpdateEmailModal() {
   // Email
   const email = useRef("");
+
   // User context
   const { setUser } = useUserContext();
+
   // Update email
   const [changeEmail, loading] = useMutate(updateEmail);
+
   // Verify Otp
   const [verify, pending] = useMutate(verifyUpdate);
+
   // Modal context
   const { close, active, setActive } = useModalContext();
 
@@ -26,20 +31,25 @@ export default function UpdateEmailModal() {
   async function handleChangeEmail(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form data
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
-    // Update email
+    const data = Object.fromEntries(new FormData(e.target));
+
+    // Send request
     const response = await changeEmail(data);
+
+    // Check response
     if (response === 200) {
       // Switch window
       setActive("verify-email");
+
       // Set email
       email.current = data.email;
-      // Display message
+
+      // Success
       notify("OTP sent successfully", "success");
     } else {
-      // Error message
+      // Error
       notify(response, "error");
     }
   }
@@ -48,24 +58,31 @@ export default function UpdateEmailModal() {
   async function handleVerifyOtp(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form data
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
-    // Verify otp
+    const data = Object.fromEntries(new FormData(e.target));
+
+    // Send request
     const response = await verify(data);
+
+    // Check response
     if (response === 200) {
       // Close modal
       close();
-      // Update state
+
+      // Update user state
       setUser((user) => ({
         ...user,
         email: email.current,
       }));
+
       // Reset email
       email.current = "";
-      // Success message
+
+      // Success
       notify("Email updated successfully", "success");
     } else {
+      // Error
       notify(response, "error");
     }
   }
@@ -73,23 +90,17 @@ export default function UpdateEmailModal() {
   return (
     <Modal.Window
       name={`${active === "verify-email" ? "verify-email" : "email"}`}
-      title={
-        <>
-          <span className="icon">
-            <BsEnvelope />
-          </span>
-          Change email
-        </>
-      }
+      title={<IconTitle icon={<BsEnvelope size={18} />} title="Change email" />}
       confirm={
         active === "verify-email" ? (
-          <VerifyButton loading={pending} />
+          <VerifyButton loading={pending} disabled={pending} />
         ) : (
           <Button
             size="sm"
             form="update-email"
             type="submit"
             $loading={loading}
+            disabled={loading}
           >
             <span>Save new email</span>
             {loading && <Spinner />}
@@ -104,14 +115,12 @@ export default function UpdateEmailModal() {
           <FormGroup label="New email">
             <Input placeholder="New email" type="text" name="email" required />
           </FormGroup>
-          <FormGroup label="Password">
-            <Input
-              placeholder="Password"
-              type="password"
-              name="password"
-              required
-            />
-          </FormGroup>
+          <Password
+            label="Password"
+            placeholder="Password"
+            name="password"
+            required={true}
+          />
         </Form>
       )}
     </Modal.Window>

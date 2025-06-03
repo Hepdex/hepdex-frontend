@@ -1,12 +1,14 @@
-import countryList from "react-select-country-list";
 import Button from "../components/Button";
-import ct from "countries-and-timezones";
 import ContentLoader from "../components/ContentLoader";
 import useMutate from "../hooks/useMutate";
 import useQuery from "../hooks/useQuery";
 import Spinner from "../components/Spinner";
-import { getJob, updateJob } from "../lib/apiJobs";
-import { useMemo, useState } from "react";
+import FormBox from "../components/FormBox";
+import DashboardBox from "../components/DashboardBox";
+import IconTitle from "../components/IconTitle";
+import { countries } from "../data/countries";
+import { getJob, updateJob } from "../services/apiJobs";
+import { useState } from "react";
 import { BsBriefcase, BsCoin, BsGeoAlt, BsInfoCircle } from "react-icons/bs";
 import {
   Form,
@@ -17,84 +19,102 @@ import {
   Textarea,
   Time,
 } from "../components/Form";
-import { currency_list } from "../data/currencies";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTimezomes, notify } from "../utils/helpers";
+import { currencyFlagList } from "../data/currencies";
+import { getDepartments } from "../services/apiDepartments";
 
 export default function EditJob() {
   const { jobID } = useParams();
+
   // Fetch job
   const [job, loading] = useQuery(getJob, `?jobID=${jobID}`);
+
+  // Fetch departments
+  const [data, pending] = useQuery(getDepartments);
+
   return (
-    <div className="form-box">
-      {loading ? (
-        <ContentLoader />
+    <>
+      {loading || pending ? (
+        <FormBox>
+          <ContentLoader />
+        </FormBox>
       ) : (
-        <>
-          <div className="form-box__content">
-            <h3 className="heading-md">Edit job</h3>
-            <p className="text-md">Update details about job.</p>
-          </div>
-          {job && <EditJobForm job={job.job} />}
-        </>
+        <FormBox title="Edit job" subtitle="Update details about job.">
+          {job && data?.departments && (
+            <EditJobForm job={job.job} departments={data.departments} />
+          )}
+        </FormBox>
       )}
-    </div>
+    </>
   );
 }
 
 // Edit job form
-function EditJobForm({ job }) {
+function EditJobForm({ job, departments }) {
   // Navigate hook
   const navigate = useNavigate();
-  // Country list
-  const options = useMemo(() => countryList().getData(), []);
+
   // Initial country
-  const initialCountry = options.find(
-    (country) => country.label.toLowerCase() === job.country.toLowerCase()
-  ).value;
+  const initialCountry = countries.find(
+    (country) => country.name.toLowerCase() === job.country.toLowerCase()
+  ).code;
+
   // Location state
   const [location, setLocation] = useState(initialCountry);
-  // Use mutate
+
+  // Edit job
   const [editJob, loading] = useMutate(updateJob);
+
   // Checked state
   const [checked, setChecked] = useState(job.paymentInterval);
+
   // Timezones
   const timezones = getTimezomes(location);
+
   // Handle update job
   async function handleUpdateJob(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form values
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
+    let data = Object.fromEntries(new FormData(e.target));
     data = {
       ...data,
-      country: ct.getCountry(data.country).name,
+      country: countries.find((item) => item.code === location).name,
       jobID: job._id,
     };
+
     if (!data.timeZone) data.timeZone = "";
-    // Update job
+
+    // Send request
     const response = await editJob(data);
-    // Show message
+
+    // Check response
     if (response === 200) {
+      // Success
       notify("Job updated successfully", "success");
+
       // Navigate to jobs page
       setTimeout(() => {
         navigate("/dashboard/jobs");
       }, 2000);
     } else {
+      // Error
       notify(response, "error");
     }
   }
   return (
     <Form $gap={32} onSubmit={handleUpdateJob}>
-      <div className="dashboard-box">
-        <h3 className="title icon-title">
-          <span className="icon">
-            <BsBriefcase size={18} />
-          </span>
-          Job details
-        </h3>
+      <DashboardBox
+        title={
+          <IconTitle
+            title="Job details"
+            icon={<BsBriefcase size={18} />}
+            className="title"
+          />
+        }
+      >
         <div className="form-content">
           <FormGroup label="Job title">
             <Input
@@ -114,23 +134,26 @@ function EditJobForm({ job }) {
             </Select>
           </FormGroup>
           <FormGroup label="Department">
-            <Input
-              placeholder="Department"
-              name="department"
-              type="text"
-              defaultValue={job.department}
-              required
-            />
+            <Select name="department" defaultValue={job.department} required>
+              <option value="">Select department</option>
+              {departments.map((option, index) => (
+                <option value={option.name} key={index}>
+                  {option.name}
+                </option>
+              ))}
+            </Select>
           </FormGroup>
         </div>
-      </div>
-      <div className="dashboard-box">
-        <h3 className="title icon-title">
-          <span className="icon">
-            <BsGeoAlt size={18} />
-          </span>
-          Location and working hours
-        </h3>
+      </DashboardBox>
+      <DashboardBox
+        title={
+          <IconTitle
+            title="Location and working hours"
+            icon={<BsGeoAlt size={18} />}
+            className="title"
+          />
+        }
+      >
         <div className="form-content">
           <FormGroup label="Location">
             <Select
@@ -140,9 +163,9 @@ function EditJobForm({ job }) {
               name="country"
             >
               <option value="">Select location</option>
-              {options.map((option, index) => (
-                <option key={index} value={option.value}>
-                  {option.label}
+              {countries.map((option, index) => (
+                <option key={index} value={option.code}>
+                  {`${option.flag} ${option.name}`}
                 </option>
               ))}
             </Select>
@@ -162,32 +185,26 @@ function EditJobForm({ job }) {
           <InputGroup>
             <FormGroup label="Start time">
               <Time
-                placeholder="Start time"
                 name="startTime"
                 required={true}
                 defaultTime={job.startTime}
-                defaultState={true}
               />
             </FormGroup>
             <FormGroup label="End time">
-              <Time
-                placeholder="End time"
-                name="endTime"
-                required={true}
-                defaultState={true}
-                defaultTime={job.endTime}
-              />
+              <Time name="endTime" required={true} defaultTime={job.endTime} />
             </FormGroup>
           </InputGroup>
         </div>
-      </div>
-      <div className="dashboard-box">
-        <h3 className="title icon-title">
-          <span className="icon">
-            <BsInfoCircle size={18} />
-          </span>
-          About the role
-        </h3>
+      </DashboardBox>
+      <DashboardBox
+        title={
+          <IconTitle
+            title="About the role"
+            icon={<BsInfoCircle size={18} />}
+            className="title"
+          />
+        }
+      >
         <div className="form-content">
           <p>
             Provide candidates with a clear understanding of the role, daily
@@ -203,17 +220,19 @@ function EditJobForm({ job }) {
             />
           </FormGroup>
         </div>
-      </div>
-      <div className="dashboard-box">
-        <h3 className="title icon-title">
-          <span className="icon">
-            <BsCoin size={18} />
-          </span>
-          Pay
-        </h3>
+      </DashboardBox>
+      <DashboardBox
+        title={
+          <IconTitle
+            className="title"
+            title="Pay"
+            icon={<BsCoin size={18} />}
+          />
+        }
+      >
         <div className="form-content">
           <div className="radio-group">
-            <div className="radio-box">
+            <div className="radio-group--box">
               <label>
                 <input
                   type="radio"
@@ -225,7 +244,7 @@ function EditJobForm({ job }) {
                 <span>Annually</span>
               </label>
             </div>
-            <div className="radio-box">
+            <div className="radio-group--box">
               <label>
                 <input
                   type="radio"
@@ -237,7 +256,7 @@ function EditJobForm({ job }) {
                 <span>Monthly</span>
               </label>
             </div>
-            <div className="radio-box">
+            <div className="radio-group--box">
               <label>
                 <input
                   type="radio"
@@ -250,7 +269,7 @@ function EditJobForm({ job }) {
               </label>
             </div>
           </div>
-          <div className="pay-details">
+          <div className="form-content--row__box">
             <FormGroup label="Minumum pay">
               <Input
                 type="number"
@@ -274,18 +293,18 @@ function EditJobForm({ job }) {
             <FormGroup label="Currency">
               <Select name="currency" defaultValue={job.currency}>
                 <option value="">Select currency</option>
-                {currency_list.map((currency, index) => (
-                  <option key={index} value={currency.code}>
-                    {currency.code} ({currency.name})
+                {currencyFlagList.map((currency, index) => (
+                  <option key={index} value={currency.currency}>
+                    {`${currency.flag} ${currency.currency}`}
                   </option>
                 ))}
               </Select>
             </FormGroup>
           </div>
         </div>
-      </div>
+      </DashboardBox>
       <div>
-        <Button type="submit" $loading={loading}>
+        <Button type="submit" $loading={loading} disabled={loading}>
           <span>Update Job</span>
           {loading && <Spinner />}
         </Button>

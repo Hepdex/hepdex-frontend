@@ -8,16 +8,14 @@ export default function Dashboard() {
   const { user } = useUserContext();
   return (
     <div>
-      <div>
-        <DashboardTitle
-          title={`Hello, ${capitalizeFirst(user.firstName)} ${capitalizeFirst(
-            user.lastName
-          )} 👋`}
-          subtitle="What would you like to do today?"
-          links={[{ name: "Dashboard" }]}
-        />
-        {user.role === "employer" && <EmployerDashboardContent />}
-      </div>
+      <DashboardTitle
+        title={`Hello, ${capitalizeFirst(user.firstName)} ${capitalizeFirst(
+          user.lastName
+        )} 👋`}
+        subtitle="What would you like to do today?"
+        links={[{ name: "Dashboard" }]}
+      />
+      {user.role === "employer" && <EmployerDashboardContent />}
     </div>
   );
 }

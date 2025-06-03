@@ -3,7 +3,7 @@ import useMutate from "../../hooks/useMutate";
 import useSetPageParam from "../../hooks/useSetPageParam";
 import Spinner from "../../components/Spinner";
 import Modal, { useModalContext } from "../../components/Modal";
-import { deleteJob as deleteJobApi } from "../../lib/apiJobs";
+import { deleteJob as deleteJobApi } from "../../services/apiJobs";
 import { notify } from "../../utils/helpers";
 import { useJobsContext } from "../../pages/Jobs";
 

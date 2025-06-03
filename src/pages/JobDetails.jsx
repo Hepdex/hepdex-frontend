@@ -2,18 +2,19 @@ import styled from "styled-components";
 import Container from "../components/Container";
 import DashboardTitle from "../components/DashboardTitle";
 import useQuery from "../hooks/useQuery";
-import ApplicationsBox from "../ui/viewJob/ApplicationsBox";
-import JobDetail from "../ui/viewJob/JobDetail";
-import { flex } from "../GlobalStyles";
-import { getJob } from "../lib/apiJobs";
-import { useParams } from "react-router-dom";
+import ApplicationsBox from "../ui/jobDetails/ApplicationsBox";
 import ContentLoader from "../components/ContentLoader";
+import JobInfo from "../components/JobInfo";
+import { flex } from "../GlobalStyles";
+import { getJob } from "../services/apiJobs";
+import { Link, useParams } from "react-router-dom";
+import Button from "../components/Button";
 
-const ViewJobBox = styled.div`
+const JobDetailsBox = styled.div`
   // Page card
   .page-card {
     background-color: var(--color-white-1);
-    padding: 28px 24px 32px 24px;
+    padding: 28px 24px;
     border-radius: 8px;
     // Title
     &__title {
@@ -31,18 +32,21 @@ const ViewJobBox = styled.div`
   }
 `;
 
-export default function ViewJob() {
+export default function JobDetails() {
   const { jobID } = useParams();
   // Fetch job
   const [data, loading] = useQuery(getJob, `?jobID=${jobID}`);
   // Job
   const job = data?.job;
   return (
-    <ViewJobBox>
+    <JobDetailsBox>
       <DashboardTitle
-        title="View job"
-        subtitle="Job details and applications"
-        links={[{ name: "Jobs", url: "/dashboard/jobs" }, { name: "View job" }]}
+        title="Job details"
+        subtitle="Job description and applications"
+        links={[
+          { name: "Jobs", url: "/dashboard/jobs" },
+          { name: "Job details" },
+        ]}
       />
       {loading ? (
         <ContentLoader />
@@ -50,12 +54,19 @@ export default function ViewJob() {
         <>
           {job && (
             <Container.Row>
-              <JobDetail job={job} />
+              <JobInfo
+                job={job}
+                editBtn={
+                  <Button size="sm" as={Link} to={`/edit-job/${job._id}`}>
+                    Edit job
+                  </Button>
+                }
+              />
               <ApplicationsBox job={job} />
             </Container.Row>
           )}
         </>
       )}
-    </ViewJobBox>
+    </JobDetailsBox>
   );
 }

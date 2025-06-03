@@ -47,12 +47,10 @@ export default function Service({ service, to = "" }) {
       ]}
     >
       <ServiceBox to={to}>
-        <div className="icon">
-          <img src={service.img} alt={service.name} />
-        </div>
+        <div className="icon">{service.icon()}</div>
         <h3 className="name">{service.name}</h3>
         <p className="text">{service.text}</p>
-        <span className="browse">Browse experts</span>
+        <span className="browse">Hire experts</span>
       </ServiceBox>
     </Container.Col>
   );

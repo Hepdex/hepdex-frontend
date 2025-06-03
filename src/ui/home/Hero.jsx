@@ -1,11 +1,13 @@
 import Container from "../../components/Container";
 import Button from "../../components/Button";
 import styled, { css } from "styled-components";
+import bgImage from "../../assets/heroBg.jpg";
 import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
 import { flex, mq } from "../../GlobalStyles";
+import { useUserContext } from "../../context/UserContext";
 
 // Hero box
 const HeroBox = styled.div`
@@ -18,18 +20,15 @@ const HeroBox = styled.div`
       height: auto;
     `
   )}
-  ${mq(
-    "lg",
-    css`
-      @media (min-height: 700px) and (max-height: 1000px) {
-        height: 100dvh;
-        background-image: url("heroBg.jpg");
-        background-position: 50% 50%;
-        background-repeat: no-repeat;
-        background-size: cover;
-      }
-    `
-  )}
+
+  @media (min-width: 992px) and (min-height: 700px) and (max-height: 1000px) {
+    height: 100dvh;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(${bgImage});
+  }
+
   // Content
   .content {
     min-height: 100%;
@@ -119,6 +118,8 @@ const HeroBox = styled.div`
 export default function Hero() {
   // Deleting state
   const [deleting, setDeleting] = useState(false);
+  // User context
+  const { user, isLoggedIn } = useUserContext();
   // Type effect
   const [typeEffect] = useTypewriter({
     words: ["virtual assistant", "developer", "designer", "digital marketer"],
@@ -152,11 +153,19 @@ export default function Hero() {
                 </li>
                 <li className="info-item">
                   <BsCheckCircle size={20} />
-                  <p className="text-md">Join the 20,000+ companies using us</p>
+                  <p className="text-md">Join the 500+ companies using us</p>
                 </li>
               </ul>
               <div className="btn-group">
-                <Button size="lg" as={Link} to="/post-a-project">
+                <Button
+                  size="lg"
+                  as={Link}
+                  to={`${
+                    user?.role === "employer" && isLoggedIn
+                      ? "/post-a-project"
+                      : "/login"
+                  }`}
+                >
                   Post a Job
                 </Button>
                 <Button color="outline" size="lg" as={Link} to="/find-work">

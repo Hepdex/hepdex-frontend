@@ -13,8 +13,10 @@ import { Link, useSearchParams } from "react-router-dom";
 import { formatDate } from "../../utils/helpers";
 
 import ViewResume from "../../components/ViewResume";
-import { getResume } from "../../lib/apiResume";
+import { getResume } from "../../services/apiResume";
 import useMutate from "../../hooks/useMutate";
+import AvatarImage from "../../components/AvatarImage";
+import { Input } from "../../components/Form";
 
 // Applications
 const Applications = styled.div`
@@ -27,10 +29,15 @@ const Applications = styled.div`
       padding: 18px 0;
     }
     .top {
-      // Search box
-      .search-box {
+      // Application box
+      .application-search {
+        position: relative;
         max-width: initial;
         width: 100%;
+
+        input {
+          width: 100%;
+        }
       }
     }
     .application-box {
@@ -51,15 +58,7 @@ const Applications = styled.div`
           .candidate-info {
             ${flex("space-between", "center")}
             gap: 24px;
-            .avatar-box__image {
-              width: 48px;
-              height: 48px;
-              .no-image {
-                font-size: 18px;
-                background-color: #f3f4f6;
-                color: #757575;
-              }
-            }
+
             &__profile {
               ${flex(undefined, "center")}
               gap: 16px;
@@ -111,8 +110,10 @@ const Applications = styled.div`
 export default function ApplicationsBox({ job }) {
   // Get resume
   const [fetchResume, loading] = useMutate(getResume);
+
   // Search params
   const [searchParams] = useSearchParams();
+
   // Applicants
   const applicants = job.applicants.map((item) => ({
     ...item,
@@ -128,14 +129,15 @@ export default function ApplicationsBox({ job }) {
       <Applications className="page-card " id="applications-card">
         <h3 className="page-card__title">Applications ({applicants.length})</h3>
         <div className="top">
-          <div className="search-box">
-            <BsSearch size={16} />
-            <input
+          <div className="application-search">
+            <Input
               placeholder="Search candidates"
               className="search-box__input"
               value={searchParams.get("fullName") ?? ""}
               onChange={(e) => search("fullName", e.target.value)}
+              $sm={true}
             />
+            <BsSearch size={15} fill="#757575" />
           </div>
         </div>
         {currentData.length === 0 ? (
@@ -154,11 +156,11 @@ export default function ApplicationsBox({ job }) {
                   <li className="application-list__item" key={index}>
                     <div className="candidate-info">
                       <div className="candidate-info__profile">
-                        <div className="avatar-box__image">
+                        <AvatarImage size={48} bgColor="#f3f4f6">
                           <span className="no-image">
-                            <BsPersonFill size={28} />
+                            <BsPersonFill size={28} fill="#757575" />
                           </span>
-                        </div>
+                        </AvatarImage>
                         <div className="candidate-info__profile--details">
                           <h3 className="name">{item.fullName}</h3>
                           <p className="email">{item.email}</p>

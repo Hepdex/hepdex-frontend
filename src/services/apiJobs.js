@@ -9,6 +9,9 @@ export const addJob = apiFetcher("add-job", "POST", "statusCode");
 // Get job
 export const getJob = apiFetcher("get-job", "GET", "data");
 
+// Get job candidate
+export const getJobCandidate = apiFetcher("get-job-candidate", "GET", "data");
+
 // Update job
 export const updateJob = apiFetcher("update-job", "PUT", "statusCode");
 

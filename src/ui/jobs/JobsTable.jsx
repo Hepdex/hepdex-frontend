@@ -6,40 +6,49 @@ import Button from "../../components/Button";
 import NoResultsTable from "../../components/NoResultsTable";
 import TableLoader from "../../components/TableLoader";
 import TableBox from "../../components/TableBox";
+import useQuery from "../../hooks/useQuery";
+import { getDepartments } from "../../services/apiDepartments";
 import { BsChevronLeft, BsChevronRight, BsSearch } from "react-icons/bs";
-import { Select } from "../../components/Form";
+import { Input, Select } from "../../components/Form";
 import { useJobsContext } from "../../pages/Jobs";
 import { capitalizeFirst, formatDate } from "../../utils/helpers";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { flex } from "../../GlobalStyles";
+import { countries } from "../../data/countries";
 
 // Jobs table
-const Table = styled.table`
-  tbody {
-    td {
-      &::first-letter {
-        text-transform: uppercase;
-      }
-      // Job status
-      .status {
-        ${flex(undefined, "center")}
-        column-gap: 8px;
-        &-icon {
-          min-width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          display: inline-block;
-          // Open
-          &.open {
-            background-color: #aee5c2;
-          }
-          // Closed
-          &.closed {
-            background-color: #999999;
+const StyledJobsTable = styled(TableBox)`
+  .table {
+    tbody {
+      td {
+        &::first-letter {
+          text-transform: uppercase;
+        }
+        // Job status
+        .status {
+          ${flex(undefined, "center")}
+          column-gap: 8px;
+          &-icon {
+            min-width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            // Open
+            &.open {
+              background-color: #aee5c2;
+            }
+            // Closed
+            &.closed {
+              background-color: #999999;
+            }
           }
         }
       }
     }
+  }
+
+  .job-search {
+    position: relative;
   }
 `;
 
@@ -48,55 +57,62 @@ export default function JobsTable() {
   const [searchParams] = useSearchParams();
   // Jobs context
   const { jobs, loading } = useJobsContext();
+  // Navigate hook
+  const navigate = useNavigate();
+  // Navigate to job page
+  const handleNavigate = (id) => {
+    navigate(`/dashboard/jobs/${id}`);
+  };
+  // Departments
+  const [data] = useQuery(getDepartments);
 
   // Use paginate
   const { dataNum, pageStart, pageEnd, currentData, next, previous, search } =
     usePaginate(10, jobs, "jobTitle");
-  // Country options
-  const countries = [
-    ...new Set(jobs?.map((job) => job.country.toLowerCase()) ?? []),
-  ];
-  // Department options
-  const departments = [
-    ...new Set(jobs?.map((job) => job.department.toLowerCase()) ?? []),
-  ];
+
   return (
-    <TableBox>
+    <StyledJobsTable>
       <div className="search-filter">
-        <div className="search-box">
-          <input
+        <div className="job-search">
+          <Input
             placeholder="Search"
             type="text"
+            $sm={true}
             value={searchParams.get("jobTitle") ?? ""}
             className="search-box__input"
             onChange={(e) => search("jobTitle", e.target.value)}
           />
-          <BsSearch size={16} />
+          <BsSearch size={15} />
         </div>
         <Filter id="jobs-filter" fields={["country", "department"]}>
-          <Select name="country" defaultValue={searchParams.get("country")}>
+          <Select
+            name="country"
+            defaultValue={searchParams.get("country")}
+            alt={true}
+          >
             <option value="">Select country</option>
-            {countries.map((item, index) => (
-              <option value={item} key={index}>
-                {capitalizeFirst(item)}
+            {countries.map((country, index) => (
+              <option key={index} value={country.name}>
+                {`${country.flag} ${country.name}`}
               </option>
             ))}
           </Select>
           <Select
             name="department"
             defaultValue={searchParams.get("department")}
+            alt={true}
           >
             <option value="">Select department</option>
-            {departments.map((item, index) => (
-              <option value={item} key={index}>
-                {capitalizeFirst(item)}
+            {data?.departments.map((option, index) => (
+              <option value={option.name} key={index}>
+                {option.name}
               </option>
             ))}
           </Select>
         </Filter>
       </div>
       <div className="table-container">
-        <Table className="table jobs-table">
+        <table className="table jobs-table">
           <thead>
             <tr>
               <th>Jobs</th>
@@ -115,7 +131,7 @@ export default function JobsTable() {
             <tbody>
               {currentData.map((item, index) => (
                 <tr key={index}>
-                  <td>
+                  <td onClick={() => handleNavigate(item._id)}>
                     <div className="cell-box">
                       <p className="cell-box__name">{item.jobTitle}</p>
                       <ul className="cell-box__details">
@@ -124,7 +140,7 @@ export default function JobsTable() {
                       </ul>
                     </div>
                   </td>
-                  <td>
+                  <td onClick={() => handleNavigate(item._id)}>
                     <div className="status">
                       <i
                         className={`status-icon ${
@@ -134,9 +150,15 @@ export default function JobsTable() {
                       {item.active ? "Open" : "Closed"}
                     </div>
                   </td>
-                  <td>{item.applicants.length}</td>
-                  <td>{item.department}</td>
-                  <td>{formatDate(item.createdAt)}</td>
+                  <td onClick={() => handleNavigate(item._id)}>
+                    {item.applicants.length}
+                  </td>
+                  <td onClick={() => handleNavigate(item._id)}>
+                    {item.department}
+                  </td>
+                  <td onClick={() => handleNavigate(item._id)}>
+                    {formatDate(item.createdAt)}
+                  </td>
                   <Actions
                     jobID={item._id}
                     index={index}
@@ -147,7 +169,7 @@ export default function JobsTable() {
               ))}
             </tbody>
           )}
-        </Table>
+        </table>
       </div>
       {dataNum === 0 && !loading && <NoResultsTable />}
       <div className="pagination">
@@ -180,6 +202,6 @@ export default function JobsTable() {
           </>
         )}
       </div>
-    </TableBox>
+    </StyledJobsTable>
   );
 }

@@ -1,4 +1,9 @@
 import Container from "../../components/Container";
+import Netflix from "../../assets/netflix.svg?react";
+import Facebook from "../../assets/facebook.svg?react";
+import Gitlab from "../../assets/gitlab.svg?react";
+import Apple from "../../assets/apple.svg?react";
+import Soundcloud from "../../assets/soundcloud.svg?react";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../../GlobalStyles";
 
@@ -17,7 +22,6 @@ const Box = styled.div`
       ${flex("center", "center")}
       flex-wrap: wrap;
       gap: 32px;
-
       ${mq(
         "lg",
         css`
@@ -25,7 +29,7 @@ const Box = styled.div`
         `
       )}
       li {
-        img {
+        svg {
           height: 24px;
           ${mq(
             "lg",
@@ -47,19 +51,19 @@ export default function Portfolio() {
           <p>Trusted by 500+ companies and startups worldwide</p>
           <ul className="logos">
             <li>
-              <img alt="netflix" src="logos/netflix.svg" />
+              <Netflix />
             </li>
             <li>
-              <img alt="facebook" src="logos/facebook.svg" />
+              <Facebook />
             </li>
             <li>
-              <img alt="apple-music" src="logos/apple.svg" />
+              <Apple />
             </li>
             <li>
-              <img alt="gitlab" src="logos/gitlab.svg" />
+              <Gitlab />
             </li>
             <li>
-              <img alt="soundcloud" src="logos/soundcloud.svg" />
+              <Soundcloud />
             </li>
           </ul>
         </div>

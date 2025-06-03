@@ -1,30 +1,32 @@
 import Button from "../components/Button";
 import useMutate from "../hooks/useMutate";
 import Spinner from "../components/Spinner";
+import FormBox from "../components/FormBox";
+import DashboardBox from "../components/DashboardBox";
+import IconTitle from "../components/IconTitle";
 import { BsHouseDoor } from "react-icons/bs";
-import { Form, FormGroup, Input } from "../components/Form";
+import { Form, FormGroup, Input, Select } from "../components/Form";
 import { useUserContext } from "../context/UserContext";
-import { capitalizeFirst, notify } from "../utils/helpers";
-import { updateProfile } from "../lib/apiUser";
+import { notify } from "../utils/helpers";
+import { updateProfile } from "../services/apiUser";
 import { useNavigate } from "react-router-dom";
+import { countries } from "../data/countries";
 
 export default function EditCompany() {
   return (
-    <div className="form-box">
-      <div className="form-box__content">
-        <h3 className="heading-md">Edit company bio</h3>
-        <p className="text-md">Update company details.</p>
-      </div>
+    <FormBox title="Edit company bio" subtitle="Update company details.">
       <EditCompanyForm />
-    </div>
+    </FormBox>
   );
 }
 
 function EditCompanyForm() {
   // User context
   const { user, setUser } = useUserContext();
+
   // Navigate hook
   const navigate = useNavigate();
+
   // Update company
   const [updateCompany, loading] = useMutate(updateProfile(user.role));
 
@@ -32,33 +34,41 @@ function EditCompanyForm() {
   async function handleUpdateCompany(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form values
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
-    // Update company bio
+    const data = Object.fromEntries(new FormData(e.target));
+
+    // Send request
     const response = await updateCompany(data);
-    // Show message
+
+    // Check response
     if (response === 200) {
-      // Update user
+      // Update user state
       setUser((user) => ({ ...user, ...data }));
+
+      // Success
       notify("Company bio updated successfully", "success");
+
       // Navigate to jobs page
       setTimeout(() => {
         navigate("/dashboard/company-bio");
       }, 2000);
     } else {
+      // Error
       notify(response, "error");
     }
   }
   return (
     <Form $gap={32} onSubmit={handleUpdateCompany}>
-      <div className="dashboard-box">
-        <h3 className="title icon-title">
-          <span className="icon">
-            <BsHouseDoor size={18} />
-          </span>
-          Company details
-        </h3>
+      <DashboardBox
+        title={
+          <IconTitle
+            title="Company details"
+            icon={<BsHouseDoor size={18} />}
+            className="title"
+          />
+        }
+      >
         <div className="form-content">
           <FormGroup label="Company name">
             <Input
@@ -77,17 +87,20 @@ function EditCompanyForm() {
             />
           </FormGroup>
           <FormGroup label="Company location">
-            <Input
-              placeholder="Company location"
-              required
-              defaultValue={capitalizeFirst(user.country)}
-              name="country"
-            />
+            <Select defaultValue={user.country} name="country">
+              <option value="">Select country</option>
+              {countries.map((item, index) => (
+                <option
+                  key={index}
+                  value={item.name.toLowerCase()}
+                >{`${item.flag} ${item.name}`}</option>
+              ))}
+            </Select>
           </FormGroup>
         </div>
-      </div>
+      </DashboardBox>
       <div>
-        <Button type="submit" $loading={loading}>
+        <Button type="submit" $loading={loading} disabled={loading}>
           <span>Update bio</span>
           {loading && <Spinner />}
         </Button>

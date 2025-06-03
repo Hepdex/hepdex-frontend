@@ -4,6 +4,7 @@ import Button from "../../components/Button";
 import Step from "../../components/Step";
 import { flex, mq } from "../../GlobalStyles";
 import { Link } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
 
 // Box
 const Box = styled.div`
@@ -23,6 +24,8 @@ const Box = styled.div`
 `;
 
 export default function HowItWorks() {
+  // User context
+  const { user, isLoggedIn } = useUserContext();
   return (
     <Box>
       <Section title="How it works" marginBottom={true}>
@@ -49,7 +52,15 @@ export default function HowItWorks() {
             />
           </ul>
           <div className="btn-box">
-            <Button as={Link} to="/post-a-project" size="lg">
+            <Button
+              as={Link}
+              to={`${
+                user?.role === "employer" && isLoggedIn
+                  ? "/post-a-job"
+                  : "/login"
+              }`}
+              size="lg"
+            >
               Post your job
             </Button>
           </div>

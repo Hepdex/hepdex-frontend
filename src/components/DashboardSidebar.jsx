@@ -42,12 +42,12 @@ const candidateMenu = [
   {
     text: "Find jobs",
     icon: <BsBriefcaseFill />,
-    link: "/dashboard/browse-jobs",
+    link: "/dashboard/find-jobs",
   },
   {
     text: "Profile",
     icon: <BsPersonFill />,
-    link: "/dashboard/talent",
+    link: "/dashboard/candidate-profile",
   },
 ];
 

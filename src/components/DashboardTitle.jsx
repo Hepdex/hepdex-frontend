@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
+import { useUserContext } from "../context/UserContext";
 
 // Title box
 const TitleBox = styled.div`
@@ -65,6 +66,7 @@ const TitleBox = styled.div`
 `;
 
 export default function DashboardTitle({ title, subtitle, links }) {
+  const { user } = useUserContext();
   return (
     <TitleBox>
       {title && (
@@ -76,7 +78,17 @@ export default function DashboardTitle({ title, subtitle, links }) {
       {links && (
         <ul className="breadcrumb">
           <li>
-            <Link to="/dashboard/home">Home</Link>
+            <Link
+              to={`${
+                user.role === "employer"
+                  ? "/dashboard/home"
+                  : user.role === "candidate"
+                  ? "/dashboard/find-jobs"
+                  : ""
+              }`}
+            >
+              Home
+            </Link>
           </li>
           <li>
             <span>{`>`}</span>
