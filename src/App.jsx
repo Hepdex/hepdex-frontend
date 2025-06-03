@@ -19,6 +19,7 @@ import EditCompany from "./pages/EditCompany";
 import Company from "./pages/Company";
 import ViewJob from "./pages/ViewJob";
 import Sourcing from "./pages/Sourcing";
+import Services from "./pages/Services";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUser } from "./lib/apiUser";
@@ -72,6 +73,7 @@ export default function App() {
         <Route index element={<Navigate replace to="home" />} />
         <Route element={<MainLayout />}>
           <Route path="home" element={<Home />} />
+          <Route path="services" element={<Services />} />
           <Route path="share-requirement" element={<Requirements />} />
         </Route>
         <Route
