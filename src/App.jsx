@@ -23,6 +23,7 @@ import FindJobs from "./pages/FindJobs";
 import UploadResume from "./pages/UploadResume";
 import JobApplication from "./pages/JobApplication";
 import Services from "./pages/Services";
+import FindWork from "./pages/FindWork";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUser } from "./services/apiUser";
@@ -82,6 +83,7 @@ export default function App() {
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
           <Route path="services" element={<Services />} />
+          <Route path="find-work" element={<FindWork />} />
         </Route>
         <Route
           element={

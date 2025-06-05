@@ -271,7 +271,7 @@ export default function SearchBox() {
       </div>
       <div className="search-box--mobile__filter">
         <Filter
-          id="search-jobs--filter"
+          id={"search-jobs--filter"}
           fields={["jobType", "department", "country"]}
         >
           <Select

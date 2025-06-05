@@ -78,7 +78,7 @@ export default function FindJobs() {
                     $loading={loading}
                     disabled={loading}
                     onClick={() => {
-                      const params = new URLSearchParams();
+                      const params = new URLSearchParams(searchParams);
                       params.set("page", Number(pagination.currentPage) + 1);
                       setSearchParams(params);
                     }}
