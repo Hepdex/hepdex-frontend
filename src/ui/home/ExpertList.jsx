@@ -1,9 +1,9 @@
 import Container from "../../components/Container";
 import Section from "../../components/Section";
-import Service from "../../components/Service";
-import { services } from "../../data/services";
+import Expert from "../../components/Expert";
+import { experts } from "../../data/experts";
 
-export default function ServiceList() {
+export default function ExpertList() {
   return (
     <Section
       title="Leverage top experts"
@@ -11,8 +11,8 @@ export default function ServiceList() {
     >
       <div data-aos className="custom-fade-up">
         <Container.Row>
-          {services.map((service, index) => (
-            <Service key={index} service={service} />
+          {experts.map((expert, index) => (
+            <Expert key={index} expert={expert} />
           ))}
         </Container.Row>
       </div>

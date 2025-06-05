@@ -162,7 +162,7 @@ export default function Hero() {
                   as={Link}
                   to={`${
                     user?.role === "employer" && isLoggedIn
-                      ? "/post-a-project"
+                      ? "/post-a-job"
                       : "/login"
                   }`}
                 >

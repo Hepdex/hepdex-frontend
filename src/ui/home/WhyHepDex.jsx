@@ -11,7 +11,7 @@ const Box = styled.div`
     font-size: 22px;
     line-height: 32px;
     text-align: left;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   & > .text {
     color: var(--color-grey-2);
@@ -25,14 +25,15 @@ const Box = styled.div`
   }
 `;
 
-export default function WhyHepDex() {
+export default function WhyHepDex({ animation = true }) {
   return (
     <Section
       title="Why Hire with HepDex?"
       subtitle="HepDex gives you the tools to scale your business."
       marginBottom={true}
+      animation={animation}
     >
-      <div data-aos className="custom-fade-up">
+      <div data-aos className={`${animation ? "custom-fade-up" : ""}`}>
         <Container.Row>
           <Container.Col breakPoints={[{ name: "700px", cols: 3 }]}>
             <Box>

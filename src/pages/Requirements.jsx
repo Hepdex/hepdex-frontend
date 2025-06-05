@@ -32,11 +32,6 @@ const Box = styled.div`
       `
     )}
   }
-  .requirement-box {
-    .cta {
-      margin-top: 6px;
-    }
-  }
 `;
 
 export default function Requirements() {
@@ -120,7 +115,9 @@ export default function Requirements() {
                   <FormGroup label="Requirement details">
                     <Textarea placeholder="Requirement details" rows={5} />
                   </FormGroup>
-                  <Button className="cta">Submit requirements</Button>
+                  <div className="submit-box">
+                    <Button>Submit requirements</Button>
+                  </div>
                 </Form>
               </div>
             </Container.Col>

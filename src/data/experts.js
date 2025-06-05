@@ -5,8 +5,8 @@ import DataEntry from "../assets/icons/data-entry.svg?react";
 import ContentWriting from "../assets/icons/content-writing.svg?react";
 import DigitalMarketing from "../assets/icons/digital-marketing.svg?react";
 
-// Services
-export const services = [
+// Experts
+export const experts = [
   {
     name: "Virtual assistance",
     text: "Virtual assistants you can count on for flexible, 24/7 support without any disruptions or downtimes.",

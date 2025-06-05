@@ -80,7 +80,7 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
               if (inputValue) setParams(inputValue);
             }}
           >
-            <BsArrowRight size={20} />
+            <BsArrowRight size={18} />
           </Button>
           {search && (
             <button

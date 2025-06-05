@@ -1,44 +1,46 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Container from "./Container";
-import { Link } from "react-router-dom";
-import { flex } from "../GlobalStyles";
+import { flex, mq } from "../GlobalStyles";
 
-const ServiceBox = styled(Link)`
-  ${flex(undefined, "center")}
-  flex-direction: column;
-  background-color: var(--color-grey-1);
-  border-radius: 8px;
+// Service container
+const StyledService = styled.div`
   height: 100%;
-  padding: 48px 32px;
-  transition: all 0.3s ease-in-out;
-  &:hover {
-    background-color: var(--color-secondary);
-    & p.text {
-      color: var(--color-black-1);
-    }
-  }
-  .icon {
-    margin-bottom: 16px;
-  }
-  .name {
-    font-size: 22px;
-    line-height: 32px;
-    margin-bottom: 8px;
-    text-align: center;
-  }
-  .text {
+
+  .service {
     color: var(--color-grey-2);
-    transition: all 0.3s ease-in-out;
-  }
-  .browse {
-    font-weight: 500;
-    margin-top: 16px;
-    font-size: 14px;
-    border-bottom: 1px solid var(--color-black-1);
+
+    &-icon {
+      border-radius: 8px;
+      height: 80px;
+      width: 80px;
+      display: inline-block;
+      ${flex("center", "center")}
+      background-color: var(--color-secondary);
+      margin-bottom: 24px;
+    }
+
+    &-title {
+      font-size: 22px;
+      line-height: 32px;
+      color: var(--color-black-1);
+      margin-bottom: 4px;
+    }
+
+    &-text {
+      color: var(--color-grey-2);
+      width: 100%;
+
+      ${mq(
+        "md",
+        css`
+          max-width: 300px;
+        `
+      )}
+    }
   }
 `;
 
-export default function Service({ service, to = "" }) {
+export default function Service({ icon, title, text }) {
   return (
     <Container.Col
       breakPoints={[
@@ -46,12 +48,11 @@ export default function Service({ service, to = "" }) {
         { name: "900px", cols: 3 },
       ]}
     >
-      <ServiceBox to={to}>
-        <div className="icon">{service.icon()}</div>
-        <h3 className="name">{service.name}</h3>
-        <p className="text">{service.text}</p>
-        <span className="browse">Hire experts</span>
-      </ServiceBox>
+      <StyledService className="service">
+        {icon && <span className="service-icon">{icon}</span>}
+        <h3 className="service-title">{title}</h3>
+        <p className="service-text">{text}</p>
+      </StyledService>
     </Container.Col>
   );
 }
