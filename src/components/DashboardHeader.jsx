@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { useState } from "react";
 import { BsBell, BsList, BsQuestionCircle } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
-import { logout as logoutApi } from "../lib/apiAuth";
+import { logout as logoutApi } from "../services/apiAuth";
 import { flex, mq } from "../GlobalStyles";
 import { useDashboardContext } from "../context/DashboardContext";
 import { useUserContext } from "../context/UserContext";
@@ -202,7 +202,7 @@ export default function DashboardHeader() {
         setUser(null);
       }, 1000);
       // Navigate to home page
-      await navigate("/home");
+      navigate("/home");
     } else {
       // Display error message
       notify(response, "error");

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import NoResult from "../assets/icons/no-result.svg?react";
 import { flex } from "../GlobalStyles";
 
 const NoResults = styled.div`
@@ -26,7 +27,7 @@ const NoResults = styled.div`
 export default function NoResultsTable() {
   return (
     <NoResults>
-      <img src="/icons/no-result.svg" />
+      <NoResult />
       <div className="content">
         <h3>No results found</h3>
         <p>Try adjusting your filters or search term.</p>

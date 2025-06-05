@@ -7,7 +7,7 @@ import { BsBox, BsCheckCircle } from "react-icons/bs";
 import { Link, useSearchParams } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
 import { createContext, useContext } from "react";
-import { fetchJobs } from "../lib/apiJobs";
+import { fetchJobs } from "../services/apiJobs";
 
 const JobsBox = styled.div`
   .jobs {

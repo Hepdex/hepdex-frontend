@@ -50,9 +50,10 @@ export default function Section({
   children,
   marginBottom,
   animation = true,
+  ...rest
 }) {
   return (
-    <SectionBox $marginBottom={marginBottom}>
+    <SectionBox $marginBottom={marginBottom} {...rest}>
       <Container>
         {title && (
           <div

@@ -12,7 +12,7 @@ import {
 } from "../components/FormElements";
 import { Toastify } from "../components/Toastify";
 import { useUserContext } from "../context/UserContext";
-import { login } from "../lib/apiAuth";
+import { login } from "../services/apiAuth";
 
 const Signin = () => {
   useDocumentTitle("Hepdex - Login");
@@ -43,7 +43,7 @@ const Signin = () => {
         if (response.user.role === "employer") navigate("/dashboard/home");
         // Redirect candidate
         if (response.user.role === "candidate")
-          navigate("/dashboard/browse-jobs");
+          navigate("/dashboard/find-jobs");
       } else {
         Toastify(response);
       }
@@ -60,7 +60,7 @@ const Signin = () => {
         />
 
         <InputField
-          labelValue="Email adddress"
+          labelValue="Email address"
           name="email"
           placeHolder="Enter your email address"
         />

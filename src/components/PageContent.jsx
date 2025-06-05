@@ -4,7 +4,7 @@ import { mq } from "../GlobalStyles";
 // Page box
 const PageBox = styled.div`
   padding-top: 100px;
-  & > section {
+  & > section:first {
     padding-top: 48px;
     ${mq(
       "sm",

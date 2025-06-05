@@ -1,18 +1,21 @@
 import Button from "../../components/Button";
-import useMutate from "../../hooks/useMutate";
 import Spinner from "../../components/Spinner";
+import useMutate from "../../hooks/useMutate";
+import IconTitle from "../../components/IconTitle";
 import Modal, { useModalContext } from "../../components/Modal";
 import VerifyOtp, { VerifyButton } from "./VerifyOtp";
-import { Form, FormGroup, Input } from "../../components/Form";
 import { BsLock } from "react-icons/bs";
-import { updatePassword, verifyUpdate } from "../../lib/apiUser";
+import { Form, Password } from "../../components/Form";
+import { updatePassword, verifyUpdate } from "../../services/apiUser";
 import { notify } from "../../utils/helpers";
 
 export default function UpdatePasswordModal() {
   // Update password
   const [changePassword, loading] = useMutate(updatePassword);
+
   // Verify Otp
   const [verify, pending] = useMutate(verifyUpdate);
+
   // Modal context
   const { close, active, setActive } = useModalContext();
 
@@ -20,16 +23,19 @@ export default function UpdatePasswordModal() {
   async function handleUpdatePassword(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form data
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
-    // Change password
+    const data = Object.fromEntries(new FormData(e.target));
+
+    // Send request
     const response = await changePassword(data);
+
     // Check response
     if (response === 200) {
       // Switch window
       setActive("verify-password");
-      // Display message
+
+      // Success
       notify("OTP sent successfully", "success");
     } else {
       // Error message
@@ -37,21 +43,26 @@ export default function UpdatePasswordModal() {
     }
   }
 
-  // Handle verify otp
-  async function handleVerifyOtp(e) {
+  // Handle verify OTP
+  async function handleVerifyOTP(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form data
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
-    // Verify otp
+    const data = Object.fromEntries(new FormData(e.target));
+
+    // Send request
     const response = await verify(data);
+
+    // Check response
     if (response === 200) {
       // Close modal
       close();
-      // Success message
+
+      // Success
       notify("Password updated successfully", "success");
     } else {
+      // Error
       notify(response, "error");
     }
   }
@@ -59,23 +70,17 @@ export default function UpdatePasswordModal() {
   return (
     <Modal.Window
       name={`${active === "verify-password" ? "verify-password" : "password"}`}
-      title={
-        <>
-          <span className="icon">
-            <BsLock />
-          </span>
-          Change password
-        </>
-      }
+      title={<IconTitle icon={<BsLock size={18} />} title="Change password" />}
       confirm={
         active === "verify-password" ? (
-          <VerifyButton loading={pending} />
+          <VerifyButton loading={pending} disabled={pending} />
         ) : (
           <Button
             size="sm"
             form="update-password"
             type="submit"
             $loading={loading}
+            disabled={loading}
           >
             <span>Save new password</span>
             {loading && <Spinner />}
@@ -84,25 +89,21 @@ export default function UpdatePasswordModal() {
       }
     >
       {active === "verify-password" ? (
-        <VerifyOtp handleVerifyOtp={handleVerifyOtp} />
+        <VerifyOtp handleVerifyOtp={handleVerifyOTP} />
       ) : (
         <Form $gap={18} onSubmit={handleUpdatePassword} id="update-password">
-          <FormGroup label="Old password">
-            <Input
-              placeholder="Old password"
-              type="password"
-              name="oldPassword"
-              required
-            />
-          </FormGroup>
-          <FormGroup label="New password">
-            <Input
-              placeholder="New password"
-              type="password"
-              name="newPassword"
-              required
-            />
-          </FormGroup>
+          <Password
+            label="Old password"
+            placeholder="Old password"
+            name="oldPassword"
+            required={true}
+          />
+          <Password
+            label="New password"
+            placeholder="New password"
+            name="newPassword"
+            required={true}
+          />
         </Form>
       )}
     </Modal.Window>

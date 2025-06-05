@@ -69,7 +69,7 @@ html {
 }
 
 body {
-  font-family: "Outfit", sans-serif;;
+  font-family: "Twemoji Country Flags","Outfit", sans-serif;;
   color: var(--color-black-1);
   line-height: 24px;
   letter-spacing: -0.25px;
@@ -245,40 +245,7 @@ img{
   }
 }
 
-// Icon title
-.icon-title{
-  ${flex(undefined, "center")}
-  font-weight: 500;
-  gap: 12px;
-  span.icon {
-    ${flex("center", "center")}
-    border-radius: 8px;
-    height: 32px;
-    width: 32px;
-    background-color: var(--color-secondary);
-    svg {
-      fill: var(--color-primary);
-    }
-  }
-}
 
-// Dashboard box
-.dashboard-box {
-  background-color: var(--color-white-1);
-  border-radius: 8px;
-  padding: 24px 16px 40px 16px;
-  ${mq(
-    "sm",
-    css`
-      padding: 32px 24px 48px 24px;
-    `
-  )}
-  .title {
-    margin-bottom: 24px;
-    font-size: 18px;
-    line-height: 24px;
-  }
-}
 
 // Box icon
 .box-icon{
@@ -386,85 +353,10 @@ img{
   }
 }
 
-  // Details box
-  .details-box {
-    ${flex(undefined, "stretch")}
-    flex-direction: column;
-    ${mq(
-      "1100px",
-      css`
-        flex-direction: row;
-      `
-    )}
-    &__content {
-      border-top-right-radius: 0px;
-      border-bottom-right-radius: 0px;
-      flex: 1;
-      .info {
-        padding-left: 20px;
-        ${mq(
-          "sm",
-          css`
-            padding-left: 40px;
-          `
-        )}
-        flex-direction: column;
-        ${flex("center")}
-        &-item {
-          ${flex("space-between", "center")}
-          gap: 16px;
-          padding: 12px 0px;
-          border-bottom: 1px solid #e5e7eb;
-          &:first-child {
-            padding-top: 0px;
-          }
-          .name {
-            width: 33.333%;
-            font-weight: 500;
-          }
-          .value {
-            width: 33.333%;
-            flex: 1; 
-            color: var(--color-grey-2);
-            max-width: calc(100% - 16px);
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-          }
-          button{
-            ${flex(undefined, "center")}
-            background-color: transparent;
-            color: var(--color-primary);
-            gap: 4px;
-            transition: color 0.4s ease-in-out;
-            font-size: 15px;
-            line-height: 20px;
-            &:hover {
-              color: var(--color-primary-hover);
-            }
-          }
-        }
-      }
-    }
-    // Side box
-    .side-box {
-      width: 100%;
-      background-color: var(--color-grey-1);
-      padding: 40px 32px;
-      ${mq(
-        "1100px",
-        css`
-          max-width: 380px;
-        `
-      )}
-      ${flex("center", "center")}
-      flex-direction: column;
-      gap: 16px;
-    }
-  }
+
 
   // Search box
-      .search-box {
+      /* .search-box {
         position: relative;
         max-width: 160px;
         &__input {
@@ -488,27 +380,8 @@ img{
           left: 12px;
           fill: #757575;
         }
-      }
+      } */
 
-      // Avatar box image
-    .avatar-box__image {
-      border-radius: 50%;
-      width: 64px;
-      height: 64px;
-      overflow: hidden;
-      // No image
-      .no-image {
-        text-transform: uppercase;
-        ${flex("center", "center")}
-        background-color: var(--color-tertiary);
-        font-family: sans-serif;
-        font-weight: 600;
-        font-size: 22px;
-        height: 100%;
-        width: 100%;
-        letter-spacing: 0px;
-      }
-    }
 
    // Pagination
   .pagination{

@@ -1,17 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import { BsSliders, BsX, BsXLg } from "react-icons/bs";
-import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import { flex } from "../GlobalStyles";
-import { capitalizeFirst } from "../utils/helpers";
 import Button from "./Button";
 import Dropdown from "./Dropdown";
 import { Form } from "./Form";
+import { useEffect, useRef, useState } from "react";
+import { BsSliders, BsXLg } from "react-icons/bs";
+import { useSearchParams } from "react-router-dom";
+import { flex } from "../GlobalStyles";
+import { capitalizeFirst } from "../utils/helpers";
 
 // Filter box
 const FilterBox = styled.div`
   position: relative;
   ${flex(undefined, "center")}
+  display: inline-flex;
   gap: 12px;
   flex-wrap: wrap;
   .filter {
@@ -24,24 +25,16 @@ const FilterBox = styled.div`
     // Dropdown
     &-dropdown {
       position: fixed;
-      //top: calc(100% + 12px);
       min-width: 250px;
       z-index: 4;
       background-color: var(--color-white-1);
       box-shadow: 0 7px 24px 0 #64646f33;
-      //left: 0;
       border-radius: 8px;
       padding: 16px;
       // Form
       form {
         select {
-          height: 40px;
-          padding: 0 12px;
-          border-radius: 4px;
-          & ~ svg {
-            top: 12px;
-          }
-          font-size: 15px;
+          max-width: 218px;
         }
         // Btn box
         .btn-box {
@@ -175,6 +168,7 @@ export default function Filter({ children, id, fields }) {
       window.removeEventListener("resize", updatePosition);
     };
   }, [open]);
+
   return (
     <FilterBox className="filter" id={id}>
       <Button

@@ -3,7 +3,7 @@ import useMutate from "../../hooks/useMutate";
 import Spinner from "../../components/Spinner";
 import useSetPageParam from "../../hooks/useSetPageParam";
 import Modal, { useModalContext } from "../../components/Modal";
-import { updateJobStatus } from "../../lib/apiJobs";
+import { updateJobStatus } from "../../services/apiJobs";
 import { notify } from "../../utils/helpers";
 import { useJobsContext } from "../../pages/Jobs";
 

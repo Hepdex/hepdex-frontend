@@ -2,8 +2,9 @@ import SourcingTable from "../ui/sourcing/SourcingTable";
 import DashboardTitle from "../components/DashboardTitle";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
-import { getCandidates } from "../lib/apiCandidates";
+import { getCandidates } from "../services/apiCandidates";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const SourcingBox = styled.div`
   // Search talent
@@ -12,13 +13,9 @@ const SourcingBox = styled.div`
     position: relative;
     // Input
     &__input {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-      padding: 0 12px;
-      border: 1px solid var(--color-grey-3);
       border-right: none;
-      line-height: 40px;
-      max-height: 40px;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
       background-color: var(--color-white-1);
       font-size: 15px;
       flex: 1;
@@ -75,21 +72,13 @@ const SourcingBox = styled.div`
       }
     }
   }
-
-  // Table
-  table {
-    td,
-    th {
-      &.sticky {
-        width: 98px !important;
-      }
-    }
-  }
 `;
 
 export default function Sourcing() {
-  // Search state
-  const [search, setSearch] = useState("");
+  // Search params
+  const [searchParams] = useSearchParams();
+  // Search
+  const search = searchParams.get("jobTitle") ?? "";
   // Candidates state
   const [candidates, setCandidates] = useState(undefined);
   // Fetch candidates
@@ -111,6 +100,7 @@ export default function Sourcing() {
             setCandidates(response.candidates);
           }
         } catch (err) {
+          setCandidates([]);
           console.log(err.message);
         } finally {
           setLoading(false);
@@ -127,8 +117,6 @@ export default function Sourcing() {
         links={[{ name: "Sourcing" }]}
       />
       <SourcingTable
-        search={search}
-        setSearch={setSearch}
         loading={loading}
         candidates={candidates}
         setCandidates={setCandidates}

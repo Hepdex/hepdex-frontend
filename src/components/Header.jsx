@@ -158,6 +158,8 @@ export default function Header() {
   const [open, setIsOpen] = useState(false);
   // Close menu
   const close = () => setIsOpen(false);
+  // User context
+  const { user, isLoggedIn } = useUserContext();
   return (
     <HeaderBox>
       <Container>
@@ -178,7 +180,11 @@ export default function Header() {
                 </li>
                 <li>
                   <NavLink
-                    to="/hire-an-expert"
+                    to={`${
+                      user?.role === "employer" && isLoggedIn
+                        ? "/dashboard/browse-talent"
+                        : "/login"
+                    }`}
                     className="nav-link"
                     onClick={close}
                   >
@@ -186,17 +192,17 @@ export default function Header() {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    to="/find-talent"
-                    className="nav-link"
-                    onClick={close}
-                  >
-                    Find Talent
+                  <NavLink to="/find-work" className="nav-link" onClick={close}>
+                    Find Work
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/find-work" className="nav-link" onClick={close}>
-                    Find Work
+                  <NavLink
+                    to="/share-requirement"
+                    className="nav-link"
+                    onClick={close}
+                  >
+                    Submit Requirements
                   </NavLink>
                 </li>
               </ul>
@@ -229,7 +235,7 @@ const AuthMenu = ({ className, close }) => {
               user.role === "employer"
                 ? "/dashboard/home"
                 : user.role === "candidate"
-                ? "/dashboard/browse-jobs"
+                ? "/dashboard/find-jobs"
                 : ""
             }`}
           >

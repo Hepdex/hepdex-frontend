@@ -14,9 +14,15 @@ export default function VerifyOtp({ handleVerifyOtp }) {
 }
 
 // Verify OTP button
-export function VerifyButton({ loading }) {
+export function VerifyButton({ loading, ...rest }) {
   return (
-    <Button size="sm" form="verify-otp" type="submit" $loading={loading}>
+    <Button
+      size="sm"
+      form="verify-otp"
+      type="submit"
+      $loading={loading}
+      {...rest}
+    >
       <span>Verify OTP</span>
       {loading && <Spinner />}
     </Button>

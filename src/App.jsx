@@ -17,13 +17,21 @@ import AltLayout from "./layouts/AltLayout";
 import EditJob from "./pages/EditJob";
 import EditCompany from "./pages/EditCompany";
 import Company from "./pages/Company";
-import ViewJob from "./pages/ViewJob";
+import JobDetails from "./pages/JobDetails";
 import Sourcing from "./pages/Sourcing";
+import FindJobs from "./pages/FindJobs";
+import UploadResume from "./pages/UploadResume";
+import JobApplication from "./pages/JobApplication";
+import Services from "./pages/Services";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchUser } from "./lib/apiUser";
+import { fetchUser } from "./services/apiUser";
 import { useUserContext } from "./context/UserContext";
 import { ToastContainer } from "react-toastify";
+import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+
+// Set emojis
+polyfillCountryFlagEmojis();
 
 export default function App() {
   const location = useLocation();
@@ -38,10 +46,10 @@ export default function App() {
   }, []);
   useEffect(() => {
     const timer = setTimeout(() => {
-      AOS.refreshHard();
+      AOS.refresh();
     }, 150);
     return () => clearTimeout(timer);
-  }, [location.pathname, loading]);
+  }, [location.pathname]);
   // Fetch user
   useEffect(() => {
     // Send request
@@ -62,7 +70,7 @@ export default function App() {
       }
     })();
   }, [setIsLoggedIn, setUser]);
-  if (loading) return <div></div>;
+  if (loading) return <div>Loading...</div>;
   return (
     <div>
       <GlobalStyles />
@@ -73,6 +81,7 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
+          <Route path="services" element={<Services />} />
         </Route>
         <Route
           element={
@@ -84,11 +93,13 @@ export default function App() {
         >
           <Route index element={<Navigate replace to="home" />} />
           <Route path="jobs" element={<Jobs />} />
+          <Route path="jobs/:jobID" element={<JobDetails />} />
           <Route path="home" element={<Dashboard />} />
           <Route path="settings" element={<Settings />} />
           <Route path="company-bio" element={<Company />} />
-          <Route path="jobs/:jobID" element={<ViewJob />} />
           <Route path="browse-talent" element={<Sourcing />} />
+          <Route path="find-jobs" element={<FindJobs />} />
+          <Route path="find-jobs/:jobID" element={<JobApplication />} />
         </Route>
         <Route
           element={
@@ -100,6 +111,7 @@ export default function App() {
           <Route element={<AddJob />} path="post-a-job" />
           <Route element={<EditJob />} path="edit-job/:jobID" />
           <Route element={<EditCompany />} path="edit-company" />
+          <Route element={<UploadResume />} path="upload-resume" />
         </Route>
         <Route path="login" element={<Signin />} />
         <Route path="forgot-password" element={<ForgotPassword />} />

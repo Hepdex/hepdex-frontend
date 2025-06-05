@@ -42,12 +42,12 @@ const candidateMenu = [
   {
     text: "Find jobs",
     icon: <BsBriefcaseFill />,
-    link: "/dashboard/browse-jobs",
+    link: "/dashboard/find-jobs",
   },
   {
     text: "Profile",
     icon: <BsPersonFill />,
-    link: "/dashboard/talent",
+    link: "/dashboard/candidate-profile",
   },
 ];
 
@@ -95,8 +95,8 @@ const Sidebar = styled.div`
           }
           svg {
             fill: #757575;
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             min-width: 24px;
             transition: fill 0.4s ease-in-out;
           }

@@ -1,8 +1,11 @@
 import Section from "../../components/Section";
 import Button from "../../components/Button";
 import { Link } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
 
 export default function Talent() {
+  // User context
+  const { user, isLoggedIn } = useUserContext();
   return (
     <Section>
       <div className="info-box" id="talent">
@@ -15,7 +18,14 @@ export default function Talent() {
             partnership, HepDex makes it simple to find talent that aligns
             perfectly with your goals.
           </p>
-          <Button as={Link} to="/find-talent">
+          <Button
+            as={Link}
+            to={`${
+              user?.role === "employer" && isLoggedIn
+                ? "/dashboard/browse-talent"
+                : "/login"
+            }`}
+          >
             Find Talent
           </Button>
         </div>

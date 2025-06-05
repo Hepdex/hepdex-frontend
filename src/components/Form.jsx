@@ -1,22 +1,29 @@
+import EyeSlashIcon from "../assets/icons/eye-slash.svg?react";
+import EyeIcon from "../assets/icons/eye.svg?react";
 import styled, { css } from "styled-components";
-import { flex, mq } from "../GlobalStyles";
-import { BsChevronDown, BsClock } from "react-icons/bs";
 import { useState } from "react";
+import { BsChevronDown, BsClock } from "react-icons/bs";
+import { flex, mq } from "../GlobalStyles";
 
-// Form
+// Form container
 const Form = styled.form`
   ${flex()}
   flex-direction: column;
+
+  // Paragraph styles
   & p {
     display: inline-block;
     color: var(--color-grey-2);
     font-weight: 400;
   }
+
+  // Link styles
   & a {
     display: inline-block;
     color: var(--color-black-1);
     font-weight: 500;
   }
+
   & a,
   & p {
     &::first-letter {
@@ -24,11 +31,17 @@ const Form = styled.form`
     }
   }
 
+  // Vertical spacing
   ${(props) =>
     props.$gap &&
     css`
       row-gap: ${props.$gap + "px"};
     `}
+
+  // Submit box
+  .submit-box {
+    margin-top: 6px;
+  }
 `;
 
 // Input group
@@ -36,14 +49,18 @@ const InputGroup = styled.div`
   ${flex()}
   flex-direction: column;
   row-gap: 18px;
+
+  // Small screens
   ${mq(
     "sm",
     css`
       flex-direction: row;
       align-items: end;
       gap: 16px;
+
       & > * {
         width: 50%;
+
         input {
           width: 100%;
         }
@@ -52,105 +69,125 @@ const InputGroup = styled.div`
   )}
 `;
 
-// Form group
-const FormGroupDiv = styled.div`
+// Form group styles
+const StyledFormGroup = styled.div`
   ${flex()}
   flex-direction: column;
   row-gap: 4px;
-  .label-error {
+
+  .label {
     min-height: 25px;
+
     span {
       font-weight: 500;
       color: #484646;
-    }
-    & > * {
       display: inline-block;
+
       &::first-letter {
         text-transform: capitalize;
       }
     }
-    &:first-child {
-      margin-right: 8px;
-    }
   }
 `;
 
-// Input css
-const InputCss = css`
+// Default styles
+const DefaultStyles = css`
   border: 1px solid var(--color-grey-3);
   padding: 12px;
   height: 48px;
   border-radius: 8px;
   line-height: 24px;
   color: var(--color-grey-2);
+
   &::placeholder {
     font-weight: 400;
     color: var(--color-grey-4);
   }
 `;
 
-// Select
-const SelectBox = styled.div`
+// Select styles
+const StyledSelect = styled.div`
   position: relative;
   color: var(--color-grey-2);
+
   & > * {
     cursor: pointer;
   }
-  .select {
+
+  select {
+    ${() => DefaultStyles}
     background-color: var(--color-white-1);
-    ${() => InputCss}
     padding-right: 40px;
     width: 100%;
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
   }
+
   svg {
     position: absolute;
-    top: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     right: 12px;
     fill: var(--color-grey-4);
     pointer-events: none;
   }
+
+  ${(props) =>
+    props.$alt === true &&
+    css`
+      select {
+        height: 40px;
+        line-height: 20px;
+        font-size: 15px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+      }
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    `}
 `;
 
-// Input
+// Input styles
 const Input = styled.input`
-  ${() => InputCss}
+  ${() => DefaultStyles}
+
+  ${(props) =>
+    props.$sm === true &&
+    css`
+      height: 40px;
+      line-height: 20px;
+      font-size: 15px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+
+      & ~ svg {
+        fill: #757575;
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+      }
+    `}
 `;
 
-// Textarea
+// Textarea styles
 const Textarea = styled.textarea`
-  ${() => InputCss}
+  ${() => DefaultStyles}
   height: auto;
   padding: 12px;
   line-height: 24px;
 `;
 
-// Error
-const Error = styled.span`
-  background: #fbdcdc;
-  border-radius: 2px;
-  padding: 0px 8px;
-  font-size: 14px;
-  line-height: 24px;
-  width: auto;
-  display: inline-block;
-`;
-
-// Button group
-const ButtonGroup = styled.div`
-  ${flex()}
-  margin-top: 8px;
-  flex-direction: column;
-  row-gap: 18px;
-`;
-
-// Time box
-const TimeBox = styled.div`
-  ${() => InputCss}
+// Time input styles
+const StyledTime = styled.div`
+  ${() => DefaultStyles}
   cursor: pointer;
   position: relative;
+
   input::-webkit-calendar-picker-indicator,
   svg {
     position: absolute;
@@ -158,84 +195,105 @@ const TimeBox = styled.div`
     top: 50%;
     transform: translateY(-50%);
   }
+
   input {
     border: none;
     outline: none;
     cursor: pointer;
     width: 100%;
+
     &::-webkit-calendar-picker-indicator {
       opacity: 0;
       cursor: pointer;
       right: 8px;
     }
   }
+
   svg {
     pointer-events: none;
     fill: var(--color-grey-2);
   }
 `;
 
-function Select({ children, ...rest }) {
+// Password input styles
+const StyledPassword = styled.div`
+  position: relative;
+  button {
+    ${flex("center", "center")}
+    background-color: transparent;
+    position: absolute;
+    height: 16px;
+    top: 44px;
+    right: 12px;
+
+    svg {
+      & > * {
+        fill: var(--color-grey-4);
+      }
+    }
+  }
+`;
+
+function Select({ children, className, alt = false, ...rest }) {
   return (
-    <SelectBox>
-      <select className="select" {...rest}>
-        {children}
-      </select>
+    <StyledSelect className={className} $alt={alt}>
+      <select {...rest}>{children}</select>
       <BsChevronDown size={16} />
-    </SelectBox>
+    </StyledSelect>
   );
 }
 
-function Time({
-  placeholder,
+function Time({ name, required = false, defaultTime }) {
+  return (
+    <StyledTime>
+      <input
+        type="time"
+        name={name}
+        required={required}
+        defaultValue={defaultTime}
+      />
+      <BsClock size={16} />
+    </StyledTime>
+  );
+}
+
+function FormGroup({ children, label }) {
+  return (
+    <StyledFormGroup>
+      {label && <div className="label">{label && <span>{label}</span>}</div>}
+      {children}
+    </StyledFormGroup>
+  );
+}
+
+function Password({
+  label,
   name,
   required = false,
-  defaultTime,
-  defaultState = false,
+  placeholder = "Enter password",
 }) {
-  const [on, setOn] = useState(defaultState);
+  // Hide password state
+  const [show, setShow] = useState(false);
+
   return (
-    <TimeBox>
-      {on ? (
-        <input
-          type="time"
+    <StyledPassword>
+      <FormGroup label={label}>
+        <Input
+          type={`${show ? "text" : "password"}`}
           name={name}
           required={required}
-          defaultValue={defaultTime}
-        />
-      ) : (
-        <input
-          type="text"
-          onFocus={() => setOn(true)}
           placeholder={placeholder}
         />
-      )}
-      <BsClock size={16} />
-    </TimeBox>
+      </FormGroup>
+      <button type="button" onClick={() => setShow((s) => !s)}>
+        {show ? (
+          <EyeSlashIcon width={20} height={20} />
+        ) : (
+          <EyeIcon width={20} height={20} />
+        )}
+      </button>
+    </StyledPassword>
   );
 }
 
-function FormGroup({ children, label, error }) {
-  return (
-    <FormGroupDiv>
-      {(label || error) && (
-        <div className="label-error">
-          {label && <span>{label}</span>}
-          {error && <Error>{error}</Error>}
-        </div>
-      )}
-      {children}
-    </FormGroupDiv>
-  );
-}
-
-export {
-  Form,
-  Input,
-  Textarea,
-  FormGroup,
-  InputGroup,
-  ButtonGroup,
-  Select,
-  Time,
-};
+export { Form, FormGroup, Input, InputGroup, Password, Select, Textarea, Time };
