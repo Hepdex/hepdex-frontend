@@ -34,6 +34,12 @@ export default function FindWork() {
   // Jobs state
   const [jobs, setJobs] = useState([]);
 
+  // Job title param
+  const jobTitle = searchParams.get("jobTitle") ?? "";
+
+  // Input state
+  const [inputValue, setInputValue] = useState(jobTitle);
+
   // Page state
   const page = Number(searchParams.get("page") ?? 1);
 
@@ -90,7 +96,7 @@ export default function FindWork() {
           animation={false}
         >
           <div>
-            <SearchBox />
+            <SearchBox inputValue={inputValue} setInputValue={setInputValue} />
             {loading && (page === 1 || !pagination) ? (
               <ContentLoader />
             ) : (
@@ -118,7 +124,7 @@ export default function FindWork() {
                     )}
                   </JobList>
                 ) : (
-                  <NoJobs />
+                  <NoJobs setInputValue={setInputValue} />
                 )}
               </>
             )}

@@ -178,14 +178,15 @@ export default function JobList({ jobs, children }) {
                 </ul>
                 <ul className="job-info--meta">
                   <Badge className="neutral">Remote</Badge>
-                  <Badge className="neutral">
-                    {capitalizeFirst(job.country)}
-                  </Badge>
+
                   <Badge className="neutral">
                     {capitalizeFirst(job.jobType)}
                   </Badge>
                   <Badge className="neutral">
                     {capitalizeFirst(job.department)}
+                  </Badge>
+                  <Badge className="neutral">
+                    {capitalizeFirst(job.country)}
                   </Badge>
                 </ul>
               </div>

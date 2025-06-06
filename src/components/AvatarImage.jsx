@@ -5,6 +5,7 @@ import { flex } from "../GlobalStyles";
 const StyledAvatarImage = styled.div`
   border-radius: 50%;
   overflow: hidden;
+  display: inline-block;
 
   // Size
   ${(props) =>
