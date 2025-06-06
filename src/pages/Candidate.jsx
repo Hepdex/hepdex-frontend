@@ -177,29 +177,31 @@ export default function Candidate() {
 
                     <div className="profile-details--box">
                       <h3>Skills</h3>
-                      <div className="badge-list">
-                        {candidate?.bio?.skills.map((skill, index) => (
-                          <Badge className="neutral" key={index}>
-                            {skill}
-                          </Badge>
-                        )) ?? (
-                          <p>No skills have been added for this candidate.</p>
-                        )}
-                      </div>
+                      {candidate?.bio?.skills?.length > 0 ? (
+                        <div className="badge-list">
+                          {candidate.bio.skills.map((skill, index) => (
+                            <Badge className="neutral" key={index}>
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <p>No skills have been added for this candidate.</p>
+                      )}
                     </div>
                     <div className="profile-details--box">
                       <h3>Languages</h3>
-                      <div className="badge-list">
-                        {candidate?.bio?.languages.map((skill, index) => (
-                          <Badge className="neutral" key={index}>
-                            {skill}
-                          </Badge>
-                        )) ?? (
-                          <p>
-                            No languages have been added for this candidate.
-                          </p>
-                        )}
-                      </div>
+                      {candidate?.bio?.languages?.length > 0 ? (
+                        <div className="badge-list">
+                          {candidate.bio.languages.map((skill, index) => (
+                            <Badge className="neutral" key={index}>
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : (
+                        <p>No languages have been added for this candidate.</p>
+                      )}
                     </div>
                   </div>
                 </div>

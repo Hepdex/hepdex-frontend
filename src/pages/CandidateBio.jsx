@@ -6,14 +6,14 @@ import IconTitle from "../components/IconTitle";
 import Badge from "../components/Badge";
 import AvatarImage from "../components/AvatarImage";
 import Button from "../components/Button";
+import ViewResume from "../components/ViewResume";
+import useMutate from "../hooks/useMutate";
 import { BsPerson } from "react-icons/bs";
 import { useUserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
 import { capitalizeFirst } from "../utils/helpers";
 import { flex, mq } from "../GlobalStyles";
-import ViewResume from "../components/ViewResume";
 import { getResume } from "../services/apiResume";
-import useMutate from "../hooks/useMutate";
 
 const StyledCandidateBio = styled.div`
   // Profile
@@ -134,7 +134,7 @@ export default function CandidateBio() {
             <div className="profile-details">
               <div className="profile-details--box">
                 <h3>About</h3>
-                <p>{user.bio.about}</p>
+                <p>{user?.bio?.about ?? "No bio has been added."}</p>
               </div>
               <div className="profile-details--box">
                 <ul>
@@ -156,9 +156,10 @@ export default function CandidateBio() {
                   </li>
                 </ul>
               </div>
-              {user?.bio.skills && (
-                <div className="profile-details--box">
-                  <h3>Skills</h3>
+
+              <div className="profile-details--box">
+                <h3>Skills</h3>
+                {user?.bio?.skills?.length > 0 ? (
                   <div className="badge-list">
                     {user.bio.skills.map((skill, index) => (
                       <Badge className="neutral" key={index}>
@@ -166,11 +167,13 @@ export default function CandidateBio() {
                       </Badge>
                     ))}
                   </div>
-                </div>
-              )}
-              {user?.bio.languages && (
-                <div className="profile-details--box">
-                  <h3>Languages</h3>
+                ) : (
+                  <p>No skills have been added.</p>
+                )}
+              </div>
+              <div className="profile-details--box">
+                <h3>Languages</h3>
+                {user?.bio?.languages?.length > 0 ? (
                   <div className="badge-list">
                     {user.bio.languages.map((skill, index) => (
                       <Badge className="neutral" key={index}>
@@ -178,8 +181,10 @@ export default function CandidateBio() {
                       </Badge>
                     ))}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <p>No languages have been added.</p>
+                )}
+              </div>
               <div className="profile-details--box">
                 <h3>Resume</h3>
                 <div className="resume-ctas">
