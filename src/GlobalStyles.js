@@ -460,6 +460,10 @@ img{
   transition:  transform .5s ease-in, opacity .5s ease-in;
 }
 
+.custom-fade-up.sm{
+  transform: translateY(20%);
+}
+
 .aos-animate.custom-fade-up{
   opacity: 1;
   transform: translateY(0);
