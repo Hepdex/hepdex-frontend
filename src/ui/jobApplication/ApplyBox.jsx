@@ -110,7 +110,7 @@ export default function ApplyBox({ jobID }) {
               size="sm"
               disabled={loading}
             >
-              <span>Send application</span>
+              <span>Submit application</span>
               {loading && <Spinner />}
             </Button>
           </div>

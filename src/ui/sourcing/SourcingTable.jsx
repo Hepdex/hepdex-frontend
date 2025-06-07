@@ -148,7 +148,7 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
                         <tr
                           key={index}
                           onClick={() =>
-                            navigate(`/dashboard/candidates/${item._id}`)
+                            navigate(`/dashboard/browse-talent/${item._id}`)
                           }
                         >
                           <td>

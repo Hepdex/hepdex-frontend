@@ -14,7 +14,7 @@ import { countries } from "../data/countries";
 
 export default function EditCompany() {
   return (
-    <FormBox title="Edit company bio" subtitle="Update company details.">
+    <FormBox title="Edit company" subtitle="Update company details.">
       <EditCompanyForm />
     </FormBox>
   );

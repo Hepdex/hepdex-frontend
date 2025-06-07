@@ -47,7 +47,7 @@ const candidateMenu = [
   {
     text: "Profile",
     icon: <BsPersonFill />,
-    link: "/dashboard/candidate-profile",
+    link: "/dashboard/candidate-bio",
   },
 ];
 

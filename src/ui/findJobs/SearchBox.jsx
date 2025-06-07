@@ -4,7 +4,6 @@ import Filter from "../../components/Filter";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../../GlobalStyles";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
 import { FormGroup, Input, Select } from "../../components/Form";
 import { countries } from "../../data/countries";
 import { getDepartments } from "../../services/apiDepartments";
@@ -117,15 +116,12 @@ const StyledSearchBox = styled.div`
   }
 `;
 
-export default function SearchBox() {
+export default function SearchBox({ inputValue, setInputValue }) {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Job title param
   const jobTitle = searchParams.get("jobTitle") ?? "";
-
-  // Input state
-  const [inputValue, setInputInvalue] = useState(jobTitle || "");
 
   // Job types
   const jobTypes = ["Full-time", "Contractor", "Part-time"];
@@ -176,7 +172,7 @@ export default function SearchBox() {
     if (!e.target.value && jobTitle) setParams("jobTitle", e.target.value);
 
     // Set input value
-    setInputInvalue(e.target.value);
+    setInputValue(e.target.value);
   }
 
   // Clear search
@@ -185,7 +181,7 @@ export default function SearchBox() {
     setParams("jobTitle", "");
 
     // Clear input state
-    setInputInvalue("");
+    setInputValue("");
   }
 
   return (

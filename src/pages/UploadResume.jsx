@@ -73,7 +73,6 @@ export default function UploadResume() {
     maxSize: 2010000,
     accept: {
       "application/pdf": [".pdf"],
-      "image/jpeg": [".jpg", ".jpeg"],
     },
   });
 
@@ -130,7 +129,7 @@ export default function UploadResume() {
                   Drag your resume here or click to upload
                 </p>
                 <span className="upload-box--types">
-                  Maximum file size of 2 MB. Supports .pdf and .jpg
+                  Maximum file size of 2 MB. Supports only .pdf
                 </span>
               </div>
             </div>

@@ -2,7 +2,7 @@ import EyeSlashIcon from "../assets/icons/eye-slash.svg?react";
 import EyeIcon from "../assets/icons/eye.svg?react";
 import styled, { css } from "styled-components";
 import { useState } from "react";
-import { BsChevronDown, BsClock } from "react-icons/bs";
+import { BsArrowRight, BsChevronDown, BsClock, BsX } from "react-icons/bs";
 import { flex, mq } from "../GlobalStyles";
 
 // Form container
@@ -234,6 +234,51 @@ const StyledPassword = styled.div`
   }
 `;
 
+// Values box styles
+const StyledValuesBox = styled.div`
+  .values-box {
+    position: relative;
+
+    button.add-value {
+      top: calc(29px + 15px);
+      right: 12px;
+      background-color: transparent;
+      position: absolute;
+
+      svg {
+        fill: #757575;
+      }
+    }
+  }
+
+  .values-list {
+    ${flex(undefined, "center")}
+    gap: 12px;
+    margin-top: 8px;
+
+    li {
+      ${flex("center", "center")}
+      gap: 4px;
+      background-color: #f3f4f6;
+      border-radius: 2px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--color-grey-2);
+
+      button {
+        background-color: transparent;
+
+        svg {
+          margin-top: 1px;
+          fill: #757575;
+        }
+      }
+    }
+  }
+`;
+
 function Select({ children, className, alt = false, ...rest }) {
   return (
     <StyledSelect className={className} $alt={alt}>
@@ -257,12 +302,71 @@ function Time({ name, required = false, defaultTime }) {
   );
 }
 
-function FormGroup({ children, label }) {
+function FormGroup({ children, label, ...rest }) {
   return (
-    <StyledFormGroup>
+    <StyledFormGroup {...rest}>
       {label && <div className="label">{label && <span>{label}</span>}</div>}
       {children}
     </StyledFormGroup>
+  );
+}
+
+function ValuesBox({
+  state = [],
+  setState,
+  placeholder = "Enter values",
+  label,
+}) {
+  // Input state
+  const [inputValue, setInputValue] = useState("");
+
+  // Handle set value
+  const handleSetValue = (value) => {
+    setState((prev) => [...prev, value]);
+    setInputValue("");
+  };
+
+  return (
+    <StyledValuesBox>
+      <FormGroup className="values-box" label={label}>
+        <Input
+          placeholder={placeholder}
+          value={inputValue}
+          type="text"
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyUp={(e) => {
+            if ((e.key === "Enter" || e.code === 13) && e.target.value)
+              handleSetValue(e.target.value);
+          }}
+        />
+        {inputValue && (
+          <button
+            className="add-value"
+            type="button"
+            onClick={() => handleSetValue(inputValue)}
+          >
+            <BsArrowRight />
+          </button>
+        )}
+      </FormGroup>
+      {state.length > 0 && (
+        <ul className="values-list">
+          {state.map((item, i) => (
+            <li key={i}>
+              <span>{item}</span>
+              <button
+                type="button"
+                onClick={() =>
+                  setState((prev) => prev.filter((value) => value !== item))
+                }
+              >
+                <BsX size={16} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </StyledValuesBox>
   );
 }
 
@@ -296,4 +400,14 @@ function Password({
   );
 }
 
-export { Form, FormGroup, Input, InputGroup, Password, Select, Textarea, Time };
+export {
+  Form,
+  FormGroup,
+  Input,
+  ValuesBox,
+  InputGroup,
+  Password,
+  Select,
+  Textarea,
+  Time,
+};

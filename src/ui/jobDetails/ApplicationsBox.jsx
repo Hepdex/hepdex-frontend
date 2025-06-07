@@ -1,6 +1,7 @@
 import Container from "../../components/Container";
 import Button from "../../components/Button";
 import usePaginate from "../../hooks/usePaginate";
+import AvatarImage from "../../components/AvatarImage";
 import styled, { css } from "styled-components";
 import {
   BsChevronLeft,
@@ -11,11 +12,6 @@ import {
 import { flex, mq } from "../../GlobalStyles";
 import { Link, useSearchParams } from "react-router-dom";
 import { formatDate } from "../../utils/helpers";
-
-import ViewResume from "../../components/ViewResume";
-import { getResume } from "../../services/apiResume";
-import useMutate from "../../hooks/useMutate";
-import AvatarImage from "../../components/AvatarImage";
 import { Input } from "../../components/Form";
 
 // Applications
@@ -108,9 +104,6 @@ const Applications = styled.div`
 `;
 
 export default function ApplicationsBox({ job }) {
-  // Get resume
-  const [fetchResume, loading] = useMutate(getResume);
-
   // Search params
   const [searchParams] = useSearchParams();
 
@@ -169,11 +162,13 @@ export default function ApplicationsBox({ job }) {
                       <p className="applied">
                         Applied {formatDate(item.createdAt)}
                       </p>
-                      <ViewResume
-                        resumePath={item.resumePath}
-                        fetchResume={fetchResume}
-                        loading={loading}
-                      />
+                      <Button
+                        size="xs"
+                        as={Link}
+                        to={`/dashboard/browse-talent/${item.userID}`}
+                      >
+                        View
+                      </Button>
                     </div>
                   </li>
                 ))}
