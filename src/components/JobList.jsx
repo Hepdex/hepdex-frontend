@@ -1,22 +1,21 @@
+import AvatarImage from "./AvatarImage";
+import Badge from "./Badge";
+import Button from "./Button";
 import styled, { css } from "styled-components";
-import AvatarImage from "../../components/AvatarImage";
-import Badge from "../../components/Badge";
-import Button from "../../components/Button";
-import { flex, mq } from "../../GlobalStyles";
+import { flex, mq } from "../GlobalStyles";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { capitalizeFirst } from "../../utils/helpers";
+import { capitalizeFirst } from "../utils/helpers";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { useUserContext } from "../../context/UserContext";
+import { useUserContext } from "../context/UserContext";
 
-// Job list
+// Job list styles
 const StyledJobList = styled.div`
   & > ul {
     ${flex("center")}
     flex-direction: column;
     gap: 16px;
 
-    // Job
     .job {
       ${flex("space-between", "start")}
       flex-direction: column;
@@ -27,13 +26,6 @@ const StyledJobList = styled.div`
       padding: 20px 16px;
       border: 1px solid transparent;
       cursor: pointer;
-      ${mq(
-        "820px",
-        css`
-          align-items: center;
-          flex-direction: row;
-        `
-      )}
 
       &:hover {
         border: 1px solid var(--color-primary);
@@ -127,6 +119,24 @@ const StyledJobList = styled.div`
           }
         }
       }
+
+      ${mq(
+        "820px",
+        css`
+          align-items: center;
+          flex-direction: row;
+        `
+      )}
+
+      // Alternate
+      &.alternate {
+        background-color: var(--color-grey-1);
+
+        .neutral {
+          background-color: #edeef1;
+          color: #454545;
+        }
+      }
     }
   }
 
@@ -137,7 +147,7 @@ const StyledJobList = styled.div`
   }
 `;
 
-export default function JobList({ jobs, children }) {
+export default function JobList({ jobs, children, alternate = false }) {
   // Navigate hook
   const navigate = useNavigate();
 
@@ -153,7 +163,7 @@ export default function JobList({ jobs, children }) {
         {jobs.map((job, index) => (
           <li
             key={index}
-            className="job"
+            className={`job ${alternate ? "alternate" : ""}`}
             onClick={() =>
               user && isLoggedIn && user.role === "candidate"
                 ? navigate(`/dashboard/find-jobs/${job._id}`)
@@ -163,7 +173,7 @@ export default function JobList({ jobs, children }) {
             <div className="job-left">
               <AvatarImage>
                 <div className="no-image">
-                  {job.employer.companyName.slice(0, 1).toUpperCase()}
+                  {job.employer.companyName.at(0).toUpperCase()}
                 </div>
               </AvatarImage>
               <div className="job-info">
@@ -178,7 +188,6 @@ export default function JobList({ jobs, children }) {
                 </ul>
                 <ul className="job-info--meta">
                   <Badge className="neutral">Remote</Badge>
-
                   <Badge className="neutral">
                     {capitalizeFirst(job.jobType)}
                   </Badge>

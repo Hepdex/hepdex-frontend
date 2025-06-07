@@ -7,37 +7,47 @@ import Soundcloud from "../../assets/soundcloud.svg?react";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../../GlobalStyles";
 
-const Box = styled.div`
+// Portolio container
+const StyledPortfolio = styled.div`
   background-color: var(--color-grey-1);
   padding: 40px 0px;
+
   .portfolio {
-    ${flex("center")}
-    flex-direction: column;
-    row-gap: 16px;
-    p {
-      text-align: center;
-      color: var(--color-grey-2);
-    }
-    ul.logos {
-      ${flex("center", "center")}
-      flex-wrap: wrap;
-      gap: 32px;
-      ${mq(
-        "lg",
-        css`
-          column-gap: 64px;
-        `
-      )}
-      li {
-        svg {
-          height: 24px;
-          ${mq(
-            "lg",
-            css`
-              height: auto;
-            `
-          )}
+    &-inner {
+      ${flex("center")}
+      flex-direction: column;
+      row-gap: 16px;
+
+      p {
+        text-align: center;
+        color: var(--color-grey-2);
+      }
+
+      // Company logos
+      .company-logos {
+        ${flex("center", "center")}
+        flex-wrap: wrap;
+        gap: 32px;
+
+        li {
+          svg {
+            height: 24px;
+            ${mq(
+              "lg",
+              css`
+                height: auto;
+              `
+            )}
+          }
         }
+
+        // Large scrrens
+        ${mq(
+          "lg",
+          css`
+            column-gap: 64px;
+          `
+        )}
       }
     }
   }
@@ -45,11 +55,12 @@ const Box = styled.div`
 
 export default function Portfolio() {
   return (
-    <Box>
+    <StyledPortfolio className="portfolio">
       <Container>
-        <div className="portfolio">
-          <p>Trusted by 500+ companies and startups worldwide</p>
-          <ul className="logos">
+        <div className="portfolio-inner">
+          <p>Trusted by 500+ companies and startups worldwide.</p>
+          {/* Company logos*/}
+          <ul className="company-logos">
             <li>
               <Netflix />
             </li>
@@ -68,6 +79,6 @@ export default function Portfolio() {
           </ul>
         </div>
       </Container>
-    </Box>
+    </StyledPortfolio>
   );
 }

@@ -1,68 +1,24 @@
 import Button from "../components/Button";
 import DashboardTitle from "../components/DashboardTitle";
 import Spinner from "../components/Spinner";
-import SearchBox from "../ui/findJobs/SearchBox";
-import JobList from "../ui/findJobs/JobList";
-import NoJobs from "../ui/findJobs/NoJobs";
+import NoJobs from "../components/NoJobs";
+import JobList from "../components/JobList";
+import JobSearch from "../components/JobSearch";
 import ContentLoader from "../components/ContentLoader";
-import { searchJobs } from "../services/apiJobs";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import useSearchJobs from "../hooks/useSearchJobs";
 
 export default function FindJobs() {
-  // Search params
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  // Job title param
-  const jobTitle = searchParams.get("jobTitle") ?? "";
-
-  // Input state
-  const [inputValue, setInputValue] = useState(jobTitle);
-
-  // Jobs state
-  const [jobs, setJobs] = useState([]);
-
-  // Page state
-  const page = Number(searchParams.get("page") ?? 1);
-
-  // Pagination
-  const [pagination, setPagination] = useState(undefined);
-
-  // Loading state
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        // Get query string
-        const queryString = `${
-          searchParams.toString() ? `?${searchParams.toString()}` : ""
-        }`;
-
-        // Send request
-        const response = await searchJobs(undefined, queryString);
-
-        // Check response
-        if (response?.jobs) {
-          // Set jobs
-          setJobs((prev) =>
-            Number(response.pagination.currentPage) === 1
-              ? response.jobs
-              : [...prev, ...response.jobs]
-          );
-
-          // Set pagination
-          setPagination(response.pagination);
-        }
-      } catch (err) {
-        // Log error
-        console.error(err.message);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [searchParams]);
+  // Search jobs hook
+  const {
+    jobs,
+    jobTitle,
+    setJobTitle,
+    page,
+    pagination,
+    loading,
+    searchParams,
+    setSearchParams,
+  } = useSearchJobs();
   return (
     <>
       <DashboardTitle
@@ -70,7 +26,7 @@ export default function FindJobs() {
         subtitle="Discover your next big opportunity"
         links={[{ name: "Find jobs" }]}
       />
-      <SearchBox inputValue={inputValue} setInputValue={setInputValue} />
+      <JobSearch jobTitle={jobTitle} setJobTitle={setJobTitle} />
       {loading && (page === 1 || !pagination) ? (
         <ContentLoader />
       ) : (
@@ -95,7 +51,7 @@ export default function FindJobs() {
               )}
             </JobList>
           ) : (
-            <NoJobs setInputValue={setInputValue} />
+            <NoJobs />
           )}
         </>
       )}

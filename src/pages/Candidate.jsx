@@ -12,7 +12,7 @@ import styled, { css } from "styled-components";
 import { useParams } from "react-router-dom";
 import { BsPerson } from "react-icons/bs";
 import { flex, mq } from "../GlobalStyles";
-import { getCandidate } from "../services/apiCandidates";
+import { getCandidate } from "../services/apiCandidate";
 import { getResume } from "../services/apiResume";
 import { capitalizeFirst } from "../utils/helpers";
 

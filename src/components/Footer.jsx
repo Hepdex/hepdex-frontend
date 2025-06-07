@@ -1,13 +1,14 @@
 import Container from "./Container";
 import Logo from "./Logo";
 import styled, { css } from "styled-components";
+import { useUserContext } from "../context/UserContext";
 import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
   FaXTwitter,
 } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
 
 // Footer container
@@ -23,18 +24,22 @@ const StyledFooter = styled.footer`
     `
   )}
 
-  // Links
-    a {
+  // Links & Buttons
+    a, button {
     transition: all.3s ease-in-out;
     &:hover {
       color: var(--color-white-1);
     }
   }
 
+  button {
+    background-color: transparent;
+  }
+
   .footer {
     /* ====================
      Top Section 
-  ===================== */
+    ===================== */
     &--top {
       padding-bottom: 48px;
       border-bottom: 1px solid #e5e5e51a;
@@ -47,7 +52,7 @@ const StyledFooter = styled.footer`
       )}
 
       // Footer row
-    &__row {
+      &__row {
         row-gap: 32px;
 
         // Footer column
@@ -79,7 +84,7 @@ const StyledFooter = styled.footer`
 
     /* ====================
      Bottom Section 
-  ===================== */
+    ===================== */
     &--bottom {
       ${flex("space-between", "center")}
       padding: 24px 0px;
@@ -95,6 +100,29 @@ const StyledFooter = styled.footer`
 `;
 
 export default function Footer() {
+  // User context
+  const { user, isLoggedIn } = useUserContext();
+
+  // Navigate hook
+  const navigate = useNavigate();
+
+  // Handle browse experts
+  const handleBrowseExperts = (jobTitle) => {
+    // Check user role and if user is logged in
+
+    if (user?.role === "employer" && isLoggedIn) {
+      // Search jobTitle
+      navigate(`/dashboard/browse-talent?jobTitle=${jobTitle}`);
+    } else {
+      // Navigate to login
+      navigate("/login");
+    }
+  };
+
+  // Handle find work
+  const handleFindWork = (jobTitle) => {
+    navigate(`/find-work?jobTitle=${jobTitle}`);
+  };
   return (
     <StyledFooter className="footer">
       <Container>
@@ -123,16 +151,34 @@ export default function Footer() {
                 <h3 className="footer--col__title">Hire Experts</h3>
                 <ul>
                   <li>
-                    <Link>Data Entry Experts</Link>
+                    <button
+                      onClick={() =>
+                        handleBrowseExperts("Data entry specialist")
+                      }
+                    >
+                      Data Entry Experts
+                    </button>
                   </li>
                   <li>
-                    <Link>Virtual Assistants</Link>
+                    <button
+                      onClick={() => handleBrowseExperts("Virtual assistant")}
+                    >
+                      Virtual Assistants
+                    </button>
                   </li>
                   <li>
-                    <Link>Help Desk Experts</Link>
+                    <button
+                      onClick={() => handleBrowseExperts("Help desk support")}
+                    >
+                      Help Desk Experts
+                    </button>
                   </li>
                   <li>
-                    <Link>Content Writers</Link>
+                    <button
+                      onClick={() => handleBrowseExperts("Content writers")}
+                    >
+                      Content Writers
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -147,16 +193,24 @@ export default function Footer() {
                 <h3 className="footer--col__title">Find Work</h3>
                 <ul>
                   <li>
-                    <Link>Find Virtual Assistant Jobs</Link>
+                    <button onClick={() => handleFindWork("Virtual assistant")}>
+                      Find Virtual Assistant Jobs
+                    </button>
                   </li>
                   <li>
-                    <Link>Find Developer Jobs</Link>
+                    <button onClick={() => handleFindWork("Developer")}>
+                      Find Developer Jobs
+                    </button>
                   </li>
                   <li>
-                    <Link>Find Help Desk Jobs</Link>
+                    <button onClick={() => handleFindWork("Help desk support")}>
+                      Find Help Desk Jobs
+                    </button>
                   </li>
                   <li>
-                    <Link>Find Marketing Jobs</Link>
+                    <button onClick={() => handleFindWork("Digital marketer")}>
+                      Find Marketing Jobs
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -190,22 +244,22 @@ export default function Footer() {
           </div>
           <ul className="footer--bottom__social">
             <li>
-              <Link>
+              <Link to="https://www.facebook.com" target="_blank">
                 <FaFacebookF size={24} />
               </Link>
             </li>
             <li>
-              <Link>
+              <Link to="https://www.twitter.com" target="_blank">
                 <FaXTwitter size={24} />
               </Link>
             </li>
             <li>
-              <Link>
+              <Link to="https://www.instagram.com" target="_blank">
                 <FaInstagram size={24} />
               </Link>
             </li>
             <li>
-              <Link>
+              <Link to="https://www.linkedin.com" target="_blank">
                 <FaLinkedinIn size={24} />
               </Link>
             </li>

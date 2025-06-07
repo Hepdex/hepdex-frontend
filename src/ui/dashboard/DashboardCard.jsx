@@ -1,5 +1,6 @@
 import Container from "../../components/Container";
 import Button from "../../components/Button";
+import BoxIcon from "../../components/BoxIcon";
 import styled, { css } from "styled-components";
 import { BsCheck } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -81,7 +82,7 @@ export default function DashboardCard({
       ]}
     >
       <CardBox className="dashboard-card">
-        {icon && <div className="dashboard-card__icon box-icon">{icon}</div>}
+        {icon && <BoxIcon className="dashboard-card__icon">{icon}</BoxIcon>}
 
         {title && <h3 className="dashboard-card__title">{title}</h3>}
         {text && <p className="dashboard-card__text">{text}</p>}

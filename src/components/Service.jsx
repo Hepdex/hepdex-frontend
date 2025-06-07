@@ -1,6 +1,7 @@
-import styled, { css } from "styled-components";
 import Container from "./Container";
-import { flex, mq } from "../GlobalStyles";
+import BoxIcon from "./BoxIcon";
+import styled, { css } from "styled-components";
+import { mq } from "../GlobalStyles";
 
 // Service container
 const StyledService = styled.div`
@@ -8,16 +9,6 @@ const StyledService = styled.div`
 
   .service {
     color: var(--color-grey-2);
-
-    &-icon {
-      border-radius: 8px;
-      height: 80px;
-      width: 80px;
-      display: inline-block;
-      ${flex("center", "center")}
-      background-color: var(--color-secondary);
-      margin-bottom: 24px;
-    }
 
     &-title {
       font-size: 22px;
@@ -49,7 +40,7 @@ export default function Service({ icon, title, text }) {
       ]}
     >
       <StyledService className="service">
-        {icon && <span className="service-icon">{icon}</span>}
+        {icon && <BoxIcon>{icon}</BoxIcon>}
         <h3 className="service-title">{title}</h3>
         <p className="service-text">{text}</p>
       </StyledService>

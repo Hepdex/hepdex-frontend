@@ -1,15 +1,16 @@
 import Section from "../../components/Section";
 import Button from "../../components/Button";
+import InfoBox from "../../components/InfoBox";
 import { Link } from "react-router-dom";
 
 export default function Team() {
   return (
     <Section>
-      <div className="info-box">
+      <InfoBox>
         <div data-aos className="img-box custom-fade-right">
           <img src="team.jpg" alt="hire-team" />
         </div>
-        <div className="content custom-fade-left" data-aos>
+        <div className="content-box custom-fade-left" data-aos>
           <h1 className="heading-md">
             Bring your ideas to life with a dedicated team
           </h1>
@@ -22,7 +23,7 @@ export default function Team() {
             Hire a Team
           </Button>
         </div>
-      </div>
+      </InfoBox>
     </Section>
   );
 }

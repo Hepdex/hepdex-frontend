@@ -119,6 +119,7 @@ img{
 .heading-lg{
   font-size: 42px;
   line-height: 48px;
+
   ${mq(
     "sm",
     css`
@@ -126,6 +127,7 @@ img{
       line-height: 64px;
     `
   )}
+  
   ${mq(
     "xl",
     css`
@@ -144,6 +146,7 @@ img{
 .heading-md{
   font-size: 36px;
   line-height: 44px;
+
   ${mq(
     "sm",
     css`
@@ -151,6 +154,7 @@ img{
       line-height: 56px;
     `
   )}
+
   ${mq(
     "lg",
     css`
@@ -158,6 +162,7 @@ img{
       line-height: 60px;
     `
   )}
+
   font-weight: 500;
 }
 
@@ -172,90 +177,6 @@ img{
   line-height: 28px;
 }
 
-// Steps
-.steps {
-  ${flex("center")}
-  flex-direction: column;
-  li:last-child {
-    .icon {
-      align-self: flex-start;
-    }
-    .arrow {
-      display: none;
-    }
-    .content{
-      padding-bottom: 0px;
-    }
-  }
-}
-
-// Info box
-.info-box{
-  overflow: hidden;
-  &#talent{
-    flex-direction: column-reverse;
-  }
-  ${flex("center", "center")}
-  flex-direction: column;
-  column-gap: 32px;
-  row-gap: 24px;
-  ${mq(
-    "700px",
-    css`
-      flex-direction: row !important;
-      align-items: flex-start;
-    `
-  )}
-  ${mq(
-    "lg",
-    css`
-      column-gap: 64px;
-    `
-  )}
-  .content{
-    width: 100%;
-    p {
-      color: var(--color-grey-2);
-      margin-top: 12px;
-    }
-    a {
-      margin-top: 24px;
-    }
-    max-width: 400px;
-    ${mq(
-      "700px",
-      css`
-        max-width: 500px;
-      `
-    )}
-    ${mq(
-      "800px",
-      css`
-        padding-top: 24px;
-      `
-    )}
-  }
-  .img-box{
-    max-width: 400px;
-    width: 100%;
-    img{
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
-
-
-
-// Box icon
-.box-icon{
-  background-color: var(--color-secondary);
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  ${flex("center", "center")}
-  margin-bottom: 24px;
-}
 
 // Overlay
 .overlay{
@@ -352,35 +273,6 @@ img{
     }
   }
 }
-
-
-
-  // Search box
-      /* .search-box {
-        position: relative;
-        max-width: 160px;
-        &__input {
-          padding-left: 36px;
-          padding-right: 12px;
-          width: 100%;
-          background-color: var(--color-white-1);
-          border-radius: 4px;
-          line-height: 40px;
-          font-size: 15px;
-          max-height: 40px;
-          border: 1px solid var(--color-grey-3);
-          transition: border 0.4s ease-in-out;
-          &:focus {
-            border-color: #757575;
-          }
-        }
-        svg {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-          fill: #757575;
-        }
-      } */
 
 
    // Pagination

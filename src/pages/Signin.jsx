@@ -1,83 +1,83 @@
 import useMutate from "../hooks/useMutate";
 import Preloader from "../components/Preloader";
-import useDocumentTitle from "../utils/TitleUpdater";
-import formStyles from "../styles/FormStyles.module.css";
+import AuthBox from "../components/AuthBox";
+import Button from "../components/Button";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  FormBox,
-  FormButton,
-  FormHeader,
-  InputField,
-  PasswordField,
-} from "../components/FormElements";
-import { Toastify } from "../components/Toastify";
+import { Form, FormGroup, Input, Password } from "../components/Form";
 import { useUserContext } from "../context/UserContext";
 import { login } from "../services/apiAuth";
+import { notify } from "../utils/helpers";
 
 const Signin = () => {
-  useDocumentTitle("Hepdex - Login");
+  // Document title
+  useDocumentTitle("Login");
+
+  // Navigate hook
   const navigate = useNavigate();
+
+  // User login
   const [userLogin, loading] = useMutate(login);
+
+  // User context
   const { setUser, setIsLoggedIn } = useUserContext();
 
   // handle user signin form
   const signInHandler = async (e) => {
+    // Prevent default submit
     e.preventDefault();
-    const email = e.target.elements.email.value;
-    const password = e.target.elements.password.value;
-    if (email === "" || !email.includes("@")) {
-      Toastify("Email address is required");
-    } else if (password === "" || password.length < 5) {
-      Toastify("Password is required");
-    } else {
-      const data = {
-        email,
-        password,
-      };
 
-      const response = await userLogin(data);
-      if (response?.user) {
-        setUser(response.user);
-        setIsLoggedIn(true);
-        // Redirect employer
-        if (response.user.role === "employer") navigate("/dashboard/home");
-        // Redirect candidate
-        if (response.user.role === "candidate")
-          navigate("/dashboard/find-jobs");
-      } else {
-        Toastify(response);
-      }
+    // Get values
+    const data = Object.fromEntries(new FormData(e.target));
+
+    // Send request
+    const response = await userLogin(data);
+
+    // Check response
+    if (response?.user) {
+      // Set user
+      setUser(response.user);
+
+      // Set logged in
+      setIsLoggedIn(true);
+
+      // Redirect employer
+      if (response.user.role === "employer") navigate("/dashboard/home");
+
+      // Redirect candidate
+      if (response.user.role === "candidate") navigate("/dashboard/find-jobs");
+    } else {
+      // Error
+      notify(response, "error");
     }
   };
 
   return (
-    <div className={formStyles.formContainer}>
-      <FormBox actionHandler={signInHandler}>
-        <FormHeader
-          title="Welcome back!"
-          titleText="Don't have an account yet?"
-          titleLink="Sign up"
-        />
-
-        <InputField
-          labelValue="Email address"
-          name="email"
-          placeHolder="Enter your email address"
-        />
-        <PasswordField
-          labelValue="Password"
+    <AuthBox
+      title="Welcome back!"
+      subtitle={
+        <>
+          Don't have an account yet? <Link to="/signup">Sign up</Link>
+        </>
+      }
+    >
+      <Form $gap={18} onSubmit={signInHandler}>
+        <FormGroup label="Email address">
+          <Input name="email" placeholder="Enter email address" required />
+        </FormGroup>
+        <Password
           name="password"
-          placeHolder="Enter your password"
+          placeholder="Enter password"
+          label="Password"
+          required
         />
-
-        <Link to="/forgot-password" className={formStyles.forgotLink}>
-          Forgot password?
-        </Link>
-
-        <FormButton value="Login" />
-      </FormBox>
+        <Link to="/forgot-password">Forgot password?</Link>
+        <div className="submit-box">
+          <Button>Login</Button>
+        </div>
+      </Form>
       {loading ? <Preloader /> : null}
-    </div>
+    </AuthBox>
   );
 };
 

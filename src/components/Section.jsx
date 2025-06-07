@@ -2,14 +2,10 @@ import Container from "./Container";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 
-const SectionBox = styled.section`
+// Section container
+const StyledSection = styled.section`
   padding-top: 72px;
-  ${mq(
-    "lg",
-    css`
-      padding-top: 96px;
-    `
-  )}
+
   // Title
   & .title {
     text-align: center;
@@ -20,19 +16,23 @@ const SectionBox = styled.section`
     margin: 0 auto;
     margin-bottom: 40px;
     row-gap: 8px;
+
+    p {
+      color: var(--color-grey-2);
+    }
+
+    // Large screens
     ${mq(
       "lg",
       css`
         margin-bottom: 56px;
       `
     )}
-    p {
-      color: var(--color-grey-2);
-    }
   }
-  // Set margin
+
+  // Set padding bottom
   ${(props) =>
-    props.$marginBottom &&
+    props.$spaceBottom &&
     css`
       padding-bottom: 72px;
       ${mq(
@@ -42,18 +42,26 @@ const SectionBox = styled.section`
         `
       )}
     `}
+
+  // Large screens
+  ${mq(
+    "lg",
+    css`
+      padding-top: 96px;
+    `
+  )}
 `;
 
 export default function Section({
   title,
   subtitle,
   children,
-  marginBottom,
+  spaceBottom,
   animation = true,
   ...rest
 }) {
   return (
-    <SectionBox $marginBottom={marginBottom} {...rest}>
+    <StyledSection $spaceBottom={spaceBottom} {...rest}>
       <Container>
         {title && (
           <div
@@ -66,6 +74,6 @@ export default function Section({
         )}
         {children}
       </Container>
-    </SectionBox>
+    </StyledSection>
   );
 }
