@@ -13,6 +13,12 @@ export default function FindJobs() {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // Job title param
+  const jobTitle = searchParams.get("jobTitle") ?? "";
+
+  // Input state
+  const [inputValue, setInputValue] = useState(jobTitle);
+
   // Jobs state
   const [jobs, setJobs] = useState([]);
 
@@ -57,7 +63,6 @@ export default function FindJobs() {
       }
     })();
   }, [searchParams]);
-
   return (
     <>
       <DashboardTitle
@@ -65,7 +70,7 @@ export default function FindJobs() {
         subtitle="Discover your next big opportunity"
         links={[{ name: "Find jobs" }]}
       />
-      <SearchBox />
+      <SearchBox inputValue={inputValue} setInputValue={setInputValue} />
       {loading && (page === 1 || !pagination) ? (
         <ContentLoader />
       ) : (
@@ -78,7 +83,7 @@ export default function FindJobs() {
                     $loading={loading}
                     disabled={loading}
                     onClick={() => {
-                      const params = new URLSearchParams();
+                      const params = new URLSearchParams(searchParams);
                       params.set("page", Number(pagination.currentPage) + 1);
                       setSearchParams(params);
                     }}
@@ -90,7 +95,7 @@ export default function FindJobs() {
               )}
             </JobList>
           ) : (
-            <NoJobs />
+            <NoJobs setInputValue={setInputValue} />
           )}
         </>
       )}

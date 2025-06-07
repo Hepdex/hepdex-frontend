@@ -23,6 +23,7 @@ import FindJobs from "./pages/FindJobs";
 import UploadResume from "./pages/UploadResume";
 import JobApplication from "./pages/JobApplication";
 import Services from "./pages/Services";
+import FindWork from "./pages/FindWork";
 import Signup from "./pages/Signup";
 import CompanySignup from "./pages/CompanySignup";
 import EmployerSignup from "./pages/EmployerSignup";
@@ -35,6 +36,9 @@ import { fetchUser } from "./services/apiUser";
 import { useUserContext } from "./context/UserContext";
 import { ToastContainer } from "react-toastify";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import CandidateBio from "./pages/CandidateBio";
+import EditCandidate from "./pages/EditCandidate";
+import Candidate from "./pages/Candidate";
 
 // Set emojis
 polyfillCountryFlagEmojis();
@@ -88,6 +92,7 @@ export default function App() {
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
           <Route path="services" element={<Services />} />
+          <Route path="find-work" element={<FindWork />} />
           
         </Route>
         <Route
@@ -105,8 +110,10 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="company-bio" element={<Company />} />
           <Route path="browse-talent" element={<Sourcing />} />
+          <Route path="browse-talent/:id" element={<Candidate />} />
           <Route path="find-jobs" element={<FindJobs />} />
           <Route path="find-jobs/:jobID" element={<JobApplication />} />
+          <Route path="candidate-bio" element={<CandidateBio />} />
         </Route>
         <Route
           element={
@@ -119,6 +126,7 @@ export default function App() {
           <Route element={<EditJob />} path="edit-job/:jobID" />
           <Route element={<EditCompany />} path="edit-company" />
           <Route element={<UploadResume />} path="upload-resume" />
+          <Route element={<EditCandidate />} path="edit-profile" />
         </Route>
         <Route path="login" element={<Signin />} />
         <Route path="signup" element={<Signup />} />

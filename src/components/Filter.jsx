@@ -10,7 +10,6 @@ import { capitalizeFirst } from "../utils/helpers";
 
 // Filter box
 const FilterBox = styled.div`
-  position: relative;
   ${flex(undefined, "center")}
   display: inline-flex;
   gap: 12px;
@@ -54,8 +53,7 @@ const FilterBox = styled.div`
         color: var(--color-black-1);
         background-color: var(--color-secondary);
         border-radius: 4px;
-        min-height: 40px;
-        max-height: 40px;
+        height: 40px;
         border: 1px solid var(--color-primary);
         padding: 0 16px;
         gap: 8px;
@@ -86,12 +84,11 @@ export default function Filter({ children, id, fields }) {
     // Prevent default submit
     e.preventDefault();
     // Get form values
-    const formData = new FormData(e.target);
-    let data = Object.fromEntries(formData);
+    const data = Object.fromEntries(new FormData(e.target));
+
     // Set params
     const params = new URLSearchParams(searchParams);
-    Object.entries(data).forEach((item) => {
-      const [key, value] = item;
+    Object.entries(data).forEach(([key, value]) => {
       if (value) params.set(key, value);
     });
     // Delete page
@@ -111,6 +108,7 @@ export default function Filter({ children, id, fields }) {
       // Set menu position
       let top = `${rect.bottom + 12}px`;
       let left = `${rect.left}px`;
+
       // Check if menu is close to right edge
       if (rect.left + menu.offsetWidth + 20 > window.innerWidth) {
         left = `${
@@ -198,7 +196,7 @@ export default function Filter({ children, id, fields }) {
         </ul>
       )}
       {open && (
-        <Dropdown close={close} menuId={id}>
+        <Dropdown close={close} menuId={id} btnId={`${id}__btn`}>
           <div className="filter-dropdown" ref={menuRef}>
             <Form $gap={16} onSubmit={setFilter}>
               {children}

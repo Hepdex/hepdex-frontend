@@ -82,7 +82,7 @@ export default function Sourcing() {
   // Candidates state
   const [candidates, setCandidates] = useState(undefined);
   // Fetch candidates
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(search ? true : false);
 
   // Fetch candidates
   useEffect(() => {

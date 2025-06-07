@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { capitalizeFirst } from "../../utils/helpers";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { useUserContext } from "../../context/UserContext";
 
 // Job list
 const StyledJobList = styled.div`
@@ -140,6 +141,9 @@ export default function JobList({ jobs, children }) {
   // Navigate hook
   const navigate = useNavigate();
 
+  // User context
+  const { user, isLoggedIn } = useUserContext();
+
   // Payment intervals
   const intervals = { monthly: "month", annually: "year", hourly: "hour" };
 
@@ -150,7 +154,11 @@ export default function JobList({ jobs, children }) {
           <li
             key={index}
             className="job"
-            onClick={() => navigate(`/dashboard/find-jobs/${job._id}`)}
+            onClick={() =>
+              user && isLoggedIn && user.role === "candidate"
+                ? navigate(`/dashboard/find-jobs/${job._id}`)
+                : navigate("/login")
+            }
           >
             <div className="job-left">
               <AvatarImage>
@@ -170,14 +178,15 @@ export default function JobList({ jobs, children }) {
                 </ul>
                 <ul className="job-info--meta">
                   <Badge className="neutral">Remote</Badge>
-                  <Badge className="neutral">
-                    {capitalizeFirst(job.country)}
-                  </Badge>
+
                   <Badge className="neutral">
                     {capitalizeFirst(job.jobType)}
                   </Badge>
                   <Badge className="neutral">
                     {capitalizeFirst(job.department)}
+                  </Badge>
+                  <Badge className="neutral">
+                    {capitalizeFirst(job.country)}
                   </Badge>
                 </ul>
               </div>
