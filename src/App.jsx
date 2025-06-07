@@ -23,6 +23,12 @@ import FindJobs from "./pages/FindJobs";
 import UploadResume from "./pages/UploadResume";
 import JobApplication from "./pages/JobApplication";
 import Services from "./pages/Services";
+import Signup from "./pages/Signup";
+import CompanySignup from "./pages/CompanySignup";
+import EmployerSignup from "./pages/EmployerSignup";
+import CandidateSignup from "./pages/CandidateSignup";
+import AddBio from "./pages/AddBio";
+import ConfirmEmail from "./pages/ConfirmEmail";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUser } from "./services/apiUser";
@@ -82,6 +88,7 @@ export default function App() {
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
           <Route path="services" element={<Services />} />
+          
         </Route>
         <Route
           element={
@@ -114,6 +121,12 @@ export default function App() {
           <Route element={<UploadResume />} path="upload-resume" />
         </Route>
         <Route path="login" element={<Signin />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="employer/signup" element={<EmployerSignup />} />
+        <Route path="candidate/signup" element={<CandidateSignup />} />
+        <Route path="company/signup" element={<CompanySignup />} />
+        <Route path="add-bio" element={<AddBio />} />
+        <Route path="confirm-email" element={<ConfirmEmail />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
       </Routes>
     </div>
