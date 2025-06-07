@@ -1,0 +1,695 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.contentSection {
+  z-index: 2;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 400px;
+}
+
+.rightSection {
+  flex: 0 0 70%;
+  background: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.formContainer {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.description {
+  font-size: 1.5rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.infoBox {
+  background: #e7f3ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.infoIcon {
+  color: #2563eb;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.infoContent {
+  flex: 1;
+}
+
+.infoTitle {
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.infoText {
+  color: #6c757d;
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 1.4;
+}
+
+.linkText {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.required {
+  color: #dc3545;
+  margin-left: 0.25rem;
+}
+
+.input, .select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input:hover, .select:hover {
+  border-color: #2563eb;
+}
+
+.fileInput {
+  padding: 0.75rem 1rem;
+  border: 2px dashed #e9ecef;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+  background: white;
+  cursor: pointer;
+}
+
+.fileInput:hover {
+  border-color: #2563eb;
+  background: #f8f9ff;
+}
+
+.fileInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.inputError:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+.errorText {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #dc3545;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.select option {
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Ensure flags display properly in mobile */
+@media (max-width: 768px) {
+  .select option {
+    font-size: 1.25rem;
+    padding: 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .select option {
+    font-size: 1rem;
+    padding: 0.3rem;
+  }
+}
+
+.helperText {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.submitButton {
+  background: #915dc2;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.submitButton:hover {
+  background: #7c43b1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(145, 93, 194, 0.3);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+/* Error Dialog Styles */
+.errorDialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.errorDialog {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: errorDialogSlideIn 0.3s ease-out;
+}
+
+@keyframes errorDialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.errorDialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.errorDialogTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #dc3545;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.errorDialogTitle::before {
+  content: "⚠️";
+  font-size: 1.25rem;
+}
+
+.errorDialogClose {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.errorDialogClose:hover {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.errorDialogClose:active {
+  transform: scale(0.95);
+}
+
+.errorDialogContent {
+  padding: 1rem 1.5rem;
+}
+
+.errorDialogMessage {
+  font-size: 1.5rem;
+  color: #495057;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.errorDialogFooter {
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #e9ecef;
+}
+
+.errorDialogButton {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.errorDialogButton:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.errorDialogButton:active {
+  transform: translateY(0);
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .leftSection {
+    flex: 0 0 35%;
+  }
+  
+  .rightSection {
+    flex: 0 0 65%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .leftSection {
+    min-height: 300px;
+    flex: 0 0 auto;
+    padding: 1.5rem;
+  }
+
+  .rightSection {
+    height: auto;
+    overflow-y: visible;
+    flex: 1;
+  }
+
+  .leftTitle {
+    font-size: 2rem;
+  }
+
+  .leftDescription {
+    font-size: 1rem;
+  }
+
+  .decorativePattern {
+    height: 40%;
+    padding: 1rem;
+  }
+
+  .circle {
+    width: 16px;
+    height: 16px;
+  }
+
+  .patternRow:nth-child(even) {
+    margin-left: 10px;
+  }
+
+  .header {
+    padding: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .content {
+    padding: 1.5rem 1rem;
+  }
+
+  .title, .subtitle {
+    font-size: 1.75rem;
+  }
+
+  .description {
+    font-size: 1.25rem;
+  }
+
+  .infoBox {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .form {
+    gap: 1.25rem;
+  }
+
+  .input, .select, .fileInput {
+    font-size: 1.25rem;
+    padding: 0.875rem;
+  }
+
+  .label {
+    font-size: 1rem;
+  }
+
+  .helperText, .errorText {
+    font-size: 1rem;
+  }
+
+  .submitButton {
+    font-size: 1.25rem;
+  }
+
+  /* Error Dialog Mobile Styles */
+  .errorDialogOverlay {
+    padding: 0.75rem;
+  }
+
+  .errorDialog {
+    max-width: none;
+    width: calc(100% - 1.5rem);
+  }
+
+  .errorDialogHeader {
+    padding: 1.25rem 1.25rem 0.75rem 1.25rem;
+  }
+
+  .errorDialogTitle {
+    font-size: 1.25rem;
+  }
+
+  .errorDialogClose {
+    font-size: 1.75rem;
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .errorDialogContent {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .errorDialogMessage {
+    font-size: 1rem;
+  }
+
+  .errorDialogFooter {
+    padding: 0.75rem 1.25rem 1.25rem 1.25rem;
+  }
+
+  .errorDialogButton {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .leftSection {
+    min-height: 250px;
+    padding: 1rem;
+  }
+
+  .logoSection {
+    margin-bottom: 1rem;
+  }
+
+  .leftTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .leftDescription {
+    font-size: 0.875rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .title, .subtitle {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .header {
+    padding: 0.75rem;
+    justify-content: space-between;
+  }
+
+  .loginLink {
+    order: -1;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .backButton, .settingsButton {
+    flex: 1;
+  }
+
+  .input, .select, .fileInput {
+    padding: 0.875rem;
+    font-size: 1rem;
+  }
+
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .helperText, .errorText {
+    font-size: 0.9rem;
+  }
+
+  .submitButton {
+    padding: 1rem;
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .form {
+    gap: 1rem;
+  }
+
+  .formGroup {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Error Dialog Small Mobile Styles */
+  .errorDialogOverlay {
+    padding: 0.5rem;
+  }
+
+  .errorDialog {
+    width: calc(100% - 1rem);
+    border-radius: 8px;
+  }
+
+  .errorDialogHeader {
+    padding: 1rem 1rem 0.5rem 1rem;
+  }
+
+  .errorDialogTitle {
+    font-size: 1.1rem;
+  }
+
+  .errorDialogTitle::before {
+    font-size: 1rem;
+  }
+
+  .errorDialogClose {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .errorDialogContent {
+    padding: 0.5rem 1rem;
+  }
+
+  .errorDialogMessage {
+    font-size: 0.9rem;
+  }
+
+  .errorDialogFooter {
+    padding: 0.5rem 1rem 1rem 1rem;
+  }
+
+  .errorDialogButton {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+}
+
+/* Additional responsive tweaks for very small screens */
+@media (max-width: 320px) {
+  .content {
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .input, .select, .fileInput {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .submitButton {
+    padding: 0.875rem;
+    font-size: 0.9rem;
+  }
+
+  /* Error Dialog Extra Small Mobile Styles */
+  .errorDialogOverlay {
+    padding: 0.25rem;
+  }
+
+  .errorDialog {
+    width: calc(100% - 0.5rem);
+  }
+
+  .errorDialogHeader {
+    padding: 0.75rem 0.75rem 0.25rem 0.75rem;
+  }
+
+  .errorDialogTitle {
+    font-size: 1rem;
+  }
+
+  .errorDialogTitle::before {
+    font-size: 0.9rem;
+  }
+
+  .errorDialogClose {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .errorDialogContent {
+    padding: 0.25rem 0.75rem;
+  }
+
+  .errorDialogMessage {
+    font-size: 0.8rem;
+  }
+
+  .errorDialogFooter {
+    padding: 0.25rem 0.75rem 0.75rem 0.75rem;
+  }
+
+  .errorDialogButton {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
