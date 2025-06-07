@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/CompanySignup.module.css';
 import { IoChevronDown, IoClose } from 'react-icons/io5';
-import {apiFetcher2, API_URL} from "../utils/helpers"; // Import any helper functions if needed
+import {apiFetcher2, API_URL, countries} from "../utils/helpers"; // Import any helper functions if needed
 
 const CompanySignup = () => {
   const navigate = useNavigate();
@@ -46,10 +46,6 @@ const CompanySignup = () => {
     }
   }, [navigate]);
 
-  const countries = [
-    'United States', 'Canada', 'United Kingdom', 'Germany', 'France', 
-    'Australia', 'Netherlands', 'Spain', 'Italy', 'Other'
-  ];
 
   const companySizes = [
     '1-10 employees', '11-50 employees', '51-200 employees', 
@@ -287,9 +283,9 @@ const CompanySignup = () => {
                           key={country}
                           type="button"
                           className={styles.dropdownItem}
-                          onClick={() => selectOption('country', country)}
+                          onClick={() => selectOption('country', country.name)}
                         >
-                          {country}
+                          {country.name}
                         </button>
                       ))}
                     </div>
