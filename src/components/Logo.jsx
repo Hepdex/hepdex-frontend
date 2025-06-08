@@ -4,10 +4,12 @@ import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import { mq } from "../GlobalStyles";
 
-// Logo box
-const LogoBox = styled(Link)`
+// Logo styles
+const StyledLogo = styled(Link)`
   svg {
     height: 32px;
+
+    // Small screens
     ${mq(
       "sm",
       css`
@@ -17,10 +19,10 @@ const LogoBox = styled(Link)`
   }
 `;
 
-export default function Logo({ alt = false, url = "/home", onClick }) {
+export default function Logo({ alt = false, url = "/home" }) {
   return (
-    <LogoBox className="logo" to={url} onClick={onClick}>
+    <StyledLogo className="logo" to={url}>
       {alt ? <LogoSvgWhite /> : <LogoSvg />}
-    </LogoBox>
+    </StyledLogo>
   );
 }

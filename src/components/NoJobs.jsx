@@ -1,7 +1,7 @@
+import NoResultIcon from "../assets/icons/no-result.svg?react";
+import Button from "./Button";
 import styled, { css } from "styled-components";
-import NoResultIcon from "../../assets/icons/no-result.svg?react";
-import Button from "../../components/Button";
-import { flex, mq } from "../../GlobalStyles";
+import { flex, mq } from "../GlobalStyles";
 import { useSearchParams } from "react-router-dom";
 
 const StyledNoJobs = styled.div`
@@ -28,7 +28,7 @@ const StyledNoJobs = styled.div`
   }
 `;
 
-export default function NoJobs({ setInputValue }) {
+export default function NoJobs() {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -45,9 +45,6 @@ export default function NoJobs({ setInputValue }) {
 
     // Delete page param
     params.delete("page");
-
-    // Update input value
-    setInputValue("");
 
     // Update params
     setSearchParams(params);

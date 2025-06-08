@@ -2,7 +2,7 @@ import SourcingTable from "../ui/sourcing/SourcingTable";
 import DashboardTitle from "../components/DashboardTitle";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
-import { getCandidates } from "../services/apiCandidates";
+import { getCandidates } from "../services/apiCandidate";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -11,6 +11,7 @@ const SourcingBox = styled.div`
   .search-talent {
     ${flex(undefined, "center")}
     position: relative;
+
     // Input
     &__input {
       border-right: none;
@@ -28,6 +29,7 @@ const SourcingBox = styled.div`
         `
       )}
     }
+
     // Button
     &__btn {
       min-width: initial;
@@ -37,6 +39,7 @@ const SourcingBox = styled.div`
       border-top-left-radius: 0px;
       border-bottom-left-radius: 0px;
     }
+
     // Clear
     &__clear {
       position: absolute;
@@ -44,6 +47,7 @@ const SourcingBox = styled.div`
       right: 52px;
       transform: translateY(-50%);
       background-color: transparent;
+
       svg {
         fill: #757575;
       }
@@ -54,17 +58,20 @@ const SourcingBox = styled.div`
   .no-search {
     background-color: var(--color-white-1);
     padding: 48px;
+
     // Box
     &__box {
       max-width: 380px;
       margin: 0 auto;
       text-align: center;
+
       // Title
       &--title {
         font-size: 22px;
         line-height: 28px;
         font-weight: 500;
       }
+
       // Text
       &--text {
         color: var(--color-grey-2);

@@ -1,22 +1,23 @@
-import useQuery from "../../hooks/useQuery";
-import Button from "../../components/Button";
-import Filter from "../../components/Filter";
+import useQuery from "../hooks/useQuery";
+import Button from "./Button";
+import Filter from "./Filter";
 import styled, { css } from "styled-components";
-import { flex, mq } from "../../GlobalStyles";
+import { flex, mq } from "../GlobalStyles";
 import { useSearchParams } from "react-router-dom";
-import { FormGroup, Input, Select } from "../../components/Form";
-import { countries } from "../../data/countries";
-import { getDepartments } from "../../services/apiDepartments";
+import { FormGroup, Input, Select } from "./Form";
+import { countries } from "../data/countries";
+import { getDepartments } from "../services/apiDepartments";
 import { BsSearch, BsXLg } from "react-icons/bs";
+import { useEffect } from "react";
 
-// Search box container
-const StyledSearchBox = styled.div`
+// Job search styles
+const StyledJobSearch = styled.div`
   background-color: var(--color-white-1);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 28px;
 
-  .search-box {
+  .job-search {
     /* ====================
      Top Section 
   ===================== */
@@ -116,12 +117,12 @@ const StyledSearchBox = styled.div`
   }
 `;
 
-export default function SearchBox({ inputValue, setInputValue }) {
+export default function JobSearch({ jobTitle, setJobTitle }) {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Job title param
-  const jobTitle = searchParams.get("jobTitle") ?? "";
+  const jobTitleParam = searchParams.get("jobTitle") ?? "";
 
   // Job types
   const jobTypes = ["Full-time", "Contractor", "Part-time"];
@@ -169,47 +170,45 @@ export default function SearchBox({ inputValue, setInputValue }) {
   // Update input
   function updateInput(e) {
     // Update job title search param
-    if (!e.target.value && jobTitle) setParams("jobTitle", e.target.value);
+    if (!e.target.value && jobTitleParam) setParams("jobTitle", e.target.value);
 
-    // Set input value
-    setInputValue(e.target.value);
+    // Set job title
+    setJobTitle(e.target.value);
   }
 
   // Clear search
   function clearSearch() {
     // Clear param
     setParams("jobTitle", "");
-
-    // Clear input state
-    setInputValue("");
   }
 
+  useEffect(() => {
+    setJobTitle(jobTitleParam);
+  }, [jobTitleParam, setJobTitle]);
+
   return (
-    <StyledSearchBox className="search-box">
-      <div className="search-box--top">
+    <StyledJobSearch className="job-search">
+      <div className="job-search--top">
         <FormGroup>
           <Input
             type="text"
             name="jobTitle"
             placeholder="Search by job title"
-            value={inputValue}
+            value={jobTitle}
             onChange={updateInput}
           />
         </FormGroup>
-        {jobTitle && (
+        {jobTitleParam && (
           <button className="clear-search" onClick={clearSearch}>
             <BsXLg size={16} />
           </button>
         )}
-        <Button
-          id="search-btn"
-          onClick={() => setParams("jobTitle", inputValue)}
-        >
+        <Button id="search-btn" onClick={() => setParams("jobTitle", jobTitle)}>
           <BsSearch size={18} />
         </Button>
       </div>
-      <div className="search-box--filter">
-        <div className="search-box--filter__group">
+      <div className="job-search--filter">
+        <div className="job-search--filter__group">
           <Select
             className={`select-box ${
               searchParams.get("jobType") ? "active" : ""
@@ -265,7 +264,7 @@ export default function SearchBox({ inputValue, setInputValue }) {
           </Button>
         )}
       </div>
-      <div className="search-box--mobile__filter">
+      <div className="job-search--mobile__filter">
         <Filter
           id={"search-jobs--filter"}
           fields={["jobType", "department", "country"]}
@@ -308,6 +307,6 @@ export default function SearchBox({ inputValue, setInputValue }) {
           </Select>
         </Filter>
       </div>
-    </StyledSearchBox>
+    </StyledJobSearch>
   );
 }

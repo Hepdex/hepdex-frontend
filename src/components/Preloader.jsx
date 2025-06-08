@@ -1,5 +1,4 @@
 import preloaderStyles from "../styles/PreloaderStyles.module.css";
-import "../styles/Mainstyles.css";
 
 const Preloader = () => {
   return (

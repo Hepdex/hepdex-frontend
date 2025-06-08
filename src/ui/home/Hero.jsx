@@ -1,7 +1,7 @@
 import Container from "../../components/Container";
 import Button from "../../components/Button";
-import styled, { css } from "styled-components";
 import bgImage from "../../assets/heroBg.jpg";
+import styled, { css } from "styled-components";
 import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -9,11 +9,121 @@ import { Cursor, useTypewriter } from "react-simple-typewriter";
 import { flex, mq } from "../../GlobalStyles";
 import { useUserContext } from "../../context/UserContext";
 
-// Hero box
-const HeroBox = styled.div`
+// Hero container
+const StyledHero = styled.div`
   position: relative;
   height: 620px;
   background-color: var(--color-tertiary);
+
+  .hero {
+    &-container {
+      ${flex("center", "center")}
+      min-height: 100%;
+
+      &--inner {
+        ${flex(undefined, "center")}
+        column-gap: 64px;
+        row-gap: 40px;
+        flex-direction: column;
+        padding: 132px 0px 40px 0px;
+
+        // Hero content
+        .hero-content {
+          max-width: 450px;
+          width: 100%;
+
+          // Hero title
+          &--title {
+            margin-bottom: 24px;
+          }
+
+          // Features
+          .features {
+            ${flex()}
+            width: 100%;
+            margin-top: 8px;
+            flex-direction: column;
+            row-gap: 8px;
+
+            &-item {
+              ${flex(undefined, "start")}
+              gap: 12px;
+              padding: 4px 0px;
+
+              p {
+                line-height: 20px;
+              }
+
+              // Icon
+              svg {
+                min-width: 20px;
+                fill: var(--color-primary-hover);
+              }
+            }
+          }
+
+          // Button group
+          .btn-group {
+            ${flex(undefined, "center")}
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 32px;
+          }
+
+          // Large screens
+          ${mq(
+            "lg",
+            css`
+              max-width: 600px;
+              width: 50%;
+            `
+          )}
+        }
+
+        // Hero image
+        .hero-img {
+          max-width: 420px;
+          width: 80%;
+          display: none;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
+
+          // Small screens
+          ${mq(
+            "480px",
+            css`
+              display: block;
+            `
+          )}
+
+          // Large screens
+        ${mq(
+            "lg",
+            css`
+              width: 50%;
+            `
+          )}
+        }
+
+        // Large screens
+        ${mq(
+          "lg",
+          css`
+            flex-direction: row;
+            @media (min-height: 700px) and (max-height: 1000px) {
+              padding-top: 50px;
+              padding-bottom: 0px;
+            }
+          `
+        )}
+      }
+    }
+  }
+
+  // Media queries
   ${mq(
     "400px",
     css`
@@ -28,98 +138,15 @@ const HeroBox = styled.div`
     background-size: cover;
     background-image: url(${bgImage});
   }
-
-  // Content
-  .content {
-    min-height: 100%;
-    ${flex("center", "center")}
-    .inner {
-      ${flex(undefined, "center")}
-      flex-direction: column;
-      padding: 132px 0px 40px 0px;
-
-      ${mq(
-        "lg",
-        css`
-          flex-direction: row;
-          @media (min-height: 700px) and (max-height: 1000px) {
-            padding-top: 50px;
-            padding-bottom: 0px;
-          }
-        `
-      )}
-      column-gap: 64px;
-      row-gap: 40px;
-      .hero-content {
-        max-width: 450px;
-        width: 100%;
-        ${mq(
-          "lg",
-          css`
-            max-width: 600px;
-            width: 50%;
-          `
-        )}
-        h1 {
-          margin-bottom: 24px;
-        }
-        .info-list {
-          width: 100%;
-          margin-top: 8px;
-          ${flex()}
-          flex-direction: column;
-          row-gap: 8px;
-
-          li {
-            svg {
-              min-width: 20px;
-              fill: var(--color-primary-hover);
-            }
-            ${flex(undefined, "start")}
-            gap: 12px;
-            padding: 4px 0px;
-            p {
-              line-height: 20px;
-            }
-          }
-        }
-        .btn-group {
-          ${flex(undefined, "center")}
-          flex-wrap: wrap;
-          gap: 16px;
-          margin-top: 32px;
-        }
-      }
-      .hero-img {
-        max-width: 420px;
-        width: 80%;
-        display: none;
-        ${mq(
-          "480px",
-          css`
-            display: block;
-          `
-        )}
-        ${mq(
-          "lg",
-          css`
-            width: 50%;
-          `
-        )}
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-  }
 `;
 
 export default function Hero() {
   // Deleting state
   const [deleting, setDeleting] = useState(false);
+
   // User context
   const { user, isLoggedIn } = useUserContext();
+
   // Type effect
   const [typeEffect] = useTypewriter({
     words: ["virtual assistant", "developer", "designer", "digital marketer"],
@@ -129,33 +156,37 @@ export default function Hero() {
     onType: () => setDeleting(false),
     onDelete: () => setDeleting(true),
   });
+
   return (
-    <HeroBox>
-      <div className="content">
+    <StyledHero className="hero">
+      <div className="hero-container">
         <Container>
-          <div className="inner">
+          <div className="hero-container--inner">
+            {/* Hero content */}
             <div className="hero-content">
-              <h1 className="heading-lg">
+              <h1 className="heading-lg hero-content--title">
                 Hire a remote <br /> {typeEffect}
                 <Cursor cursorStyle="_" cursorBlinking={deleting} />
               </h1>
               <p className="text-md">
                 Find over 20,000+ remote experts on HepDex.
               </p>
-              <ul className="info-list">
-                <li className="info-item">
+              {/* Features */}
+              <ul className="features">
+                <li className="features-item">
                   <BsCheckCircle size={20} />
                   <p className="text-md">Post your job for free</p>
                 </li>
-                <li className="info-item">
+                <li className="features-item">
                   <BsCheckCircle size={20} />
                   <p className="text-md">Find skilled remote experts</p>
                 </li>
-                <li className="info-item">
+                <li className="features-item">
                   <BsCheckCircle size={20} />
                   <p className="text-md">Join the 500+ companies using us</p>
                 </li>
               </ul>
+              {/* Button group */}
               <div className="btn-group">
                 <Button
                   size="lg"
@@ -173,12 +204,13 @@ export default function Hero() {
                 </Button>
               </div>
             </div>
+            {/* Hero Image */}
             <div className="hero-img">
               <img alt="hero-image" src="heroImg.png" />
             </div>
           </div>
         </Container>
       </div>
-    </HeroBox>
+    </StyledHero>
   );
 }

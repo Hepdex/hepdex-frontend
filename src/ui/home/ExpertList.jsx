@@ -9,13 +9,11 @@ export default function ExpertList() {
       title="Leverage top experts"
       subtitle="Find skilled professionals your business deserves."
     >
-      <div data-aos className="custom-fade-up">
-        <Container.Row>
-          {experts.map((expert, index) => (
-            <Expert key={index} expert={expert} />
-          ))}
-        </Container.Row>
-      </div>
+      <Container.Row className="custom-fade-up" data-aos>
+        {experts.map((expert, index) => (
+          <Expert key={index} expert={expert} />
+        ))}
+      </Container.Row>
     </Section>
   );
 }
