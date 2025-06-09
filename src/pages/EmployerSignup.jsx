@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import style from '../styles/EmployerSignup.module.css';
 import LeftPanel from '../components/LeftPanel';
 import SignupTopBar from '../components/SignupTopBar'; // Import the SignupTopBar component
+import {apiFetcher2, API_URL} from '../utils/helpers'
+import { IoClose } from 'react-icons/io5';
 
 const EmployerSignup = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,10 @@ const EmployerSignup = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [errorDialog, setErrorDialog] = useState({
+      isOpen: false,
+      message: ''
+  });
 
   const navigate = useNavigate();
 
@@ -44,11 +50,34 @@ const EmployerSignup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const showErrorDialog = (message) => {
+    setErrorDialog({
+      isOpen: true,
+      message: message
+    });
+  };
 
-  const handleSubmit = (e) => {
+  const closeErrorDialog = () => {
+    setErrorDialog({
+      isOpen: false,
+      message: ''
+    });
+  };
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
+      return;
+    }
+
+    //check if email is unique
+    const jsonEmail = JSON.stringify({email: formData.email.trim()}) ;
+    const response = await apiFetcher2(`${API_URL}/check-unique-email`, {method: 'PUT', body: jsonEmail});
+
+    if(response.statusCode !==200){
+      showErrorDialog(response.data?.msg || 'An error occurred.');
       return;
     }
 
@@ -60,6 +89,33 @@ const EmployerSignup = () => {
 
   return (
     <div className={style.container}>
+      {/* Error Dialog */}
+            {errorDialog.isOpen && (
+              <div className={style.errorOverlay}>
+                <div className={style.errorDialog}>
+                  <div className={style.errorHeader}>
+                    <h3 className={style.errorTitle}>Error</h3>
+                    <button 
+                      className={style.closeButton}
+                      onClick={closeErrorDialog}
+                    >
+                      <IoClose size={24} />
+                    </button>
+                  </div>
+                  <div className={style.errorBody}>
+                    <p className={style.errorMessage}>{errorDialog.message}</p>
+                  </div>
+                  <div className={style.errorFooter}>
+                    <button 
+                      className={style.okButton}
+                      onClick={closeErrorDialog}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
         <LeftPanel type='employer' />
 
       <div className={style.rightSection}>
