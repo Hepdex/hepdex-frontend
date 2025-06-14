@@ -6,6 +6,7 @@ const StyledAvatarImage = styled.div`
   border-radius: 50%;
   overflow: hidden;
   display: inline-block;
+  background-color: #f3f4f6;
 
   // Size
   ${(props) =>

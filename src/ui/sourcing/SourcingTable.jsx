@@ -20,17 +20,22 @@ import { countries } from "../../data/countries";
 export default function SourcingTable({ loading, candidates, setCandidates }) {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
+
   // Navigate hook
   const navigate = useNavigate();
+
   // Search
   const search = searchParams.get("jobTitle") ?? "";
+
   // Search input
   const [inputValue, setInputValue] = useState(search || "");
+
   // Clear params and candidates
   const clearParams = () => {
     setCandidates(undefined);
     navigate(window.location.pathname);
   };
+
   // Set params
   const setParams = (value) => {
     const params = new URLSearchParams(searchParams);
@@ -49,8 +54,10 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
   function handleFormSearch(e) {
     // Prevent default submit
     e.preventDefault();
+
     // Get form values
     const { search } = Object.fromEntries(new FormData(e.target));
+
     // Check for search value
     if (search) {
       // Set input value

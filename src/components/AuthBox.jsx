@@ -1,6 +1,8 @@
 import Logo from "./Logo";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
+import { useNavigate } from "react-router-dom";
+import { BsArrowLeft } from "react-icons/bs";
 
 // Auth box container
 const StyledAuthBox = styled.div`
@@ -18,7 +20,7 @@ const StyledAuthBox = styled.div`
   )}
 
 // Links
-  a {
+  & a {
     color: var(--color-primary);
     font-weight: 400;
   }
@@ -27,7 +29,7 @@ const StyledAuthBox = styled.div`
     background-color: var(--color-white-1);
     max-width: 520px;
     width: 100%;
-    padding: 30px 30px 48px 30px;
+    padding: 30px 16px;
     border-radius: 8px;
 
     // Small screens
@@ -35,6 +37,13 @@ const StyledAuthBox = styled.div`
       "sm",
       css`
         box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
+      `
+    )}
+
+    ${mq(
+      "400px",
+      css`
+        padding: 30px;
       `
     )}
 
@@ -65,10 +74,22 @@ const StyledAuthBox = styled.div`
     .submit-box button {
       width: 100%;
     }
+
+    // Back button
+    .back {
+      ${flex("center", "center")}
+      gap: 8px;
+      background-color: transparent;
+      width: 100%;
+      margin-top: 24px;
+    }
   }
 `;
 
 export default function AuthBox({ title, subtitle, children }) {
+  // Navigate hook
+  const navigate = useNavigate();
+
   return (
     <StyledAuthBox>
       <div className="auth-box">
@@ -80,6 +101,10 @@ export default function AuthBox({ title, subtitle, children }) {
           <p className="auth-box--top__subtitle">{subtitle}</p>
         </div>
         <div className="auth-box--bottom">{children}</div>
+        <button className="back" onClick={() => navigate(-1)}>
+          <BsArrowLeft size={20} />
+          <span>Back</span>
+        </button>
       </div>
     </StyledAuthBox>
   );

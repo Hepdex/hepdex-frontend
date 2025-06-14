@@ -5,25 +5,36 @@ import useQuery from "../hooks/useQuery";
 import FormBox from "../components/FormBox";
 import DashboardBox from "../components/DashboardBox";
 import IconTitle from "../components/IconTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useState } from "react";
-import { BsBriefcase, BsCoin, BsGeoAlt, BsInfoCircle } from "react-icons/bs";
+import {
+  BsBriefcase,
+  BsCoin,
+  BsGeoAlt,
+  BsGlobe,
+  BsInfoCircle,
+} from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import {
   Form,
   FormGroup,
   Input,
   InputGroup,
+  SearchSelect,
   Select,
   Textarea,
   Time,
 } from "../components/Form";
 import { addJob } from "../services/apiJobs";
-import { getTimezomes, notify } from "../utils/helpers";
+import { getTimezones, notify } from "../utils/helpers";
 import { countries } from "../data/countries";
 import { currencyFlagList } from "../data/currencies";
 import { getDepartments } from "../services/apiDepartments";
 
 export default function AddJob() {
+  // Document title
+  useDocumentTitle("Add job");
+
   return (
     <FormBox
       title="Add job"
@@ -51,7 +62,7 @@ function AddJobForm() {
   const [location, setLocation] = useState("");
 
   // Timezones
-  const timezones = getTimezomes(location);
+  const timezones = getTimezones(location);
 
   // Handle add job
   async function handleAddJob(e) {
@@ -60,12 +71,20 @@ function AddJobForm() {
 
     // Get form values
     let data = Object.fromEntries(new FormData(e.target));
+
+    // Check if timeZone is empty
+    if (!data.timeZone)
+      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     data = {
       ...data,
-      country: countries.find((item) => item.code === location).name,
-    };
+      country:
+        // Get country
+        countries.find((item) => item.code === location).name,
 
-    if (!data.timeZone) data.timeZone = "";
+      // Remove emoji from currency
+      currency: data.currency.split(" ")[1],
+    };
 
     // Send request
     const response = await postJob(data);
@@ -135,17 +154,14 @@ function AddJobForm() {
       >
         <div className="form-content">
           <FormGroup label="Location">
-            <Select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            >
-              <option value="">Select location</option>
-              {countries.map((country, index) => (
-                <option key={index} value={country.code}>
-                  {`${country.flag} ${country.name}`}
-                </option>
-              ))}
-            </Select>
+            <SearchSelect
+              placeholder="Select location"
+              searchPlaceholder="Search location..."
+              name="country"
+              defaultItem={{}}
+              items={countries}
+              onSelect={(item) => setLocation(item.code)}
+            />
           </FormGroup>
           {location && timezones.length > 0 && (
             <FormGroup label="Timezone">
@@ -242,6 +258,16 @@ function AddJobForm() {
             </div>
           </div>
           <div className="form-content--row__box">
+            <FormGroup label="Currency">
+              <SearchSelect
+                name="currency"
+                placeholder="Select currency"
+                searchPlaceholder="Search currency..."
+                defaultItem={{}}
+                valueField="currency"
+                items={currencyFlagList}
+              />
+            </FormGroup>
             <FormGroup label="Minimum pay">
               <Input
                 type="number"
@@ -259,16 +285,6 @@ function AddJobForm() {
                 required
                 name="maxSalary"
               />
-            </FormGroup>
-            <FormGroup label="Currency">
-              <Select name="currency">
-                <option value="">Select currency</option>
-                {currencyFlagList.map((currency, index) => (
-                  <option key={index} value={currency.currency}>
-                    {`${currency.flag} ${currency.currency}`}
-                  </option>
-                ))}
-              </Select>
             </FormGroup>
           </div>
         </div>

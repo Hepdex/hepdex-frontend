@@ -153,28 +153,6 @@ export default function Candidate() {
                           "No bio available for this candidate."}
                       </p>
                     </div>
-
-                    <div className="profile-details--box">
-                      <ul>
-                        <li>
-                          <span className="name">Email</span>
-                          <span className="value">{candidate.email}</span>
-                        </li>
-                        <li>
-                          <span className="name">Country</span>
-                          <span className="value">
-                            {capitalizeFirst(candidate.country)}
-                          </span>
-                        </li>
-                        <li>
-                          <span className="name">Job type</span>
-                          <span className="value">
-                            {capitalizeFirst(candidate.jobType)}
-                          </span>
-                        </li>
-                      </ul>
-                    </div>
-
                     <div className="profile-details--box">
                       <h3>Skills</h3>
                       {candidate?.bio?.skills?.length > 0 ? (
@@ -202,6 +180,26 @@ export default function Candidate() {
                       ) : (
                         <p>No languages have been added for this candidate.</p>
                       )}
+                    </div>
+                    <div className="profile-details--box">
+                      <ul>
+                        <li>
+                          <span className="name">Email</span>
+                          <span className="value">{candidate.email}</span>
+                        </li>
+                        <li>
+                          <span className="name">Country</span>
+                          <span className="value">
+                            {capitalizeFirst(candidate.country)}
+                          </span>
+                        </li>
+                        <li>
+                          <span className="name">Job type</span>
+                          <span className="value">
+                            {capitalizeFirst(candidate.jobType)}
+                          </span>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>

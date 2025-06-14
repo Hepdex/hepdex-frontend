@@ -79,18 +79,33 @@ const StyledDetailsBox = styled.div`
      Side Section 
   ===================== */
     &--side {
-      ${flex("center", "center")}
+      ${flex("start", "center")}
       flex-direction: column;
       gap: 16px;
       width: 100%;
       background-color: var(--color-grey-1);
-      padding: 40px 32px;
+      padding: 48px 32px;
       ${mq(
         "1100px",
         css`
           max-width: 380px;
         `
       )}
+
+      .edit-image {
+        ${flex("center", "center")}
+        background-color: var(--color-primary);
+        height: 28px;
+        width: 28px;
+        color: var(--color-white-1);
+        border-radius: 50%;
+        pointer-events: none;
+        margin-top: -20px;
+        align-self: flex-end;
+        svg {
+          margin-left: 2px;
+        }
+      }
     }
   }
 `;

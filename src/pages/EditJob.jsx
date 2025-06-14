@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner";
 import FormBox from "../components/FormBox";
 import DashboardBox from "../components/DashboardBox";
 import IconTitle from "../components/IconTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { countries } from "../data/countries";
 import { getJob, updateJob } from "../services/apiJobs";
 import { useState } from "react";
@@ -15,16 +16,21 @@ import {
   FormGroup,
   Input,
   InputGroup,
+  SearchSelect,
   Select,
   Textarea,
   Time,
 } from "../components/Form";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTimezomes, notify } from "../utils/helpers";
+import { getTimezones, notify } from "../utils/helpers";
 import { currencyFlagList } from "../data/currencies";
 import { getDepartments } from "../services/apiDepartments";
 
 export default function EditJob() {
+  // Document title
+  useDocumentTitle("Edit job");
+
+  // Get job ID
   const { jobID } = useParams();
 
   // Fetch job
@@ -56,12 +62,17 @@ function EditJobForm({ job, departments }) {
   const navigate = useNavigate();
 
   // Initial country
-  const initialCountry = countries.find(
+  let initialCountry = countries.find(
     (country) => country.name.toLowerCase() === job.country.toLowerCase()
-  ).code;
+  );
+
+  // Initial currency
+  const initialCurrency = currencyFlagList.find(
+    (curr) => curr.currency === job.currency
+  );
 
   // Location state
-  const [location, setLocation] = useState(initialCountry);
+  const [location, setLocation] = useState(initialCountry.code);
 
   // Edit job
   const [editJob, loading] = useMutate(updateJob);
@@ -70,7 +81,7 @@ function EditJobForm({ job, departments }) {
   const [checked, setChecked] = useState(job.paymentInterval);
 
   // Timezones
-  const timezones = getTimezomes(location);
+  const timezones = getTimezones(location);
 
   // Handle update job
   async function handleUpdateJob(e) {
@@ -81,11 +92,19 @@ function EditJobForm({ job, departments }) {
     let data = Object.fromEntries(new FormData(e.target));
     data = {
       ...data,
+      // Get country
       country: countries.find((item) => item.code === location).name,
+
+      // Remove emoji from currency
+      currency: data.currency.split(" ")[1],
+
+      // Add job ID
       jobID: job._id,
     };
 
-    if (!data.timeZone) data.timeZone = "";
+    // Check if timeZone is empty
+    if (!data.timeZone)
+      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     // Send request
     const response = await editJob(data);
@@ -104,6 +123,7 @@ function EditJobForm({ job, departments }) {
       notify(response, "error");
     }
   }
+
   return (
     <Form $gap={32} onSubmit={handleUpdateJob}>
       <DashboardBox
@@ -156,19 +176,14 @@ function EditJobForm({ job, departments }) {
       >
         <div className="form-content">
           <FormGroup label="Location">
-            <Select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              required={true}
+            <SearchSelect
+              placeholder="Select location"
+              searchPlaceholder="Search location..."
               name="country"
-            >
-              <option value="">Select location</option>
-              {countries.map((option, index) => (
-                <option key={index} value={option.code}>
-                  {`${option.flag} ${option.name}`}
-                </option>
-              ))}
-            </Select>
+              defaultItem={initialCountry}
+              items={countries}
+              onSelect={(item) => setLocation(item.code)}
+            />
           </FormGroup>
           {location && timezones.length > 0 && (
             <FormGroup label="Timezone">
@@ -270,6 +285,16 @@ function EditJobForm({ job, departments }) {
             </div>
           </div>
           <div className="form-content--row__box">
+            <FormGroup label="Currency">
+              <SearchSelect
+                placeholder="Select currency"
+                searchPlaceholder="Search currency..."
+                name="currency"
+                defaultItem={initialCurrency}
+                valueField="currency"
+                items={currencyFlagList}
+              />
+            </FormGroup>
             <FormGroup label="Minumum pay">
               <Input
                 type="number"
@@ -289,16 +314,6 @@ function EditJobForm({ job, departments }) {
                 defaultValue={job.maxSalary}
                 name="maxSalary"
               />
-            </FormGroup>
-            <FormGroup label="Currency">
-              <Select name="currency" defaultValue={job.currency}>
-                <option value="">Select currency</option>
-                {currencyFlagList.map((currency, index) => (
-                  <option key={index} value={currency.currency}>
-                    {`${currency.flag} ${currency.currency}`}
-                  </option>
-                ))}
-              </Select>
             </FormGroup>
           </div>
         </div>

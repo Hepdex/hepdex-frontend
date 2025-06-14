@@ -24,19 +24,23 @@ const StyledJobsTable = styled(TableBox)`
         &::first-letter {
           text-transform: uppercase;
         }
+
         // Job status
         .status {
           ${flex(undefined, "center")}
           column-gap: 8px;
+
           &-icon {
             min-width: 12px;
             height: 12px;
             border-radius: 50%;
             display: inline-block;
+
             // Open
             &.open {
               background-color: #aee5c2;
             }
+
             // Closed
             &.closed {
               background-color: #999999;
@@ -55,14 +59,18 @@ const StyledJobsTable = styled(TableBox)`
 export default function JobsTable() {
   // Search params
   const [searchParams] = useSearchParams();
+
   // Jobs context
   const { jobs, loading } = useJobsContext();
+
   // Navigate hook
   const navigate = useNavigate();
+
   // Navigate to job page
   const handleNavigate = (id) => {
     navigate(`/dashboard/jobs/${id}`);
   };
+
   // Departments
   const [data] = useQuery(getDepartments);
 

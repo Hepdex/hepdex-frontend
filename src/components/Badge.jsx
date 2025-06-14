@@ -7,7 +7,7 @@ const StyledBadge = styled.span`
   display: inline-flex;
   border-radius: 8px;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 4px 10px;
   font-size: 14px;
   line-height: 20px;
   color: var(--color-black-1);

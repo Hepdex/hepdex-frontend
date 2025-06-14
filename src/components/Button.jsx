@@ -7,28 +7,34 @@ const colors = {
   primary: css`
     background-color: var(--color-primary);
     color: var(--color-white-1);
+
     &:hover {
       background-color: var(--color-primary-hover);
     }
   `,
+
   // Danger
   error: css`
     background-color: var(--color-error);
     color: var(--color-white-1);
+
     &:hover {
       background-color: #d12f1e;
     }
   `,
+
   // Secondary
   secondary: css`
     background-color: var(--color-white-1);
     color: var(--color-grey-2);
     border: 1px solid var(--color-grey-3);
+
     &:hover {
       background-color: var(--color-secondary);
       border: 1px solid var(--color-primary-hover);
       color: var(--color-black-1);
     }
+
     &.alternate {
       &:hover {
         background-color: #f3f4f6;
@@ -36,11 +42,13 @@ const colors = {
       }
     }
   `,
+
   // Outline
   outline: css`
     background-color: transparent;
     border: 1px solid var(--color-black-1);
     color: var(--color-black-1);
+
     &:hover {
       background-color: var(--color-black-1);
       color: var(--color-white-1);
@@ -57,12 +65,14 @@ const sizes = {
     max-height: 64px;
     min-height: 64px;
   `,
+
   // md
   md: css`
     padding: 12px 32px !important;
     min-height: 48px;
     max-height: 48px;
   `,
+
   // sm
   sm: css`
     padding: 0px 16px;
@@ -72,6 +82,7 @@ const sizes = {
     max-height: 40px;
     min-width: 88px;
   `,
+
   // xs
   xs: css`
     font-size: 15px;
@@ -79,6 +90,7 @@ const sizes = {
     line-height: 20px;
     min-height: 32px;
     font-weight: 400;
+
     // Spinner
     .spinner {
       svg {
@@ -99,10 +111,13 @@ const Button = styled.button`
   justify-content: center;
   position: relative;
   font-weight: 500;
+
   // Set size
   ${(props) => sizes[props.size ? props.size : "md"]}
+
   // Set color
   ${(props) => colors[props.color ? props.color : "primary"]}
+
   // Set loading styles
   ${(props) =>
     props.$loading &&
@@ -111,6 +126,7 @@ const Button = styled.button`
         visibility: hidden;
       }
     `}
+
   // Spinner
   .spinner {
     ${flex("center", "center")}

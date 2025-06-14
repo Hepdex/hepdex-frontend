@@ -8,10 +8,14 @@ import { BsLock } from "react-icons/bs";
 import { Form, Password } from "../../components/Form";
 import { updatePassword, verifyUpdate } from "../../services/apiUser";
 import { notify } from "../../utils/helpers";
+import { useState } from "react";
 
 export default function UpdatePasswordModal() {
   // Update password
   const [changePassword, loading] = useMutate(updatePassword);
+
+  // OTP
+  const [OTP, setOTP] = useState("");
 
   // Verify Otp
   const [verify, pending] = useMutate(verifyUpdate);
@@ -36,7 +40,7 @@ export default function UpdatePasswordModal() {
       setActive("verify-password");
 
       // Success
-      notify("OTP sent successfully", "success");
+      notify("Please check your email", "success");
     } else {
       // Error message
       notify(response, "error");
@@ -48,11 +52,11 @@ export default function UpdatePasswordModal() {
     // Prevent default submit
     e.preventDefault();
 
-    // Get form data
-    const data = Object.fromEntries(new FormData(e.target));
+    // Check for OTP
+    if (!OTP) return;
 
     // Send request
-    const response = await verify(data);
+    const response = await verify({ otp: OTP });
 
     // Check response
     if (response === 200) {
@@ -73,7 +77,7 @@ export default function UpdatePasswordModal() {
       title={<IconTitle icon={<BsLock size={18} />} title="Change password" />}
       confirm={
         active === "verify-password" ? (
-          <VerifyButton loading={pending} disabled={pending} />
+          <VerifyButton loading={pending} />
         ) : (
           <Button
             size="sm"
@@ -82,14 +86,14 @@ export default function UpdatePasswordModal() {
             $loading={loading}
             disabled={loading}
           >
-            <span>Save new password</span>
+            <span>Update</span>
             {loading && <Spinner />}
           </Button>
         )
       }
     >
       {active === "verify-password" ? (
-        <VerifyOtp handleVerifyOtp={handleVerifyOTP} />
+        <VerifyOtp handleVerifyOTP={handleVerifyOTP} setOTP={setOTP} />
       ) : (
         <Form $gap={18} onSubmit={handleUpdatePassword} id="update-password">
           <Password

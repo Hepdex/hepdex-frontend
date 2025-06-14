@@ -4,10 +4,13 @@ import DetailsBox from "../components/DetailsBox";
 import DashboardBox from "../components/DashboardBox";
 import DashboardTitle from "../components/DashboardTitle";
 import IconTitle from "../components/IconTitle";
-import { BsHouseDoor } from "react-icons/bs";
+import AvatarImage from "../components/AvatarImage";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import { BsHouseDoor, BsPencil } from "react-icons/bs";
 import { useUserContext } from "../context/UserContext";
 import { capitalizeFirst } from "../utils/helpers";
 import { Link } from "react-router-dom";
+import { flex } from "../GlobalStyles";
 
 // Company container
 const StyledCompany = styled.div`
@@ -15,8 +18,26 @@ const StyledCompany = styled.div`
   .company-box {
     text-align: center;
 
+    .no-image {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    &--file {
+      input {
+        display: none;
+      }
+
+      label {
+        display: inline-flex;
+        cursor: pointer;
+        flex-direction: column;
+        ${flex(undefined, "center")}
+      }
+    }
+
     &--title {
-      margin-bottom: 8px;
+      text-transform: capitalize;
     }
 
     &--name {
@@ -26,8 +47,12 @@ const StyledCompany = styled.div`
 `;
 
 export default function Company() {
+  // Document title
+  useDocumentTitle("Company");
+
   // User context
   const { user } = useUserContext();
+
   return (
     <StyledCompany>
       <DashboardTitle
@@ -58,10 +83,18 @@ export default function Company() {
           </ul>
         </DashboardBox>
         <div className="details-box--side company-box">
-          <div className="company-box--info">
-            <h3 className="heading-sm company-box--title">Company Manager</h3>
-            <p className="company-info--name">{user.companyName}</p>
+          <div className="company-box--file">
+            <input type="file" id="upload-logo" name="file" />
+            <label htmlFor="upload-logo">
+              <AvatarImage>
+                <div className="no-image">{`${user.companyName.at(0)}`}</div>
+              </AvatarImage>
+              <button className="edit-image" type="button">
+                <BsPencil size={14} />
+              </button>
+            </label>
           </div>
+          <h3 className="company-box--title heading-sm"> {user.companyName}</h3>
           <Button size="sm" as={Link} to="/edit-company">
             Edit bio
           </Button>

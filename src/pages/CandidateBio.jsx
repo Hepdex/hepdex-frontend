@@ -8,7 +8,15 @@ import AvatarImage from "../components/AvatarImage";
 import Button from "../components/Button";
 import ViewResume from "../components/ViewResume";
 import useMutate from "../hooks/useMutate";
-import { BsPerson } from "react-icons/bs";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import {
+  BsCheckCircle,
+  BsCheckCircleFill,
+  BsEnvelope,
+  BsPencil,
+  BsPerson,
+  BsXCircleFill,
+} from "react-icons/bs";
 import { useUserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
 import { capitalizeFirst } from "../utils/helpers";
@@ -27,23 +35,77 @@ const StyledCandidateBio = styled.div`
     )}
 
     &-top {
-      ${flex("space-between", "center")}
+      ${flex("space-between", "start")}
+      position: relative;
       gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
+      row-gap: 16px;
+      margin-bottom: 24px;
 
       &--left {
-        ${flex(undefined, "center")}
+        ${flex(undefined, "start")}
         gap: 16px;
+        flex-direction: column;
+
+        ${mq(
+          "sm",
+          css`
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: wrap;
+          `
+        )}
 
         .candidate {
           &-name {
             font-weight: 500;
-            font-size: 22px;
+            font-size: 24px;
             line-height: 28px;
           }
-          &-role {
+          &-details {
+            gap: 8px;
+            row-gap: 2px;
+            ${flex(undefined, "center")}
+            flex-wrap: wrap;
             color: var(--color-grey-2);
+            margin-bottom: 8px;
+
+            p {
+              ${flex(undefined, "center")}
+              gap: 4px;
+
+              &:not(:first-child)::before {
+                content: "";
+                width: 4px;
+                height: 4px;
+                background-color: var(--color-grey-2);
+                border-radius: 50%;
+              }
+            }
+          }
+        }
+      }
+
+      &--right {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        ${mq(
+          "sm",
+          css`
+            position: static;
+          `
+        )}
+
+        .edit-profile {
+          ${flex("center", "center")}
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          transition: background-color 0.4s ease-in-out;
+
+          &:hover {
+            background-color: #f3f4f6;
           }
         }
       }
@@ -53,10 +115,6 @@ const StyledCandidateBio = styled.div`
       ${flex("center")}
       flex-direction: column;
       gap: 24px;
-
-      ul {
-        padding: 0;
-      }
 
       p {
         color: var(--color-grey-2);
@@ -87,8 +145,13 @@ const StyledCandidateBio = styled.div`
 `;
 
 export default function CandidateBio() {
+  // Document title
+  useDocumentTitle("Profile");
+
   // User context
   const { user } = useUserContext();
+
+  console.log(user);
 
   // Get resume
   const [fetchResume, loading] = useMutate(getResume);
@@ -100,63 +163,68 @@ export default function CandidateBio() {
         subtitle="Manage profile information"
         links={[{ name: "Profile" }]}
       />
-
       <DetailsBox>
         <DashboardBox className="details-box--content">
           <IconTitle
-            title="Candidate profile"
+            title="Profile"
             icon={<BsPerson size={18} />}
             className="title"
           />
           <div className="profile">
             <div className="profile-top">
               <div className="profile-top--left">
-                <AvatarImage>
-                  <span className="no-image">
-                    {`${user.firstName.at(0)}${user.lastName.at(0)}`}
-                  </span>
+                <AvatarImage size={96}>
+                  {user.profileImage ? (
+                    <img
+                      alt="profile-image"
+                      src={`${user.profileImage}?t=${Date.now()}`}
+                    />
+                  ) : (
+                    <div className="no-image">
+                      {`${user.firstName.at(0)}${user.lastName.at(0)}`}
+                    </div>
+                  )}
                 </AvatarImage>
                 <div className="candidate">
                   <h2 className="candidate-name">{`${capitalizeFirst(
                     user.firstName
                   )} ${capitalizeFirst(user.lastName)}`}</h2>
-                  <p className="candidate-role">
-                    {capitalizeFirst(user.jobTitle)}
-                  </p>
+                  <div className="candidate-details">
+                    <p> {capitalizeFirst(user.jobTitle)}</p>
+                    <p>{capitalizeFirst(user.jobType)}</p>
+                  </div>
+                  {user.available ? (
+                    <Badge className="success">
+                      <BsCheckCircleFill />
+                      Available
+                    </Badge>
+                  ) : (
+                    <Badge className="dark">
+                      <BsXCircleFill />
+                      Not available
+                    </Badge>
+                  )}
                 </div>
               </div>
               <div className="profile-top--right">
-                <Button size="sm" as={Link} to="/edit-profile">
-                  Edit profile
-                </Button>
+                <Link to="/edit-profile" className="edit-profile">
+                  <BsPencil size={24} />
+                </Link>
               </div>
             </div>
             <div className="profile-details">
               <div className="profile-details--box">
-                <h3>About</h3>
+                <h3>About me</h3>
                 <p>{user?.bio?.about ?? "No bio has been added."}</p>
               </div>
               <div className="profile-details--box">
-                <ul>
-                  <li>
-                    <span className="name">Email</span>
-                    <span className="value">{user.email}</span>
-                  </li>
-                  <li>
-                    <span className="name">Country</span>
-                    <span className="value">
-                      {capitalizeFirst(user.country)}
-                    </span>
-                  </li>
-                  <li>
-                    <span className="name">Job type</span>
-                    <span className="value">
-                      {capitalizeFirst(user.jobType)}
-                    </span>
-                  </li>
-                </ul>
+                <h3>Email</h3>
+                <p>{user.email}</p>
               </div>
-
+              <div className="profile-details--box">
+                <h3>Location</h3>
+                <p>{capitalizeFirst(user.country)}</p>
+              </div>
               <div className="profile-details--box">
                 <h3>Skills</h3>
                 {user?.bio?.skills?.length > 0 ? (
@@ -192,6 +260,7 @@ export default function CandidateBio() {
                     size="sm"
                     text="View resume"
                     color="secondary"
+                    className="alternate"
                     loading={loading}
                     resumePath={user.resumePath}
                     fetchResume={fetchResume}

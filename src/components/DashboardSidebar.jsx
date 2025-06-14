@@ -1,5 +1,6 @@
 import Dropdown from "./Dropdown";
 import styled, { css } from "styled-components";
+import Overlay from "./Overlay";
 import {
   BsBriefcaseFill,
   BsGearFill,
@@ -63,6 +64,8 @@ const Sidebar = styled.div`
     border-right: 1px solid #e5e7eb;
     padding: 32px 12px 12px 12px;
     z-index: 5;
+
+    // Medium screens
     ${mq(
       "md",
       css`
@@ -71,19 +74,22 @@ const Sidebar = styled.div`
         height: calc(100% - 70px);
       `
     )}
+
     // Navigation
-  ul.sidebar-nav {
+    ul.sidebar-nav {
       ${flex(undefined, "stretch")}
       flex-direction: column;
       gap: 8px;
+
       li {
         a {
+          ${flex(undefined, "center")}
           padding: 10px;
           gap: 12px;
           border-radius: 8px;
           min-width: 44px;
           transition: color 0.4s ease-in-out, background-color 0.4s ease-in-out;
-          ${flex(undefined, "center")}
+
           .link-text {
             line-height: 16px;
             ${mq(
@@ -93,6 +99,7 @@ const Sidebar = styled.div`
               `
             )}
           }
+
           svg {
             fill: #757575;
             width: 20px;
@@ -112,11 +119,13 @@ const Sidebar = styled.div`
       }
     }
   }
+
   // Overlay
   .overlay {
     z-index: 4;
     display: none;
   }
+
   // Open mobile nav
   ${(props) =>
     props.$isMobileNavOpen &&
@@ -125,6 +134,7 @@ const Sidebar = styled.div`
         left: 0;
         max-width: 250px;
       }
+
       .overlay {
         display: block;
         ${mq(
@@ -135,6 +145,7 @@ const Sidebar = styled.div`
         )}
       }
     `}
+
   // Open nav
   ${(props) =>
     props.$isNavOpen &&
@@ -144,6 +155,7 @@ const Sidebar = styled.div`
           "md",
           css`
             max-width: 250px;
+
             // Navigation
             ul.sidebar-nav {
               li a {
@@ -161,11 +173,14 @@ const Sidebar = styled.div`
 export default function DashboardSideBar() {
   // User role
   const { user } = useUserContext();
+
   // Get dashboard context
   const { isNavOpen, isMobileNavOpen, setIsMobileNavOpen } =
     useDashboardContext();
+
   // Close
   const close = () => setIsMobileNavOpen(false);
+
   return (
     <Sidebar $isNavOpen={isNavOpen} $isMobileNavOpen={isMobileNavOpen}>
       <Dropdown close={close} btnId="side-nav__btn" menuId="dashboard-sidebar">
@@ -198,7 +213,7 @@ export default function DashboardSideBar() {
           </ul>
         </aside>
       </Dropdown>
-      <div className="overlay" />
+      <Overlay className="overlay" />
     </Sidebar>
   );
 }

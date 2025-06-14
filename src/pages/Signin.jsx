@@ -1,8 +1,8 @@
 import useMutate from "../hooks/useMutate";
-import Preloader from "../components/Preloader";
 import AuthBox from "../components/AuthBox";
 import Button from "../components/Button";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import Spinner from "../components/Spinner";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, FormGroup, Input, Password } from "../components/Form";
 import { useUserContext } from "../context/UserContext";
@@ -73,10 +73,12 @@ const Signin = () => {
         />
         <Link to="/forgot-password">Forgot password?</Link>
         <div className="submit-box">
-          <Button>Login</Button>
+          <Button $loading={loading} disabled={loading}>
+            <span>Login</span>
+            {loading && <Spinner />}
+          </Button>
         </div>
       </Form>
-      {loading ? <Preloader /> : null}
     </AuthBox>
   );
 };

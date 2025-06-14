@@ -9,11 +9,13 @@ export const getFlagEmoji = (code) => {
 };
 
 // Countries
-export const countries = Object.values(ct.getAllCountries()).map((country) => ({
+const countries = Object.values(ct.getAllCountries()).map((country) => ({
   code: country.id,
   name: country.name,
   flag: getFlagEmoji(country.id),
 }));
+
+countries.unshift({ name: "Anywhere", code: "", flag: "🌐" });
 
 // Currencies
 export const currencies = [
@@ -23,3 +25,5 @@ export const currencies = [
     )
   ),
 ];
+
+export { countries };
