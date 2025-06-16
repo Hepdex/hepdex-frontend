@@ -276,7 +276,7 @@ export default function DashboardHeader() {
             </Link>
           </li>
           <li>
-            <Link to="/help" className="nav-btn">
+            <Link to="/contact" className="nav-btn">
               <BsQuestionCircle size={20} />
             </Link>
           </li>
@@ -302,7 +302,11 @@ export default function DashboardHeader() {
                     </Link>
                   </li>
                   <li className="dropdown-menu__item">
-                    <Link className="dropdown-menu__item--link" onClick={close}>
+                    <Link
+                      to="/contact"
+                      className="dropdown-menu__item--link"
+                      onClick={close}
+                    >
                       Help centre
                     </Link>
                   </li>

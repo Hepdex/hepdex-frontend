@@ -214,11 +214,11 @@ export default function CandidateBio() {
             </div>
             <div className="profile-details">
               <div className="profile-details--box">
-                <h3>About me</h3>
+                <h3>Biography</h3>
                 <p>{user?.bio?.about ?? "No bio has been added."}</p>
               </div>
               <div className="profile-details--box">
-                <h3>Email</h3>
+                <h3>Email address</h3>
                 <p>{user.email}</p>
               </div>
               <div className="profile-details--box">

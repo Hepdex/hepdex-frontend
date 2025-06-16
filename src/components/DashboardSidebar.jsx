@@ -1,18 +1,19 @@
-import Dropdown from "./Dropdown";
-import styled, { css } from "styled-components";
-import Overlay from "./Overlay";
 import {
   BsBriefcaseFill,
   BsGearFill,
   BsHouseDoorFill,
   BsPersonFill,
   BsPieChartFill,
+  BsPinAngleFill,
   BsShareFill,
 } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
+import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 import { useDashboardContext } from "../context/DashboardContext";
 import { useUserContext } from "../context/UserContext";
+import Dropdown from "./Dropdown";
+import Overlay from "./Overlay";
 
 // Employer menu
 const employerMenu = [
@@ -44,6 +45,11 @@ const candidateMenu = [
     text: "Find jobs",
     icon: <BsBriefcaseFill />,
     link: "/dashboard/find-jobs",
+  },
+  {
+    text: "Saved jobs",
+    icon: <BsPinAngleFill />,
+    link: "/dashboard/saved-jobs",
   },
   {
     text: "Profile",

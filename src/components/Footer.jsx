@@ -225,7 +225,7 @@ export default function Footer() {
                 <h3 className="footer--col__title">Support</h3>
                 <ul>
                   <li>
-                    <Link>Help</Link>
+                    <Link to="/contact">Help</Link>
                   </li>
                   <li>
                     <Link>Customer Support</Link>

@@ -12,6 +12,7 @@ import {
 import { flex, mq } from "../GlobalStyles";
 import Dropdown from "./Dropdown";
 import { notify } from "../utils/helpers";
+import Badge from "./Badge";
 
 // Form container
 const Form = styled.form`
@@ -265,16 +266,7 @@ const StyledValuesBox = styled.div`
     margin-top: 8px;
     flex-wrap: wrap;
 
-    li {
-      ${flex("center", "center")}
-      gap: 4px;
-      background-color: #f3f4f6;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 14px;
-      height: 28px;
-      line-height: 1;
-
+    span {
       button {
         background-color: transparent;
 
@@ -434,7 +426,7 @@ function ValuesBox({
       {state.length > 0 && (
         <ul className="values-list">
           {state.map((item, i) => (
-            <li key={i}>
+            <Badge className="neutral" key={i}>
               <span>{item}</span>
               <button
                 type="button"
@@ -444,7 +436,7 @@ function ValuesBox({
               >
                 <BsX size={20} />
               </button>
-            </li>
+            </Badge>
           ))}
         </ul>
       )}

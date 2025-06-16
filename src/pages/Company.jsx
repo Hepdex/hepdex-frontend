@@ -8,9 +8,11 @@ import AvatarImage from "../components/AvatarImage";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import { BsHouseDoor, BsPencil } from "react-icons/bs";
 import { useUserContext } from "../context/UserContext";
-import { capitalizeFirst } from "../utils/helpers";
+import { capitalizeFirst, notify } from "../utils/helpers";
 import { Link } from "react-router-dom";
 import { flex } from "../GlobalStyles";
+import useMutate from "../hooks/useMutate";
+import { uploadLogo } from "../services/apiEmployer";
 
 // Company container
 const StyledCompany = styled.div`
@@ -50,8 +52,39 @@ export default function Company() {
   // Document title
   useDocumentTitle("Company");
 
+  // Upload logo
+  const [upload, loading] = useMutate(uploadLogo);
+
   // User context
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
+
+  // Handle upload logo
+  const handleUploadLogo = async (e) => {
+    // Get file
+    const file = e.target.files[0];
+
+    // Check for file
+    if (!file) return;
+
+    // Construct data
+    const data = new FormData();
+    data.append("file", file);
+
+    // Send request
+    const response = await upload(data);
+
+    // Check response
+    if (response.url) {
+      // Update user
+      setUser((user) => ({ ...user, companyLogo: response.url }));
+
+      // Success
+      notify("Logo uploaded successfully", "success");
+    } else {
+      // Error
+      notify(response, "error");
+    }
+  };
 
   return (
     <StyledCompany>
@@ -84,10 +117,24 @@ export default function Company() {
         </DashboardBox>
         <div className="details-box--side company-box">
           <div className="company-box--file">
-            <input type="file" id="upload-logo" name="file" />
+            <input
+              type="file"
+              id="upload-logo"
+              name="file"
+              accept="image/*"
+              disabled={loading}
+              onChange={handleUploadLogo}
+            />
             <label htmlFor="upload-logo">
               <AvatarImage>
-                <div className="no-image">{`${user.companyName.at(0)}`}</div>
+                {user.companyLogo ? (
+                  <img
+                    alt="company-logo"
+                    src={`${user.companyLogo}?t=${Date.now()}`}
+                  />
+                ) : (
+                  <div className="no-image">{`${user.companyName.at(0)}`}</div>
+                )}
               </AvatarImage>
               <button className="edit-image" type="button">
                 <BsPencil size={14} />
