@@ -8,7 +8,7 @@ import { FormGroup, Input, Select } from "./Form";
 import { countries } from "../data/countries";
 import { getDepartments } from "../services/apiDepartments";
 import { BsSearch, BsXLg } from "react-icons/bs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // Job search styles
 const StyledJobSearch = styled.div`
@@ -117,12 +117,15 @@ const StyledJobSearch = styled.div`
   }
 `;
 
-export default function JobSearch({ jobTitle, setJobTitle }) {
+export default function JobSearch() {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Job title param
   const jobTitleParam = searchParams.get("jobTitle") ?? "";
+
+  // Job title
+  const [jobTitle, setJobTitle] = useState(jobTitleParam);
 
   // Job types
   const jobTypes = ["Full-time", "Contractor", "Part-time"];

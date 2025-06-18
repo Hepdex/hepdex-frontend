@@ -5,11 +5,12 @@ import { flex } from "../GlobalStyles";
 const StyledBadge = styled.span`
   ${flex("center", "center")}
   display: inline-flex;
-  border-radius: 8px;
-  gap: 6px;
-  padding: 4px 12px;
+  border-radius: 4px;
+  gap: 4px;
+  padding: 0 8px;
+  height: 24px;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 1;
   color: var(--color-black-1);
 
   &::first-letter {

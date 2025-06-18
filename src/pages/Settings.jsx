@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Button from "../components/Button";
 import DashboardTitle from "../components/DashboardTitle";
 import Modal from "../components/Modal";
 import DetailsBox from "../components/DetailsBox";
@@ -9,9 +8,13 @@ import UpdatePasswordModal from "../ui/settings/UpdatePasswordModal";
 import DashboardBox from "../components/DashboardBox";
 import IconTitle from "../components/IconTitle";
 import AvatarImage from "../components/AvatarImage";
+import useMutate from "../hooks/useMutate";
 import { useUserContext } from "../context/UserContext";
 import { BsFileEarmarkText, BsPencil } from "react-icons/bs";
-import { capitalizeFirst } from "../utils/helpers";
+import { capitalizeFirst, notify } from "../utils/helpers";
+import { flex } from "../GlobalStyles";
+import { uploadProfilePicture } from "../services/apiUser";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 // Settings container
 const StyledSettings = styled.div`
@@ -29,15 +32,52 @@ const StyledSettings = styled.div`
       }
 
       label {
+        display: inline-flex;
         cursor: pointer;
+        flex-direction: column;
+        ${flex(undefined, "center")}
       }
     }
   }
 `;
 
 export default function Settings() {
+  // Document title
+  useDocumentTitle("Settings");
+
   // User context
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
+
+  // Upload profile image
+  const [upload, loading] = useMutate(uploadProfilePicture);
+
+  // Handle upload image
+  const handleUploadImage = async (e) => {
+    // Get file
+    const file = e.target.files[0];
+
+    // Check for file
+    if (!file) return;
+
+    // Construct data
+    const data = new FormData();
+    data.append("file", file);
+
+    // Send request
+    const response = await upload(data);
+
+    // Check response
+    if (response.url) {
+      // Update user
+      setUser((user) => ({ ...user, profileImage: response.url }));
+
+      // Success
+      notify("Image uploaded successfully", "success");
+    } else {
+      // Error
+      notify(response, "error");
+    }
+  };
 
   return (
     <StyledSettings>
@@ -94,18 +134,33 @@ export default function Settings() {
           </Modal>
         </DashboardBox>
         <div className="details-box--side avatar-box">
-          <AvatarImage>
-            <div className="no-image">
-              {`${user.firstName.at(0)}${user.lastName.at(0)}`}
-            </div>
-          </AvatarImage>
-          <h3 className="avatar-box--name heading-sm">{`${user.firstName} ${user.lastName}`}</h3>
           <div className="avatar-box--file">
-            <input type="file" id="upload-image" />
-            <Button as="label" size="sm" htmlFor="upload-image">
-              Upload photo
-            </Button>
+            <input
+              accept="image/*"
+              type="file"
+              disabled={loading}
+              id="upload-image"
+              onChange={handleUploadImage}
+            />
+            <label htmlFor="upload-image">
+              <AvatarImage>
+                {user.profileImage ? (
+                  <img
+                    alt="profile-image"
+                    src={`${user.profileImage}?t=${Date.now()}`}
+                  />
+                ) : (
+                  <div className="no-image">
+                    {`${user.firstName.at(0)}${user.lastName.at(0)}`}
+                  </div>
+                )}
+              </AvatarImage>
+              <button className="edit-image" type="button">
+                <BsPencil size={14} />
+              </button>
+            </label>
           </div>
+          <h3 className="avatar-box--name heading-sm">{`${user.firstName} ${user.lastName}`}</h3>
         </div>
       </DetailsBox>
     </StyledSettings>

@@ -44,7 +44,7 @@ const employerCards = [
   },
 ];
 
-export default function EmployerDashboardContent() {
+export default function DashboardContent() {
   return (
     <Container.Row>
       {employerCards.map((card, index) => (

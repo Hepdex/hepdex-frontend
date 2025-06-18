@@ -61,7 +61,7 @@ export default function UpdateNameModal() {
           $loading={loading}
           disabled={loading}
         >
-          <span>Save new name</span>
+          <span>Update</span>
           {loading && <Spinner />}
         </Button>
       }

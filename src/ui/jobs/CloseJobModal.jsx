@@ -10,10 +10,13 @@ import { useJobsContext } from "../../pages/Jobs";
 export default function CloseJobModal({ jobID, currentDataLength }) {
   // Jobs context
   const { setJobs } = useJobsContext();
+
   // Modal context
   const { close } = useModalContext();
+
   // Set page param
   const setPageParam = useSetPageParam(currentDataLength);
+
   // Close job
   const [closeJob, loading] = useMutate(updateJobStatus);
 
@@ -24,15 +27,19 @@ export default function CloseJobModal({ jobID, currentDataLength }) {
       jobID,
       active: false,
     });
+
     // Check response
     if (response === 200) {
       // Update jobs state
       setJobs((data) => {
         const jobs = data.jobs;
+
         // Find job
         const updatedJob = jobs.find((job) => job._id === jobID);
+
         // Check if job exists
         if (!updatedJob) return data;
+
         // Set status
         updatedJob.active = false;
         // Update jobs
@@ -40,10 +47,13 @@ export default function CloseJobModal({ jobID, currentDataLength }) {
           jobs,
         };
       });
+
       // Close modal
       close();
+
       // Change page param if jobs length is one
       setPageParam();
+
       // Display message
       notify("Job successfully closed", "success");
     } else {
@@ -51,6 +61,7 @@ export default function CloseJobModal({ jobID, currentDataLength }) {
       notify(response, "error");
     }
   }
+
   return (
     <Modal.Window
       name="close-job"

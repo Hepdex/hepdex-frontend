@@ -3,11 +3,14 @@ import DashboardBox from "../components/DashboardBox";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
 import FormBox from "../components/FormBox";
+import useMutate from "../hooks/useMutate";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { BsPerson } from "react-icons/bs";
 import {
   Form,
   FormGroup,
   Input,
+  SearchSelect,
   Select,
   Textarea,
   ValuesBox,
@@ -15,12 +18,14 @@ import {
 import { useUserContext } from "../context/UserContext";
 import { countries } from "../data/countries";
 import { useState } from "react";
-import useMutate from "../hooks/useMutate";
 import { updateProfile } from "../services/apiUser";
 import { notify } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
 
 export default function EditCandidate() {
+  // Use document title
+  useDocumentTitle("Edit profile");
+
   // User context
   const { user, setUser } = useUserContext();
 
@@ -29,6 +34,11 @@ export default function EditCandidate() {
 
   // Languages state
   const [languages, setLanguages] = useState(user?.bio?.languages ?? []);
+
+  // Initial country
+  const initialCountry = countries.find(
+    (item) => item.name.toLowerCase() === user.country.toLowerCase()
+  );
 
   // Update candidate
   const [update, loading] = useMutate(updateProfile(user.role));
@@ -43,8 +53,15 @@ export default function EditCandidate() {
 
     // Get values
     let data = Object.fromEntries(new FormData(e.target));
+
+    // Get country
+    const [_flag, ...rest] = data.country.split(" ");
+
+    // Construct data
     data = {
       ...data,
+      country: rest.join(" ").toLowerCase(),
+      available: data.available === "true",
       bio: {
         about: data.about,
         skills,
@@ -88,7 +105,7 @@ export default function EditCandidate() {
         <DashboardBox
           title={
             <IconTitle
-              title="Candidate Profile"
+              title="Profile"
               icon={<BsPerson size={18} />}
               className="title"
             />
@@ -103,22 +120,29 @@ export default function EditCandidate() {
                 name="jobTitle"
               />
             </FormGroup>
-            <FormGroup label="Country">
-              <Select defaultValue={user.country} name="country">
-                <option value="">Select country</option>
-                {countries.map((item, index) => (
-                  <option
-                    key={index}
-                    value={item.name.toLowerCase()}
-                  >{`${item.flag} ${item.name}`}</option>
-                ))}
+            <FormGroup label="Status">
+              <Select defaultValue={user.available} name="available">
+                <option value="true">Available</option>
+                <option value="false">Not available</option>
               </Select>
+            </FormGroup>
+            <FormGroup label="Location">
+              <SearchSelect
+                placeholder="Select location"
+                searchPlaceholder="Search location..."
+                name="country"
+                defaultItem={initialCountry}
+                items={(() => {
+                  return countries.filter((country) => country.code !== "");
+                })()}
+              />
             </FormGroup>
             <ValuesBox
               state={skills}
               setState={setSkills}
               placeholder="Enter skills"
-              label="skills"
+              label="Skills"
+              limit={15}
             />
             <ValuesBox
               state={languages}

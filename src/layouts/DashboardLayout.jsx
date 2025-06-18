@@ -8,6 +8,7 @@ import { useUserContext } from "../context/UserContext";
 export default function DashboardLayout() {
   // Get user context
   const { user } = useUserContext();
+
   return (
     <DashboardContextProvider>
       {user && (

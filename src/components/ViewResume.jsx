@@ -8,6 +8,7 @@ export default function ViewResume({
   size = "xs",
   text = "View",
   color = "primary",
+  ...rest
 }) {
   // Handle get resume
   async function handleGetResume() {
@@ -35,6 +36,7 @@ export default function ViewResume({
       onClick={() => {
         handleGetResume(resumePath);
       }}
+      {...rest}
     >
       <span>{text}</span>
     </Button>

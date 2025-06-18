@@ -23,36 +23,44 @@ const Header = styled.header`
   max-height: 70px;
   background-color: var(--color-white-1);
   border-bottom: 1px solid #e5e7eb;
+
   // Icon
   svg {
     fill: #757575;
     transition: fill 0.4s ease-in-out;
   }
+
   // Nav button
   .nav-btn {
+    ${flex("center", "center")}
     background-color: transparent;
     width: 36px;
     height: 36px;
-    ${flex("center", "center")}
     border-radius: 50%;
     transition: all 0.4s ease-in-out;
+
     svg {
       pointer-events: none;
     }
+
     &:hover {
       background-color: #f3f4f6;
+
       & > svg {
         fill: var(--color-black-1);
       }
     }
   }
+
   // Header left
   .left {
     ${flex(undefined, "center")}
     gap: 12px;
+
     // Main menu btn
     .main-menu__btn {
       display: none;
+      // Medium screens
       ${mq(
         "md",
         css`
@@ -60,8 +68,10 @@ const Header = styled.header`
         `
       )}
     }
+
     // Mobile menu btn
     .mobile-menu__btn {
+      // Medium screens
       ${mq(
         "md",
         css`
@@ -69,14 +79,17 @@ const Header = styled.header`
         `
       )}
     }
+
     .main-menu__btn,
     .mobile-menu__btn {
       width: 40px;
       height: 40px;
     }
+
     // logo
     .logo {
       display: none;
+      // Medium screens
       ${mq(
         "md",
         css`
@@ -99,8 +112,11 @@ const Header = styled.header`
     &-nav {
       ${flex(undefined, "center")}
       gap: 4px;
+
       & > li:not(:last-child) {
         display: none;
+
+        // Medium screens
         ${mq(
           "md",
           css`
@@ -108,24 +124,35 @@ const Header = styled.header`
           `
         )}
       }
+
       // User box
       &__user {
         span {
           text-transform: uppercase;
           pointer-events: none;
         }
+
         & > button {
-          ${flex("center", "center")}
           height: 40px;
           width: 40px;
-          font-family: sans-serif;
+          background-color: transparent;
           margin-left: 4px;
-          font-weight: 600;
-          font-size: 15px;
-          letter-spacing: 0px;
-          background-color: var(--color-tertiary);
+          overflow: hidden;
           border-radius: 50%;
+          background-color: #f3f4f6;
+
+          .no-image {
+            ${flex("center", "center")}
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0px;
+            background-color: var(--color-tertiary);
+            font-family: sans-serif;
+            width: 100%;
+            height: 100%;
+          }
         }
+
         // Dropdown
         ul.dropdown-menu {
           position: absolute;
@@ -138,11 +165,14 @@ const Header = styled.header`
           border-bottom-left-radius: 8px;
           border-bottom-right-radius: 8px;
           text-align: left;
+
           li {
             padding: 3px 0px;
+
             &:not(:last-child) {
               border-bottom: 1px solid #e5e7eb;
             }
+
             a,
             button {
               ${flex(undefined, "center")}
@@ -154,10 +184,12 @@ const Header = styled.header`
               font-size: 15px;
               line-height: 20px;
               gap: 12px;
+
               &,
               & > svg {
                 transition: none;
               }
+
               &:hover {
                 color: var(--color-black-1);
                 background-color: #f3f4f6;
@@ -176,14 +208,19 @@ const Header = styled.header`
 export default function DashboardHeader() {
   // Get dashboard context
   const { toggleNav, toggleMobileNav } = useDashboardContext();
+
   // Get user context
   const { user, setUser, setIsLoggedIn } = useUserContext();
+
   // Navigate hook
   const navigate = useNavigate();
+
   // Logout
   const [logout] = useMutate(logoutApi);
+
   // Dropdown state
   const [open, setOpen] = useState(false);
+
   // Close
   const close = () => setOpen(false);
 
@@ -191,16 +228,20 @@ export default function DashboardHeader() {
   const handleLogout = async () => {
     // Close dropdown
     close();
+
     // Send request
     const response = await logout();
+
     // Check response
     if (response === 200) {
       // Set logged in state
       setIsLoggedIn(false);
+
       // Clear user state
       setTimeout(() => {
         setUser(null);
       }, 1000);
+
       // Navigate to home page
       navigate("/home");
     } else {
@@ -235,36 +276,40 @@ export default function DashboardHeader() {
             </Link>
           </li>
           <li>
-            <Link to="/help" className="nav-btn">
+            <Link to="/contact" className="nav-btn">
               <BsQuestionCircle size={20} />
             </Link>
           </li>
           <li className="right-nav__user" id="user-menu">
             <button onClick={() => setOpen((s) => !s)}>
-              <span>{`${user.firstName.at(0)}${user.lastName.at(0)}`}</span>
+              {user.profileImage ? (
+                <img
+                  alt="profile-image"
+                  src={`${user.profileImage}?t=${Date.now()}`}
+                />
+              ) : (
+                <span className="no-image">{`${user.firstName.at(
+                  0
+                )}${user.lastName.at(0)}`}</span>
+              )}
             </button>
             {open && (
               <Dropdown close={() => setOpen(false)} menuId="user-menu">
                 <ul className="dropdown-menu">
                   <li className="dropdown-menu__item">
-                    <Link
-                      className="dropdown-menu__item--link"
-                      to="/dashboard/notifications"
-                      onClick={close}
-                    >
+                    <Link className="dropdown-menu__item--link" onClick={close}>
                       Notifications
                     </Link>
                   </li>
                   <li className="dropdown-menu__item">
                     <Link
+                      to="/contact"
                       className="dropdown-menu__item--link"
-                      to="/dashboard/help"
                       onClick={close}
                     >
                       Help centre
                     </Link>
                   </li>
-
                   <li className="dropdown-menu__item">
                     <Link
                       className="dropdown-menu__item--link"

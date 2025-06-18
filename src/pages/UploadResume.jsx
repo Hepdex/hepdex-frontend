@@ -98,7 +98,7 @@ export default function UploadResume() {
 
       // Navigate to profile page
       setTimeout(() => {
-        navigate("/dashboard/candidate-bio");
+        navigate("/dashboard/candidate-bio", { replace: true });
       }, 2000);
     } else {
       // Error

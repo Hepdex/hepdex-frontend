@@ -13,7 +13,7 @@ export default function Home() {
   useDocumentTitle("The #1 Global platform for remote workers.");
 
   return (
-    <div>
+    <>
       <Hero />
       <Portfolio />
       <Talent />
@@ -23,6 +23,6 @@ export default function Home() {
       <HowItWorks />
       <WhyHepDex />
       <Faqs />
-    </div>
+    </>
   );
 }

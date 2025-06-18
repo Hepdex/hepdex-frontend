@@ -65,6 +65,7 @@ export default function usePaginate(pageSize = 10, data = [], searchField) {
   // Previous
   const previous = () => {
     const params = new URLSearchParams(searchParams);
+
     if (page > 1) {
       params.set("page", `${page - 1}`);
       setSearchParams(params);
@@ -73,12 +74,19 @@ export default function usePaginate(pageSize = 10, data = [], searchField) {
 
   // Search
   const search = (field, value) => {
+    // Get params
     const params = new URLSearchParams(searchParams);
+
+    // Set search field
     params.set(field, value);
+
     // Delete param if value is empty
     if (value === "") params.delete(field);
+
     // Delete page param
     params.delete("page");
+
+    // Set params
     setSearchParams(params);
   };
 

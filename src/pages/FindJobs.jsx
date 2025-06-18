@@ -11,8 +11,7 @@ export default function FindJobs() {
   // Search jobs hook
   const {
     jobs,
-    jobTitle,
-    setJobTitle,
+
     page,
     pagination,
     loading,
@@ -26,7 +25,7 @@ export default function FindJobs() {
         subtitle="Discover your next big opportunity"
         links={[{ name: "Find jobs" }]}
       />
-      <JobSearch jobTitle={jobTitle} setJobTitle={setJobTitle} />
+      <JobSearch />
       {loading && (page === 1 || !pagination) ? (
         <ContentLoader />
       ) : (

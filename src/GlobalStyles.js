@@ -113,6 +113,8 @@ letter-spacing: -0.5px;
 
 img{
     display: block;
+    width: 100%;
+    height: 100%;
 }
 
 // Heading styles
@@ -177,6 +179,9 @@ img{
   line-height: 28px;
 }
 
+.text-center{
+  text-align: center;
+}
 
 // Overlay
 .overlay{
@@ -190,40 +195,8 @@ img{
 }
 
 
-// Tabs
-.tabs{
-  ${flex(undefined, "center")}
-  gap: 40px;
-  border-bottom: 1px solid #e5e7eb;
-  margin-bottom: 32px;
-  li {
-    button{
-      background-color: transparent;
-      padding-bottom: 12px;
-      display: inline-block;
-      color: var(--color-grey-2);
-      font-weight: 500;
-      transition: color .4s ease-in-out;
-      &.active, &:hover{
-        color: var(--color-black-1);
-      }
-      &.active{
-        position: relative;
-        &::after{
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          background-color: var(--color-primary);
-          height: 3px;
-        }
-      }
-    }
-  }
-}
 
-// Toast
+// Custom toast
 .toast{
   position: relative;
   & > div:first-child{

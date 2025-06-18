@@ -9,9 +9,6 @@ export default function useSearchJobs() {
   // Jobs state
   const [jobs, setJobs] = useState([]);
 
-  // Job title
-  const [jobTitle, setJobTitle] = useState(searchParams.get("jobTitle") ?? "");
-
   // Page state
   const page = Number(searchParams.get("page") ?? 1);
 
@@ -56,8 +53,6 @@ export default function useSearchJobs() {
 
   return {
     jobs,
-    jobTitle,
-    setJobTitle,
     pagination,
     loading,
     page,

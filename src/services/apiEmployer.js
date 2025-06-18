@@ -6,3 +6,12 @@ export const sendRequirement = apiFetcher(
   "POST",
   "statusCode"
 );
+
+// Upload logo
+export const uploadLogo = apiFetcher(
+  "upload-logo-image",
+  "PUT",
+  "data",
+  false,
+  true
+);

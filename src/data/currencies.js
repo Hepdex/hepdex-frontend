@@ -52,6 +52,7 @@ const currencies = [
   { currency: "ETB", code: "ET" },
   { currency: "FJD", code: "FJ" },
   { currency: "FKP", code: "FK" },
+  { currency: "NGN", code: "NG" },
   { currency: "GBP", code: "GB" },
 ];
 

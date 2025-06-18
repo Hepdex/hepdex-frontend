@@ -11,16 +11,8 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function FindWork() {
   // Search jobs hook
-  const {
-    jobs,
-    jobTitle,
-    setJobTitle,
-    page,
-    pagination,
-    loading,
-    searchParams,
-    setSearchParams,
-  } = useSearchJobs();
+  const { jobs, page, pagination, loading, searchParams, setSearchParams } =
+    useSearchJobs();
 
   useDocumentTitle("Find work");
 
@@ -33,7 +25,7 @@ export default function FindWork() {
           spaceBottom={true}
           animation={false}
         >
-          <JobSearch jobTitle={jobTitle} setJobTitle={setJobTitle} />
+          <JobSearch />
           {loading && (page === 1 || !pagination) ? (
             <ContentLoader />
           ) : (

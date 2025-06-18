@@ -57,16 +57,22 @@ const List = styled.ul`
 export default function Actions({ jobID, index, active, currentDataLength }) {
   // Jobs context
   const { setJobs } = useJobsContext();
+
   // Set page param
   const setPageParam = useSetPageParam(currentDataLength);
+
   // Button ref
   const buttonRef = useRef(null);
+
   // Menu ref
   const menuRef = useRef(null);
+
   // Dropdown state
   const [open, setOpen] = useState(false);
+
   // Open job
   const [openJob] = useMutate(updateJobStatus);
+
   // Close
   const close = () => setOpen(false);
 
@@ -75,15 +81,19 @@ export default function Actions({ jobID, index, active, currentDataLength }) {
     if (buttonRef.current && menuRef.current) {
       // Get button position
       const rect = buttonRef.current.getBoundingClientRect();
+
       // Menu
       const menu = menuRef.current;
+
       // Set menu position
       let top = `${rect.bottom}px`;
       let left = `${rect.right - menu.offsetWidth}px`;
+
       // Check if menu is close to bottom edge
       if (rect.bottom + menu.offsetHeight > window.innerHeight) {
         top = `${rect.top - menu.offsetHeight}px`;
       }
+
       menu.style.top = top;
       menu.style.left = left;
     }
@@ -93,24 +103,32 @@ export default function Actions({ jobID, index, active, currentDataLength }) {
   const handleOpenJob = async () => {
     // Close menu
     close();
+
     // Send request
     const response = await openJob({ jobID, active: true });
+
     // Check response
     if (response === 200) {
       // Update jobs state
       setJobs((data) => {
         const jobs = data.jobs;
+
         // Updated job
         const updatedJob = jobs.find((job) => job._id === jobID);
+
         // Check if job exists
         if (!updatedJob) return data;
+
         // Set job status
         updatedJob.active = true;
+
         // Update jobs
         return { jobs };
       });
+
       // Change page param if jobs length is one
       setPageParam();
+
       // Display message
       notify("Job successfully opened", "success");
     } else {
@@ -124,16 +142,20 @@ export default function Actions({ jobID, index, active, currentDataLength }) {
     if (open) {
       // Update position
       updatePosition();
+
       window.addEventListener("scroll", updatePosition);
+
       window.addEventListener("resize", updatePosition);
     }
 
     // Clean up
     return () => {
       window.removeEventListener("scroll", updatePosition);
+
       window.removeEventListener("resize", updatePosition);
     };
   }, [open]);
+
   return (
     <td className="sticky">
       <div>

@@ -10,10 +10,13 @@ import { useJobsContext } from "../../pages/Jobs";
 export default function DeleteJobModal({ jobID, currentDataLength }) {
   // Jobs context
   const { setJobs } = useJobsContext();
+
   // Modal context
   const { close } = useModalContext();
+
   // Set page param
   const setPageParam = useSetPageParam(currentDataLength);
+
   // Delete job
   const [deleteJob, loading] = useMutate(deleteJobApi);
 
@@ -21,19 +24,24 @@ export default function DeleteJobModal({ jobID, currentDataLength }) {
   const handleJobApi = async () => {
     // Send request
     const response = await deleteJob(undefined, `?jobID=${jobID}`);
+
     // Check response
     if (response === 200) {
       // Update jobs state
       setJobs((data) => {
         // Remove deleted job
         const jobs = data.jobs.filter((job) => job._id !== jobID);
+
         // Update jobs
         return { jobs };
       });
+
       // Close modal
       close();
+
       // Change page param if jobs length is one
       setPageParam();
+
       // Display message
       notify("Job successfully deleted", "success");
     } else {

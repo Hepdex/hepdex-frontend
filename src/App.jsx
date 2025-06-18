@@ -39,6 +39,7 @@ import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
 import CandidateBio from "./pages/CandidateBio";
 import EditCandidate from "./pages/EditCandidate";
 import Candidate from "./pages/Candidate";
+import Contact from "./pages/Contact";
 
 // Set emojis
 polyfillCountryFlagEmojis();
@@ -92,8 +93,8 @@ export default function App() {
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
           <Route path="services" element={<Services />} />
+          <Route path="contact" element={<Contact />} />
           <Route path="find-work" element={<FindWork />} />
-          
         </Route>
         <Route
           element={

@@ -14,16 +14,18 @@ import { Link, useSearchParams } from "react-router-dom";
 import { formatDate } from "../../utils/helpers";
 import { Input } from "../../components/Form";
 
-// Applications
-const Applications = styled.div`
+// Applications container
+const StyledApplicationsBox = styled.div`
   &#applications-card {
     ${flex()}
     min-height: 300px;
     flex-direction: column;
     padding-bottom: 0px;
+
     .pagination {
       padding: 18px 0;
     }
+
     .top {
       // Application box
       .application-search {
@@ -36,6 +38,7 @@ const Applications = styled.div`
         }
       }
     }
+
     .application-box {
       overflow-x: auto;
       display: grid;
@@ -43,13 +46,16 @@ const Applications = styled.div`
       max-width: 100%;
       grid-template-columns: repeat(1, minmax(0, 1fr));
       flex: 1;
+
       // Application list
       .application-list {
         &__item {
           padding: 16px 0;
+
           &:not(:last-child) {
             border-bottom: 1px solid #e5e7eb;
           }
+
           // Candidate info
           .candidate-info {
             ${flex("space-between", "center")}
@@ -58,11 +64,13 @@ const Applications = styled.div`
             &__profile {
               ${flex(undefined, "center")}
               gap: 16px;
+
               &--details {
                 .name {
                   font-weight: 500;
                   font-size: 16px;
                 }
+
                 .email {
                   font-size: 14px;
                   line-height: 20px;
@@ -73,6 +81,7 @@ const Applications = styled.div`
             // Applied
             p.applied {
               display: none;
+
               ${mq(
                 "820px",
                 css`
@@ -92,9 +101,11 @@ const Applications = styled.div`
       padding: 16px 0 48px 0px;
       flex-direction: column;
       text-align: center;
+
       h3 {
         margin-bottom: 4px;
       }
+
       p {
         color: var(--color-grey-2);
         margin-bottom: 16px;
@@ -119,7 +130,7 @@ export default function ApplicationsBox({ job }) {
 
   return (
     <Container.Col breakPoints={[{ name: "1200px", width: 60 }]}>
-      <Applications className="page-card " id="applications-card">
+      <StyledApplicationsBox className="page-card " id="applications-card">
         <h3 className="page-card__title">Applications ({applicants.length})</h3>
         <div className="top">
           <div className="application-search">
@@ -203,7 +214,7 @@ export default function ApplicationsBox({ job }) {
             </div>
           </>
         )}
-      </Applications>
+      </StyledApplicationsBox>
     </Container.Col>
   );
 }

@@ -4,8 +4,15 @@ import Spinner from "../components/Spinner";
 import FormBox from "../components/FormBox";
 import DashboardBox from "../components/DashboardBox";
 import IconTitle from "../components/IconTitle";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { BsHouseDoor } from "react-icons/bs";
-import { Form, FormGroup, Input, Select } from "../components/Form";
+import {
+  Form,
+  FormGroup,
+  Input,
+  SearchSelect,
+  Select,
+} from "../components/Form";
 import { useUserContext } from "../context/UserContext";
 import { notify } from "../utils/helpers";
 import { updateProfile } from "../services/apiUser";
@@ -13,6 +20,8 @@ import { useNavigate } from "react-router-dom";
 import { countries } from "../data/countries";
 
 export default function EditCompany() {
+  // Document title
+  useDocumentTitle("Edit company");
   return (
     <FormBox title="Edit company" subtitle="Update company details.">
       <EditCompanyForm />
@@ -23,6 +32,12 @@ export default function EditCompany() {
 function EditCompanyForm() {
   // User context
   const { user, setUser } = useUserContext();
+
+  // Initial country
+  let initialCountry =
+    countries.find(
+      (country) => country.name.toLowerCase() === user.country.toLowerCase()
+    ) ?? {};
 
   // Navigate hook
   const navigate = useNavigate();
@@ -36,7 +51,17 @@ function EditCompanyForm() {
     e.preventDefault();
 
     // Get form values
-    const data = Object.fromEntries(new FormData(e.target));
+    let data = Object.fromEntries(new FormData(e.target));
+
+    console.log(data);
+
+    // get country
+    const [_flag, ...country] = data.country.split(" ");
+
+    data = {
+      ...data,
+      country: country.join(" "),
+    };
 
     // Send request
     const response = await updateCompany(data);
@@ -78,23 +103,24 @@ function EditCompanyForm() {
               name="companyName"
             />
           </FormGroup>
-          <FormGroup label="Company size">
-            <Input
-              placeholder="Company size"
-              required
-              defaultValue={user.companySize}
-              name="companySize"
+          <FormGroup label="Company location">
+            <SearchSelect
+              placeholder="Select location"
+              searchPlaceholder="Search location..."
+              name="country"
+              defaultItem={initialCountry}
+              items={(() => {
+                return countries.filter((country) => country.code !== "");
+              })()}
             />
           </FormGroup>
-          <FormGroup label="Company location">
-            <Select defaultValue={user.country} name="country">
-              <option value="">Select country</option>
-              {countries.map((item, index) => (
-                <option
-                  key={index}
-                  value={item.name.toLowerCase()}
-                >{`${item.flag} ${item.name}`}</option>
-              ))}
+          <FormGroup label="Company size">
+            <Select defaultValue={user.companySize} name="companySize" required>
+              <option value="">Select company size</option>
+              <option value="1-10 employees">1-10 employees</option>
+              <option value="11-50 employees">11-50 employees</option>
+              <option value="51-200 employees">51-200 employees</option>
+              <option value="1000+ employees">1000+ employees</option>
             </Select>
           </FormGroup>
         </div>

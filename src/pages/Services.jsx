@@ -6,6 +6,7 @@ import GetStarted from "../ui/services/GetStarted";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const ServicesPage = () => {
+  // Document title
   useDocumentTitle("Services");
   return (
     <PageContent>
