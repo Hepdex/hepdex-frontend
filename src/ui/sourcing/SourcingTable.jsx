@@ -13,7 +13,13 @@ import {
   BsChevronRight,
   BsX,
 } from "react-icons/bs";
-import { Form, FormGroup, Input, Select } from "../../components/Form";
+import {
+  Form,
+  FormGroup,
+  Input,
+  SearchSelect,
+  Select,
+} from "../../components/Form";
 import { capitalizeFirst, formatDate } from "../../utils/helpers";
 import { countries } from "../../data/countries";
 
@@ -103,18 +109,20 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
         </div>
         {search && (
           <Filter id="sourcing-filter" fields={["country", "jobType"]}>
-            <Select
+            <SearchSelect
+              placeholder="Select country"
+              searchPlaceholder="Search country..."
               name="country"
-              defaultValue={searchParams.get("country")}
-              alt={true}
-            >
-              <option value="">Select country</option>
-              {countries.map((country, index) => (
-                <option key={index} value={country.name}>
-                  {`${country.flag} ${country.name}`}
-                </option>
-              ))}
-            </Select>
+              required={false}
+              defaultItem={
+                countries.find(
+                  (item) => item.name === searchParams.get("country")
+                ) || {}
+              }
+              param={searchParams.get("country") ?? ""}
+              items={countries}
+              className="sm"
+            />
             <Select
               name="jobType"
               defaultValue={searchParams.get("jobType")}

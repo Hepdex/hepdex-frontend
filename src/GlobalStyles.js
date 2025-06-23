@@ -274,10 +274,10 @@ img{
 // Animations
 @keyframes skeletonLoader {
   0% {
-      background-color: hsl(200, 20%, 86%)
+      background-color: #d4dee2
   }
   100%{
-    background-color: hsl(200, 20%, 95%)
+    background-color: #f0f3f5
   }
 }
 

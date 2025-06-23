@@ -8,16 +8,24 @@ import Spinner from "../components/Spinner";
 import Button from "../components/Button";
 import useSearchJobs from "../hooks/useSearchJobs";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import styled from "styled-components";
+
+const StyledFindWork = styled.div`
+  .job-search {
+    padding: 0;
+  }
+`;
 
 export default function FindWork() {
   // Search jobs hook
   const { jobs, page, pagination, loading, searchParams, setSearchParams } =
     useSearchJobs();
 
+  // Document title
   useDocumentTitle("Find work");
 
   return (
-    <div className="custom-fade-up sm" data-aos>
+    <StyledFindWork className="custom-fade-up sm" data-aos>
       <PageContent>
         <Section
           title="Browse open jobs"
@@ -59,6 +67,6 @@ export default function FindWork() {
           )}
         </Section>
       </PageContent>
-    </div>
+    </StyledFindWork>
   );
 }

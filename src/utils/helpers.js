@@ -127,6 +127,14 @@ export const getTimezones = (location) => {
   return timezones;
 };
 
+// Remove emoji from string
+export const removeEmojis = (str) => {
+  return str.replace(
+    /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF]+|\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
+    ""
+  );
+};
+
 export const countries = [
   { code: "AF", name: "Afghanistan", flag: "🇦🇫" },
   { code: "AL", name: "Albania", flag: "🇦🇱" },

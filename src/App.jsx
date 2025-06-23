@@ -113,21 +113,15 @@ export default function App() {
           <Route path="browse-talent" element={<Sourcing />} />
           <Route path="browse-talent/:id" element={<Candidate />} />
           <Route path="find-jobs" element={<FindJobs />} />
-          <Route path="find-jobs/:jobID" element={<JobApplication />} />
           <Route path="candidate-bio" element={<CandidateBio />} />
         </Route>
-        <Route
-          element={
-            <ProtectedRoute>
-              <AltLayout />
-            </ProtectedRoute>
-          }
-        >
+        <Route element={<AltLayout />}>
           <Route element={<AddJob />} path="post-a-job" />
           <Route element={<EditJob />} path="edit-job/:jobID" />
           <Route element={<EditCompany />} path="edit-company" />
           <Route element={<UploadResume />} path="upload-resume" />
           <Route element={<EditCandidate />} path="edit-profile" />
+          <Route path="jobs/:jobID" element={<JobApplication />} />
         </Route>
         <Route path="login" element={<Signin />} />
         <Route path="signup" element={<Signup />} />

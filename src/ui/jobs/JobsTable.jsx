@@ -9,7 +9,7 @@ import TableBox from "../../components/TableBox";
 import useQuery from "../../hooks/useQuery";
 import { getDepartments } from "../../services/apiDepartments";
 import { BsChevronLeft, BsChevronRight, BsSearch } from "react-icons/bs";
-import { Input, Select } from "../../components/Form";
+import { Input, SearchSelect, Select } from "../../components/Form";
 import { useJobsContext } from "../../pages/Jobs";
 import { capitalizeFirst, formatDate } from "../../utils/helpers";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -93,18 +93,20 @@ export default function JobsTable() {
           <BsSearch size={15} />
         </div>
         <Filter id="jobs-filter" fields={["country", "department"]}>
-          <Select
+          <SearchSelect
+            placeholder="Select country"
+            searchPlaceholder="Search country..."
             name="country"
-            defaultValue={searchParams.get("country")}
-            alt={true}
-          >
-            <option value="">Select country</option>
-            {countries.map((country, index) => (
-              <option key={index} value={country.name}>
-                {`${country.flag} ${country.name}`}
-              </option>
-            ))}
-          </Select>
+            defaultItem={
+              countries.find(
+                (item) => item.name === searchParams.get("country")
+              ) || {}
+            }
+            required={false}
+            param={searchParams.get("country") ?? ""}
+            items={countries}
+            className="sm"
+          />
           <Select
             name="department"
             defaultValue={searchParams.get("department")}

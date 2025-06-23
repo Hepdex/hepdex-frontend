@@ -64,7 +64,9 @@ const StyledWindow = styled.div`
   .modal {
     background-color: var(--color-white-1);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 100vh;
 
     &--header {
       padding: 20px;
@@ -134,11 +136,63 @@ const StyledWindow = styled.div`
         }
       }
     }
+
+    &-box {
+      &--top {
+        margin-bottom: 16px;
+
+        h2 {
+          font-size: 24px;
+          line-height: 28px;
+          font-weight: 500;
+
+          &.heading {
+            font-size: 28px;
+            line-height: 32px;
+          }
+        }
+
+        p {
+          margin-top: 4px;
+          font-size: 18px;
+        }
+      }
+
+      &--text {
+        color: var(--color-grey-2);
+        margin: 0 auto;
+        max-width: 400px;
+      }
+
+      &--form {
+        text-align: left;
+      }
+
+      &--auth {
+        ${flex(undefined)}
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 16px;
+
+        .modal-box--text {
+          a {
+            color: var(--color-primary);
+          }
+        }
+      }
+    }
   }
 `;
 
 // Window
-function Window({ name, children, title, confirm, alt = false }) {
+function Window({
+  name,
+  children,
+  title,
+  confirm,
+  alt = false,
+  cancel = true,
+}) {
   // Get context
   const { active, close } = useModalContext();
 
@@ -158,14 +212,17 @@ function Window({ name, children, title, confirm, alt = false }) {
           </div>
           <div className="modal--body">{children}</div>
           <div className="modal--footer">
-            <Button
-              size="sm"
-              color="secondary"
-              className={`${alt ? "alternate" : ""}`}
-              onClick={close}
-            >
-              Cancel
-            </Button>
+            {cancel && (
+              <Button
+                size="sm"
+                color="secondary"
+                className={`${alt ? "alternate" : ""}`}
+                onClick={close}
+              >
+                Cancel
+              </Button>
+            )}
+
             {confirm && confirm}
           </div>
         </div>

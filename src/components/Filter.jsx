@@ -32,7 +32,8 @@ const FilterBox = styled.div`
       padding: 16px;
       // Form
       form {
-        select {
+        select,
+        * > input {
           max-width: 218px;
         }
         // Btn box
@@ -89,7 +90,14 @@ export default function Filter({ children, id, fields }) {
     // Set params
     const params = new URLSearchParams(searchParams);
     Object.entries(data).forEach(([key, value]) => {
-      if (value) params.set(key, value);
+      if (value) {
+        if (key === "country") {
+          const [_emoji, ...rest] = value.split(" ");
+          params.set(key, rest.join(" "));
+        } else {
+          params.set(key, value);
+        }
+      }
     });
     // Delete page
     params.delete("page");

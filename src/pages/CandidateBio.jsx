@@ -125,7 +125,7 @@ const StyledCandidateBio = styled.div`
           font-size: 18px;
           line-height: 24px;
           font-weight: 500;
-          margin-bottom: 8px;
+          margin-bottom: 4px;
         }
 
         .badge-list {
@@ -139,6 +139,11 @@ const StyledCandidateBio = styled.div`
           gap: 16px;
           flex-wrap: wrap;
         }
+
+        .badge-list,
+        .resume-ctas {
+          margin-top: 8px;
+        }
       }
     }
   }
@@ -150,8 +155,6 @@ export default function CandidateBio() {
 
   // User context
   const { user } = useUserContext();
-
-  console.log(user);
 
   // Get resume
   const [fetchResume, loading] = useMutate(getResume);

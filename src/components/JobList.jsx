@@ -1,13 +1,22 @@
+import { formatDistanceToNow } from "date-fns";
+import {
+  BsCheckCircleFill,
+  BsClock,
+  BsFolder,
+  BsGeoAlt,
+  BsHeart,
+  BsHouseDoor,
+  BsStar,
+} from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import styled, { css } from "styled-components";
+import { useUserContext } from "../context/UserContext";
+import { flex, mq } from "../GlobalStyles";
+import { capitalizeFirst } from "../utils/helpers";
 import AvatarImage from "./AvatarImage";
 import Badge from "./Badge";
 import Button from "./Button";
-import styled, { css } from "styled-components";
-import { flex, mq } from "../GlobalStyles";
-import { useNavigate } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns";
-import { capitalizeFirst } from "../utils/helpers";
-import { BsCheckCircleFill } from "react-icons/bs";
-import { useUserContext } from "../context/UserContext";
+import SaveJob from "./SaveJob";
 
 // Job list styles
 const StyledJobList = styled.div`
@@ -17,13 +26,14 @@ const StyledJobList = styled.div`
     gap: 16px;
 
     .job {
+      position: relative;
       ${flex("space-between", "start")}
       flex-direction: column;
       column-gap: 24px;
       row-gap: 16px;
       background-color: var(--color-white-1);
       border-radius: 8px;
-      padding: 20px 16px;
+      padding: 24px 16px;
       border: 1px solid transparent;
       cursor: pointer;
 
@@ -80,6 +90,7 @@ const StyledJobList = styled.div`
 
               // Date
               &.date {
+                margin-top: 2px;
                 font-size: 14px;
                 line-height: 20px;
               }
@@ -98,7 +109,7 @@ const StyledJobList = styled.div`
       &-right {
         ${flex("center", "start")}
         text-align: right;
-        gap: 16px;
+        gap: 20px;
         flex-direction: column;
         ${mq(
           "820px",
@@ -106,6 +117,25 @@ const StyledJobList = styled.div`
             align-items: end;
           `
         )}
+
+        .job-save--status {
+          ${flex(undefined, "center")}
+          gap: 12px;
+          position: absolute;
+          top: 20px;
+          right: 16px;
+
+          ${mq(
+            "820px",
+            css`
+              position: static;
+            `
+          )}
+
+          button {
+            background-color: transparent;
+          }
+        }
 
         .job-pay {
           &--price {
@@ -154,6 +184,12 @@ export default function JobList({ jobs, children, alternate = false }) {
   // User context
   const { user, isLoggedIn } = useUserContext();
 
+  // Check for candidate
+  const isCandidate = user?.role === "candidate" && isLoggedIn;
+
+  // Check for employer
+  const isEmployer = user?.role === "employer" && isLoggedIn;
+
   // Payment intervals
   const intervals = { monthly: "month", annually: "year", hourly: "hour" };
 
@@ -164,17 +200,20 @@ export default function JobList({ jobs, children, alternate = false }) {
           <li
             key={index}
             className={`job ${alternate ? "alternate" : ""}`}
-            onClick={() =>
-              user && isLoggedIn && user.role === "candidate"
-                ? navigate(`/dashboard/find-jobs/${job._id}`)
-                : navigate("/login")
-            }
+            onClick={() => navigate(`/jobs/${job._id}`)}
           >
             <div className="job-left">
               <AvatarImage>
-                <div className="no-image">
-                  {job.employer.companyName.at(0).toUpperCase()}
-                </div>
+                {job.employer.companyLogo ? (
+                  <img
+                    alt="company-logo"
+                    src={`${job.employer.companyLogo}?t=${Date.now()}`}
+                  />
+                ) : (
+                  <div className="no-image">{`${job.employer.companyName.at(
+                    0
+                  )}`}</div>
+                )}
               </AvatarImage>
               <div className="job-info">
                 <h3 className="job-info--title">{job.jobTitle}</h3>
@@ -187,24 +226,38 @@ export default function JobList({ jobs, children, alternate = false }) {
                   </li>
                 </ul>
                 <ul className="job-info--meta">
-                  <Badge className="neutral">Remote</Badge>
                   <Badge className="neutral">
+                    <BsHouseDoor />
+                    Remote
+                  </Badge>
+                  <Badge className="neutral">
+                    <BsClock />
                     {capitalizeFirst(job.jobType)}
                   </Badge>
                   <Badge className="neutral">
+                    <BsFolder />
                     {capitalizeFirst(job.department)}
                   </Badge>
                   <Badge className="neutral">
+                    <BsGeoAlt />
                     {capitalizeFirst(job.country)}
                   </Badge>
                 </ul>
               </div>
             </div>
             <div className="job-right">
-              <Badge className="success">
-                <BsCheckCircleFill size={16} />
-                Open
-              </Badge>
+              <SaveJob
+                isCandidate={isCandidate}
+                isEmployer={isEmployer}
+                className="job-save--status"
+                jobID={job._id}
+                defaultValue={job.isSaved}
+              />
+              {/* <div className="job-save--status">
+                <button>
+                  <BsStar size={28} />
+                </button>
+              </div> */}
               <div className="job-pay">
                 <span className="job-pay--price">{`${job.minSalary} - ${
                   job.maxSalary
@@ -213,7 +266,6 @@ export default function JobList({ jobs, children, alternate = false }) {
                   intervals[job?.paymentInterval ?? "hourly"]
                 }`}</span>
               </div>
-              <Button size="xs">Apply</Button>
             </div>
           </li>
         ))}

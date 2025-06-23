@@ -10,8 +10,20 @@ const StyledBadge = styled.span`
   padding: 0 8px;
   height: 24px;
   font-size: 14px;
-  line-height: 1;
+  line-height: 24px;
   color: var(--color-black-1);
+
+  &.md {
+    border-radius: 8px;
+    gap: 8px;
+    font-weight: 500;
+    padding: 0px 16px;
+    font-size: 15px;
+    line-height: 40px;
+    font-weight: 400;
+    height: 40px;
+    min-width: 88px;
+  }
 
   &::first-letter {
     text-transform: uppercase;
