@@ -1,4 +1,10 @@
 import {
+  BsArchive,
+  BsArchiveFill,
+  BsBookmarkCheckFill,
+  BsBookmarkFill,
+  BsBookmarkHeart,
+  BsBookmarkHeartFill,
   BsBriefcaseFill,
   BsGearFill,
   BsHouseDoorFill,
@@ -6,6 +12,7 @@ import {
   BsPieChartFill,
   BsPinAngleFill,
   BsShareFill,
+  BsStarFill,
 } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 import styled, { css } from "styled-components";
@@ -48,7 +55,7 @@ const candidateMenu = [
   },
   {
     text: "Saved jobs",
-    icon: <BsPinAngleFill />,
+    icon: <BsStarFill />,
     link: "/dashboard/saved-jobs",
   },
   {

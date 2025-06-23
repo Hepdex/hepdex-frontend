@@ -139,6 +139,11 @@ const StyledCandidateBio = styled.div`
           gap: 16px;
           flex-wrap: wrap;
         }
+
+        .badge-list,
+        .resume-ctas {
+          margin-top: 8px;
+        }
       }
     }
   }
