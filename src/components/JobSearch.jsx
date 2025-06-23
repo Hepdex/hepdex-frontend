@@ -4,7 +4,7 @@ import Filter from "./Filter";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 import { useSearchParams } from "react-router-dom";
-import { FormGroup, Input, Select } from "./Form";
+import { FormGroup, Input, SearchSelect, Select } from "./Form";
 import { countries } from "../data/countries";
 import { getDepartments } from "../services/apiDepartments";
 import { BsSearch, BsXLg } from "react-icons/bs";
@@ -77,7 +77,8 @@ const StyledJobSearch = styled.div`
         gap: 12px;
 
         .select-box {
-          select {
+          & > select,
+          & > input {
             min-width: 180px;
             max-width: 180px;
             overflow: hidden;
@@ -96,7 +97,8 @@ const StyledJobSearch = styled.div`
               fill: var(--color-black-1);
             }
 
-            select {
+            & > select,
+            & > input {
               border: 1px solid var(--color-primary);
               color: var(--color-black-1);
               background-color: var(--color-secondary);
@@ -227,6 +229,7 @@ export default function JobSearch() {
               </option>
             ))}
           </Select>
+
           <Select
             className={`select-box ${
               searchParams.get("department") ? "active" : ""
@@ -242,19 +245,23 @@ export default function JobSearch() {
               </option>
             ))}
           </Select>
-          <Select
-            className={`select-box ${
+          <SearchSelect
+            placeholder="Select country"
+            searchPlaceholder="Search country..."
+            name="country"
+            required={false}
+            defaultItem={
+              countries.find(
+                (item) => item.name === searchParams.get("country")
+              ) || {}
+            }
+            param={searchParams.get("country") ?? ""}
+            items={countries}
+            onSelect={(value) => setParams("country", value.name)}
+            className={`sm select-box ${
               searchParams.get("country") ? "active" : ""
             }`}
-            alt={true}
-            value={searchParams.get("country") ?? ""}
-            onChange={(e) => setParams("country", e.target.value)}
-          >
-            <option value="">Select country</option>
-            {countries.map((ct, i) => (
-              <option value={ct.name} key={i}>{`${ct.flag} ${ct.name}`}</option>
-            ))}
-          </Select>
+          />
         </div>
         {urlParams.length > 0 && (
           <Button
@@ -284,18 +291,20 @@ export default function JobSearch() {
               </option>
             ))}
           </Select>
-          <Select
+          <SearchSelect
+            placeholder="Select country"
+            searchPlaceholder="Search country..."
             name="country"
-            defaultValue={searchParams.get("country")}
-            alt={true}
-          >
-            <option value="">Select country</option>
-            {countries.map((country, index) => (
-              <option key={index} value={country.name}>
-                {`${country.flag} ${country.name}`}
-              </option>
-            ))}
-          </Select>
+            required={false}
+            defaultItem={
+              countries.find(
+                (item) => item.name === searchParams.get("country")
+              ) || {}
+            }
+            param={searchParams.get("country") ?? ""}
+            items={countries}
+            className="sm"
+          />
           <Select
             name="department"
             defaultValue={searchParams.get("department")}

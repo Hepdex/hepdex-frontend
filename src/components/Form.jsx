@@ -1,7 +1,9 @@
 import EyeSlashIcon from "../assets/icons/eye-slash.svg?react";
 import EyeIcon from "../assets/icons/eye.svg?react";
+import Badge from "./Badge";
+import Dropdown from "./Dropdown";
 import styled, { css } from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BsArrowRight,
   BsChevronDown,
@@ -10,9 +12,7 @@ import {
   BsXLg,
 } from "react-icons/bs";
 import { flex, mq } from "../GlobalStyles";
-import Dropdown from "./Dropdown";
 import { notify } from "../utils/helpers";
-import Badge from "./Badge";
 
 // Form container
 const Form = styled.form`
@@ -24,13 +24,6 @@ const Form = styled.form`
     display: inline-block;
     color: var(--color-grey-2);
     font-weight: 400;
-  }
-
-  // Link styles
-  & a {
-    display: inline-block;
-    color: var(--color-black-1);
-    font-weight: 500;
   }
 
   & a,
@@ -284,11 +277,29 @@ const StyledSearchSelect = styled.div`
   position: relative;
   width: 100%;
 
+  &.sm {
+    width: auto;
+    .search-dropdown {
+      &--input {
+        font-size: 15px;
+        line-height: 20px;
+        padding: 0 12px;
+        height: 40px;
+      }
+
+      &--icon {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
   .search-dropdown {
     &--input {
       cursor: pointer;
       width: 100%;
       caret-color: transparent;
+      padding-right: 40px !important;
 
       &::placeholder {
         color: var(--color-grey-2);
@@ -308,12 +319,13 @@ const StyledSearchSelect = styled.div`
       list-style: none;
       position: absolute;
       width: 100%;
+      min-width: 220px;
       background-color: var(--color-white-1);
       border: 1px solid var(--color-grey-3);
       max-height: 216px;
       border-radius: 8px;
       overflow-y: auto;
-      z-index: 10;
+      z-index: 4;
       box-shadow: 0 7px 24px 0 #64646f33;
 
       li {
@@ -323,6 +335,9 @@ const StyledSearchSelect = styled.div`
         background-color: var(--color-white-1);
         font-size: 15px;
         line-height: 20px;
+        white-space: nowrap;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
 
         &:not(:first-child):hover,
         &.active {
@@ -449,9 +464,12 @@ function SearchSelect({
   name,
   defaultItem,
   onSelect,
+  param,
+  required = true,
   valueField = "name",
   placeholder = "Select items",
   searchPlaceholder = "Search items",
+  className = "",
 }) {
   // Select item
   const [item, setItem] = useState(defaultItem);
@@ -467,6 +485,13 @@ function SearchSelect({
   // Show dropdown
   const [show, setShow] = useState(false);
 
+  // Clear item
+  function clear() {
+    setItem({});
+
+    setQuery("");
+  }
+
   // Handle select item
   function handleSelect(item) {
     // Set search value
@@ -478,18 +503,27 @@ function SearchSelect({
     // Select item
     setItem(item);
 
-    onSelect?.(item);
+    onSelect?.(item, setItem);
   }
 
+  useEffect(() => {
+    if (param === "") clear();
+    if (param) {
+      setItem(items.find((item) => item.name === param) ?? {});
+    }
+  }, [param, items]);
+
   return (
-    <StyledSearchSelect className="search-dropdown">
+    <StyledSearchSelect className={`search-dropdown ${className}`}>
       <Input
         name={name}
-        onClick={() => {
+        autoComplete="off"
+        onClick={(e) => {
+          e.stopPropagation();
           setQuery("");
           setShow((s) => !s);
         }}
-        required
+        required={required}
         placeholder={placeholder}
         onChange={() => {}}
         className="search-dropdown--input"
@@ -533,7 +567,10 @@ function SearchSelect({
                     currItem[valueField] === item[valueField] ? "active" : ""
                   }
                   key={i}
-                  onClick={() => handleSelect(currItem)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelect(currItem);
+                  }}
                 >
                   {`${currItem.flag} ${currItem[valueField]}`}
                 </li>

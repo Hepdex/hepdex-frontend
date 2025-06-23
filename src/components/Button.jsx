@@ -29,10 +29,20 @@ const colors = {
     color: var(--color-grey-2);
     border: 1px solid var(--color-grey-3);
 
+    svg {
+      transition: fill 0.4s ease-in-out;
+    }
+
     &:hover {
       background-color: var(--color-secondary);
       border: 1px solid var(--color-primary-hover);
       color: var(--color-black-1);
+
+      &:not(.alternate) {
+        svg {
+          fill: var(--color-primary-hover);
+        }
+      }
     }
 
     &.alternate {

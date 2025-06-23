@@ -139,7 +139,7 @@ const Header = styled.header`
           margin-left: 4px;
           overflow: hidden;
           border-radius: 50%;
-          background-color: #f3f4f6;
+          background-color: #f0f3f5;
 
           .no-image {
             ${flex("center", "center")}

@@ -30,3 +30,16 @@ export const searchJobs = apiFetcher("search-jobs", "GET", "data");
 
 // Job application
 export const applyForJob = apiFetcher("job-application", "POST", "statusCode");
+
+// Flag job
+export const flagJob = apiFetcher("flag-job", "POST", "statusCode");
+
+// Save job
+export const saveJob = apiFetcher("save-job", "POST", "statusCode");
+
+// Delete saved job
+export const removeSavedJob = apiFetcher(
+  "delete-saved-job",
+  "DELETE",
+  "statusCode"
+);

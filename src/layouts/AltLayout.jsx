@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { BsXLg } from "react-icons/bs";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { flex } from "../GlobalStyles";
-import { useUserContext } from "../context/UserContext";
 
 const StyledAltLayout = styled.main`
   background-color: #f3f4f6;
@@ -28,7 +27,6 @@ const StyledAltLayout = styled.main`
 
 export default function AltLayout() {
   // User context
-  const { user } = useUserContext();
 
   // Navigate hook
   const navigate = useNavigate();
@@ -38,17 +36,15 @@ export default function AltLayout() {
 
   return (
     <StyledAltLayout>
-      {user && (
-        <Container mw="1400px">
-          <div className="header">
-            <Logo url={location.pathname} />
-            <button onClick={() => navigate(-1)} className="close-page">
-              <BsXLg size={18} />
-            </button>
-          </div>
-          <Outlet />
-        </Container>
-      )}
+      <Container mw="1400px">
+        <div className="header">
+          <Logo url={location.pathname} />
+          <button onClick={() => navigate(-1)} className="close-page">
+            <BsXLg size={18} />
+          </button>
+        </div>
+        <Outlet />
+      </Container>
     </StyledAltLayout>
   );
 }

@@ -1,28 +1,21 @@
 import Button from "../../components/Button";
-import Card from "../../components/Card";
-import Container from "../../components/Container";
 import useMutate from "../../hooks/useMutate";
 import Spinner from "../../components/Spinner";
-import {
-  Form,
-  FormGroup,
-  Input,
-  InputGroup,
-  Select,
-} from "../../components/Form";
+import Modal, { useModalContext } from "../../components/Modal";
+import { Form, FormGroup, Input } from "../../components/Form";
 import { useUserContext } from "../../context/UserContext";
-import { countries } from "../../data/countries";
-import { capitalizeFirst, notify } from "../../utils/helpers";
 import { applyForJob } from "../../services/apiJobs";
-import { useNavigate } from "react-router-dom";
+import { capitalizeFirst, notify } from "../../utils/helpers";
 
-export default function ApplyBox({ jobID }) {
+export default function ApplyBox({ job }) {
   // User context
   const { user } = useUserContext();
+
+  // Modal context
+  const { close } = useModalContext();
+
   // Job apply
   const [apply, loading] = useMutate(applyForJob);
-  // Navigate hook
-  const navigate = useNavigate();
 
   // Handle application
   async function handleApplication(e) {
@@ -30,23 +23,27 @@ export default function ApplyBox({ jobID }) {
     e.preventDefault();
 
     // Get values
-    const data = Object.fromEntries(new FormData(e.target));
+    let data = Object.fromEntries(new FormData(e.target));
 
-    // Set job ID
-    data.jobID = jobID;
+    // Add user details
+    data = {
+      ...data,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: user.country,
+      jobID: job._id,
+    };
 
     // Send request
     const response = await apply(data);
 
     // Check response
     if (response === 200) {
-      // Success
-      notify("Application submitted successfully", "success");
+      // Close modal
+      close();
 
-      // Navigate to find jobs page
-      setTimeout(() => {
-        navigate("/dashboard/find-jobs");
-      }, 2000);
+      // Success
+      notify(`Application sent to ${job.employer.companyName}`, "success");
     } else {
       // Error
       notify(response, "error");
@@ -54,68 +51,61 @@ export default function ApplyBox({ jobID }) {
   }
 
   return (
-    <Container.Col breakPoints={[{ name: "1200px", width: 60 }]}>
-      <Card title="Application form">
-        <Form $gap={18} onSubmit={handleApplication}>
-          <InputGroup>
-            <FormGroup label="First name">
-              <Input
-                placeholder="First name"
-                name="firstName"
-                required
-                defaultValue={capitalizeFirst(user.firstName)}
-              />
-            </FormGroup>
-            <FormGroup label="Last name">
-              <Input
-                placeholder="Last name"
-                name="lastName"
-                required
-                defaultValue={capitalizeFirst(user.lastName)}
-              />
-            </FormGroup>
-          </InputGroup>
-          <InputGroup>
-            <FormGroup label="Email address">
-              <Input
-                placeholder="Email address"
-                name="email"
-                required
-                defaultValue={user.email}
-              />
-            </FormGroup>
-            <FormGroup label="Country">
-              <Select
-                defaultValue={capitalizeFirst(user.country)}
-                required
-                name="country"
-              >
-                <option value="">Select country</option>
-                {countries.map((ct, i) => (
-                  <option
-                    value={ct.name}
-                    key={i}
-                  >{`${ct.flag} ${ct.name}`}</option>
-                ))}
-              </Select>
-            </FormGroup>
-          </InputGroup>
-          <FormGroup label="Phone number">
-            <Input placeholder="Phone number" name="phoneNo" required />
-          </FormGroup>
-          <div className="submit-box">
-            <Button
-              type="submit"
-              $loading={loading}
-              size="sm"
-              disabled={loading}
-            >
-              <span>Submit application</span>
-              {loading && <Spinner />}
-            </Button>
+    <Modal.Window
+      name="apply-box"
+      alt
+      cancel={false}
+      confirm={
+        <Button
+          size="sm"
+          form="apply-form"
+          type="submit"
+          disabled={loading}
+          $loading={loading}
+        >
+          <span>Submit application</span>
+          {loading && <Spinner />}
+        </Button>
+      }
+    >
+      <div className="modal-box">
+        <div className="modal-box--top">
+          <h2 className="heading">Apply to {job.employer.companyName}</h2>
+          <p className="modal-box--text">
+            {capitalizeFirst(job.jobTitle.toLowerCase())}
+          </p>
+        </div>
+
+        <Form
+          $gap={18}
+          onSubmit={handleApplication}
+          className="modal-box--form"
+          id="apply-form"
+        >
+          <div>
+            <p className="text-center modal-box--text">
+              By submitting your application we will send all necessary details
+              from your candidate profile to {job.employer.companyName}.
+            </p>
           </div>
+          <FormGroup label="Email address">
+            <Input
+              placeholder="Email address"
+              name="email"
+              type="email"
+              required
+              defaultValue={user?.email ?? ""}
+            />
+          </FormGroup>
+          <FormGroup label="Phone number">
+            <Input
+              placeholder="Phone number (with + country code)"
+              name="phoneNo"
+              required
+            />
+          </FormGroup>
         </Form>
-      </Card>
-    </Container.Col>
+      </div>
+    </Modal.Window>
   );
 }
