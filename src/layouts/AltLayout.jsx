@@ -39,7 +39,10 @@ export default function AltLayout() {
       <Container mw="1400px">
         <div className="header">
           <Logo url={location.pathname} />
-          <button onClick={() => navigate(-1)} className="close-page">
+          <button
+            onClick={() => navigate(-1, { replace: true })}
+            className="close-page"
+          >
             <BsXLg size={18} />
           </button>
         </div>

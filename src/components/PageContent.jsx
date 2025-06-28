@@ -1,9 +1,14 @@
 import styled, { css } from "styled-components";
 import { mq } from "../GlobalStyles";
 
-// Page box
-const PageBox = styled.div`
+// Page content container
+const StyledPageContent = styled.div`
   padding-top: 100px;
+
+  &.dark {
+    background-color: #f3f4f6;
+  }
+
   & > section:first {
     padding-top: 48px;
     ${mq(
@@ -15,6 +20,8 @@ const PageBox = styled.div`
   }
 `;
 
-export default function PageContent({ children }) {
-  return <PageBox>{children}</PageBox>;
+export default function PageContent({ children, className = "" }) {
+  return (
+    <StyledPageContent className={className}>{children}</StyledPageContent>
+  );
 }

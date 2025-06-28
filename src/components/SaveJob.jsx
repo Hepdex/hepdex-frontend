@@ -10,6 +10,8 @@ export default function SaveJob({
   isCandidate,
   isEmployer,
   className,
+  setSavedJobs,
+  isSaved,
 }) {
   // Saved state
   const [saved, setSaved] = useState(defaultValue);
@@ -49,7 +51,16 @@ export default function SaveJob({
     // Check response
     if (response === 200) {
       // Set saved state to false
-      setSaved(false);
+      if (isSaved) {
+        setSavedJobs((prev) => {
+          const updatedJobs = prev.savedJobs.filter(
+            (job) => job.jobDetails._id !== jobID
+          );
+          return { savedJobs: updatedJobs };
+        });
+      } else {
+        setSaved(false);
+      }
     } else {
       // Log error
       console.error(response);

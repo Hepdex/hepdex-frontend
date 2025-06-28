@@ -76,7 +76,10 @@ export default function Company() {
     // Check response
     if (response.url) {
       // Update user
-      setUser((user) => ({ ...user, companyLogo: response.url }));
+      setUser((user) => ({
+        ...user,
+        companyLogo: `${response.url}?t=${Date.now()}`,
+      }));
 
       // Success
       notify("Logo uploaded successfully", "success");
@@ -128,10 +131,7 @@ export default function Company() {
             <label htmlFor="upload-logo">
               <AvatarImage>
                 {user.companyLogo ? (
-                  <img
-                    alt="company-logo"
-                    src={`${user.companyLogo}?t=${Date.now()}`}
-                  />
+                  <img alt="company-logo" src={user.companyLogo} />
                 ) : (
                   <div className="no-image">{`${user.companyName.at(0)}`}</div>
                 )}

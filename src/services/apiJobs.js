@@ -43,3 +43,6 @@ export const removeSavedJob = apiFetcher(
   "DELETE",
   "statusCode"
 );
+
+// Get saved jobs
+export const getSavedJobs = apiFetcher("get-saved-jobs", "GET", "data");

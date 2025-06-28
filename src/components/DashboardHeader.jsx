@@ -276,17 +276,14 @@ export default function DashboardHeader() {
             </Link>
           </li>
           <li>
-            <Link to="/contact" className="nav-btn">
+            <Link to="/contact-us" className="nav-btn">
               <BsQuestionCircle size={20} />
             </Link>
           </li>
           <li className="right-nav__user" id="user-menu">
             <button onClick={() => setOpen((s) => !s)}>
               {user.profileImage ? (
-                <img
-                  alt="profile-image"
-                  src={`${user.profileImage}?t=${Date.now()}`}
-                />
+                <img alt="profile-image" src={`${user.profileImage}`} />
               ) : (
                 <span className="no-image">{`${user.firstName.at(
                   0
@@ -303,7 +300,7 @@ export default function DashboardHeader() {
                   </li>
                   <li className="dropdown-menu__item">
                     <Link
-                      to="/contact"
+                      to="/contact-us"
                       className="dropdown-menu__item--link"
                       onClick={close}
                     >

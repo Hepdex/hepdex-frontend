@@ -225,13 +225,19 @@ export default function Footer() {
                 <h3 className="footer--col__title">Support</h3>
                 <ul>
                   <li>
-                    <Link to="/contact">Help</Link>
+                    <Link to="/about-us">About us</Link>
                   </li>
                   <li>
-                    <Link>Customer Support</Link>
+                    <Link to="/contact-us">Contact us</Link>
                   </li>
                   <li>
-                    <Link>Terms and Conditions</Link>
+                    <Link to="/faqs">FAQs</Link>
+                  </li>
+                  <li>
+                    <Link to="/privacy-policy">Privacy policy</Link>
+                  </li>
+                  <li>
+                    <Link to="/terms-and-conditions">Terms and Conditions</Link>
                   </li>
                 </ul>
               </div>

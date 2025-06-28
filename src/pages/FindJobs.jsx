@@ -9,15 +9,10 @@ import useSearchJobs from "../hooks/useSearchJobs";
 
 export default function FindJobs() {
   // Search jobs hook
-  const {
-    jobs,
+  const { jobs, page, pagination, loading, searchParams, setSearchParams } =
+    useSearchJobs();
 
-    page,
-    pagination,
-    loading,
-    searchParams,
-    setSearchParams,
-  } = useSearchJobs();
+  console.log(jobs);
   return (
     <>
       <DashboardTitle

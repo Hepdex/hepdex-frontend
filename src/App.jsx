@@ -30,16 +30,19 @@ import EmployerSignup from "./pages/EmployerSignup";
 import CandidateSignup from "./pages/CandidateSignup";
 import AddBio from "./pages/AddBio";
 import ConfirmEmail from "./pages/ConfirmEmail";
+import CandidateBio from "./pages/CandidateBio";
+import EditCandidate from "./pages/EditCandidate";
+import Candidate from "./pages/Candidate";
+import Contact from "./pages/Contact";
+import SavedJobs from "./pages/SavedJobs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUser } from "./services/apiUser";
 import { useUserContext } from "./context/UserContext";
 import { ToastContainer } from "react-toastify";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
-import CandidateBio from "./pages/CandidateBio";
-import EditCandidate from "./pages/EditCandidate";
-import Candidate from "./pages/Candidate";
-import Contact from "./pages/Contact";
 
 // Set emojis
 polyfillCountryFlagEmojis();
@@ -55,12 +58,14 @@ export default function App() {
       offset: 0,
     });
   }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       AOS.refresh();
     }, 150);
     return () => clearTimeout(timer);
   }, [location.pathname]);
+
   // Fetch user
   useEffect(() => {
     // Send request
@@ -93,8 +98,10 @@ export default function App() {
           <Route path="home" element={<Home />} />
           <Route path="share-requirement" element={<Requirements />} />
           <Route path="services" element={<Services />} />
-          <Route path="contact" element={<Contact />} />
+          <Route path="contact-us" element={<Contact />} />
           <Route path="find-work" element={<FindWork />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="terms-and-conditions" element={<TermsConditions />} />
         </Route>
         <Route
           element={
@@ -114,6 +121,7 @@ export default function App() {
           <Route path="browse-talent/:id" element={<Candidate />} />
           <Route path="find-jobs" element={<FindJobs />} />
           <Route path="candidate-bio" element={<CandidateBio />} />
+          <Route path="saved-jobs" element={<SavedJobs />} />
         </Route>
         <Route element={<AltLayout />}>
           <Route element={<AddJob />} path="post-a-job" />

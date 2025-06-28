@@ -69,7 +69,10 @@ export default function Settings() {
     // Check response
     if (response.url) {
       // Update user
-      setUser((user) => ({ ...user, profileImage: response.url }));
+      setUser((user) => ({
+        ...user,
+        profileImage: `${response.url}?t=${Date.now()}`,
+      }));
 
       // Success
       notify("Image uploaded successfully", "success");
@@ -145,10 +148,7 @@ export default function Settings() {
             <label htmlFor="upload-image">
               <AvatarImage>
                 {user.profileImage ? (
-                  <img
-                    alt="profile-image"
-                    src={`${user.profileImage}?t=${Date.now()}`}
-                  />
+                  <img alt="profile-image" src={`${user.profileImage}`} />
                 ) : (
                   <div className="no-image">
                     {`${user.firstName.at(0)}${user.lastName.at(0)}`}
