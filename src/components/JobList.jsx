@@ -1,13 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import {
-  BsCheckCircleFill,
-  BsClock,
-  BsFolder,
-  BsGeoAlt,
-  BsHeart,
-  BsHouseDoor,
-  BsStar,
-} from "react-icons/bs";
+import { BsClock, BsFolder, BsGeoAlt, BsHouseDoor } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useUserContext } from "../context/UserContext";
@@ -15,9 +7,7 @@ import { flex, mq } from "../GlobalStyles";
 import { capitalizeFirst } from "../utils/helpers";
 import AvatarImage from "./AvatarImage";
 import Badge from "./Badge";
-import Button from "./Button";
 import SaveJob from "./SaveJob";
-import { useState } from "react";
 
 // Job list styles
 const StyledJobList = styled.div`

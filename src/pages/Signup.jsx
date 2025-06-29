@@ -1,120 +1,97 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import style from '../styles/Signup.module.css'; // Adjust the path as necessary
+import SignupBox from "../components/SignupBox";
+import styled from "styled-components";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import { Link } from "react-router-dom";
+import { flex } from "../GlobalStyles";
+import { BsHouseDoor, BsPerson } from "react-icons/bs";
+
+const StyledOptions = styled.ul`
+  ${flex("center")}
+  flex-direction: column;
+  gap: 16px;
+
+  li a {
+    ${flex("space-between", "center")}
+    background-color: var(--color-white-1);
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 24px 16px;
+    gap: 16px;
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+
+    .left {
+      h3 {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 24px;
+        margin-bottom: 2px;
+      }
+
+      p {
+        color: var(--color-grey-2);
+      }
+    }
+
+    .right {
+      ${flex("center", "center")}
+      background-color: var(--color-secondary);
+      height: 40px;
+      min-width: 40px;
+      border-radius: 8px;
+
+      svg {
+        fill: var(--color-primary);
+      }
+    }
+  }
+`;
 
 const SignupPage = () => {
-  const [userType, setUserType] = useState('');
-  const navigate = useNavigate();
-
-  const handleUserTypeSelection = (type) => {
-    setUserType(type);
-    if (type === 'company') {
-      navigate('/employer/signup');
-    }
-    else if (type === 'individual') {
-      navigate('/candidate/signup');
-    }
-    
-  };
-
-  const handleLoginNavigation = () => {
-    navigate('/login');
-  };
-
-  const handleLogoNavigation = () => {
-    navigate('/home');
-  };
-
-  const handlePreviousNavigation = () => {
-    navigate(-1); // Go back to previous page in history
-  };
+  // Document title
+  useDocumentTitle("Sign up");
 
   return (
-    <div className={style.container}>
-      <div className={style.leftSection}>
-        <div className={style.logoSection}>
-          <div className={style.logo} onClick={handleLogoNavigation}>
-            <span className={style.logoText}>HepDex</span>
-          </div>
+    <SignupBox>
+      <SignupBox.Left>
+        <div>
+          <h2>Sign up to get started</h2>
+          <p>
+            Signing up is simple, free, and fast. Join our platform and unlock
+            new possibilities.
+          </p>
         </div>
-        <div className={style.decorativePattern}>
-          {[...Array(12)].map((_, row) => (
-            <div key={row} className={style.patternRow}>
-              {[...Array(8)].map((_, col) => (
-                <div
-                  key={col}
-                  className={style.circle}
-                  style={{
-                    animationDelay: `${(row + col) * 0.1}s`
-                  }}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className={style.rightSection}>
-        <div className={style.header}>
-          <button className={style.backButton} onClick={handlePreviousNavigation}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5"/>
-              <path d="m12 19-7-7 7-7"/>
-            </svg>
-            Previous
-          </button>
-          <div className={style.loginLink}>
-            Already have an account? <button onClick={handleLoginNavigation} className={style.link}>Log in</button>
-          </div>
-        </div>
-
-        <div className={style.content}>
-          <h1 className={style.title}>How would you be using Hepdex?</h1>
-          
-          <div className={style.optionsContainer}>
-            <div 
-              className={`${style.option} ${userType === 'company' ? style.selected : ''}`}
-              onClick={() => handleUserTypeSelection('company')}
-            >
-              <div className={style.optionContent}>
-                <div className={style.optionText}>
-                  <h3 className={style.optionTitle}>I'm a company</h3>
-                  <p className={style.optionDescription}>I want to manage my team or recruit new talent.</p>
-                </div>
-                <div className={style.optionIcon}>
-                  <div className={style.iconCompany}>
-                    <div className={`${style.iconElement} ${style.screen}`}></div>
-                    <div className={`${style.iconElement} ${style.person}`}></div>
-                  </div>
-                </div>
+      </SignupBox.Left>
+      <SignupBox.Content title="How would you be using HepDex?">
+        <StyledOptions>
+          <li className="company">
+            <Link to="/employer/signup">
+              <div className="left">
+                <h3>I'm a company</h3>
+                <p>I want to manage my team or recruit new talent.</p>
               </div>
-            </div>
-
-            <div 
-              className={`${style.option} ${userType === 'individual' ? style.selected : ''}`}
-              onClick={() => handleUserTypeSelection('individual')}
-            >
-              <div className={style.optionContent}>
-                <div className={style.optionText}>
-                  <h3 className={style.optionTitle}>I'm an individual</h3>
-                  <p className={style.optionDescription}>I'm a freelancer, job seeker, or employee.</p>
-                </div>
-                <div className={style.optionIcon}>
-                  <div className={style.iconIndividual}>
-                    <div className={`${style.iconElement} ${style.chart}`}></div>
-                    <div className={`${style.iconElement} ${style.folders}`}></div>
-                  </div>
-                </div>
+              <div className="right icon">
+                <BsHouseDoor size={24} />
               </div>
-            </div>
-          </div>
-
-
-        </div>
-      </div>
-
-      
-    </div>
+            </Link>
+          </li>
+          <li>
+            <Link to="/candidate/signup">
+              <div className="left">
+                <h3>I'm an individual</h3>
+                <p>I'm a freelancer, job seeker, or employee.</p>
+              </div>
+              <div className="right icon">
+                <BsPerson size={24} />
+              </div>
+            </Link>
+          </li>
+        </StyledOptions>
+      </SignupBox.Content>
+    </SignupBox>
   );
 };
 
