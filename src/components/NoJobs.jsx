@@ -2,7 +2,7 @@ import NoResultIcon from "../assets/icons/no-result.svg?react";
 import Button from "./Button";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const StyledNoJobs = styled.div`
   ${flex("center", "center")}
@@ -28,7 +28,7 @@ const StyledNoJobs = styled.div`
   }
 `;
 
-export default function NoJobs() {
+export default function NoJobs({ isSaved = false }) {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -53,11 +53,23 @@ export default function NoJobs() {
   return (
     <StyledNoJobs className="no-jobs">
       <div className="no-jobs--details">
-        <h3 className="heading-sm">No jobs matching that search</h3>
-        <p>Try adjusting search terms or filters</p>
-        <Button size="sm" onClick={clearParams}>
-          Clear search and filters
-        </Button>
+        <h3 className="heading-sm">
+          {isSaved ? "No saved jobs available" : "No jobs matching that search"}
+        </h3>
+        <p>
+          {isSaved
+            ? "You haven't saved any jobs yet"
+            : "Try adjusting search terms or filters"}
+        </p>
+        {isSaved ? (
+          <Button as={Link} size="sm" to="/dashboard/find-jobs">
+            Find jobs
+          </Button>
+        ) : (
+          <Button size="sm" onClick={clearParams}>
+            Clear search and filters
+          </Button>
+        )}
       </div>
       <div className="no-jobs--icon">
         <NoResultIcon width={228} height={228} />

@@ -287,6 +287,17 @@ img{
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
 // Animation classes
 .skeleton{
   opacity: 0.7;
@@ -296,6 +307,12 @@ img{
 .rotate{
   animation: rotate 1.5s infinite linear;
 }
+
+.pulse{
+  animation: pulse 4s ease-in-out infinite;
+}
+
+
 
 .custom-fade-right{
   opacity: 0;

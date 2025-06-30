@@ -1,13 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import {
-  BsCheckCircleFill,
-  BsClock,
-  BsFolder,
-  BsGeoAlt,
-  BsHeart,
-  BsHouseDoor,
-  BsStar,
-} from "react-icons/bs";
+import { BsClock, BsFolder, BsGeoAlt, BsHouseDoor } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useUserContext } from "../context/UserContext";
@@ -15,7 +7,6 @@ import { flex, mq } from "../GlobalStyles";
 import { capitalizeFirst } from "../utils/helpers";
 import AvatarImage from "./AvatarImage";
 import Badge from "./Badge";
-import Button from "./Button";
 import SaveJob from "./SaveJob";
 
 // Job list styles
@@ -177,7 +168,13 @@ const StyledJobList = styled.div`
   }
 `;
 
-export default function JobList({ jobs, children, alternate = false }) {
+export default function JobList({
+  jobs,
+  children,
+  alternate = false,
+  isSaved = false,
+  setSavedJobs,
+}) {
   // Navigate hook
   const navigate = useNavigate();
 
@@ -207,7 +204,8 @@ export default function JobList({ jobs, children, alternate = false }) {
                 {job.employer.companyLogo ? (
                   <img
                     alt="company-logo"
-                    src={`${job.employer.companyLogo}?t=${Date.now()}`}
+                    loading="lazy"
+                    src={job.employer.companyLogo}
                   />
                 ) : (
                   <div className="no-image">{`${job.employer.companyName.at(
@@ -252,12 +250,9 @@ export default function JobList({ jobs, children, alternate = false }) {
                 className="job-save--status"
                 jobID={job._id}
                 defaultValue={job.isSaved}
+                isSaved={isSaved}
+                setSavedJobs={setSavedJobs}
               />
-              {/* <div className="job-save--status">
-                <button>
-                  <BsStar size={28} />
-                </button>
-              </div> */}
               <div className="job-pay">
                 <span className="job-pay--price">{`${job.minSalary} - ${
                   job.maxSalary

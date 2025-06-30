@@ -10,9 +10,7 @@ import ViewResume from "../components/ViewResume";
 import useMutate from "../hooks/useMutate";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import {
-  BsCheckCircle,
   BsCheckCircleFill,
-  BsEnvelope,
   BsPencil,
   BsPerson,
   BsXCircleFill,
@@ -139,11 +137,6 @@ const StyledCandidateBio = styled.div`
           gap: 16px;
           flex-wrap: wrap;
         }
-
-        .badge-list,
-        .resume-ctas {
-          margin-top: 8px;
-        }
       }
     }
   }
@@ -178,10 +171,7 @@ export default function CandidateBio() {
               <div className="profile-top--left">
                 <AvatarImage size={96}>
                   {user.profileImage ? (
-                    <img
-                      alt="profile-image"
-                      src={`${user.profileImage}?t=${Date.now()}`}
-                    />
+                    <img alt="profile-image" src={user.profileImage} />
                   ) : (
                     <div className="no-image">
                       {`${user.firstName.at(0)}${user.lastName.at(0)}`}

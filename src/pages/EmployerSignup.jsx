@@ -1,229 +1,213 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import style from '../styles/EmployerSignup.module.css';
-import LeftPanel from '../components/LeftPanel';
-import SignupTopBar from '../components/SignupTopBar'; // Import the SignupTopBar component
-import {apiFetcher2, API_URL} from '../utils/helpers'
-import { IoClose } from 'react-icons/io5';
+import SignupBox from "../components/SignupBox";
+import Button from "../components/Button";
+import useMutate from "../hooks/useMutate";
+import Spinner from "../components/Spinner";
+import styled from "styled-components";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Form, FormGroup, Input, Password } from "../components/Form";
+import { BsInfoCircle } from "react-icons/bs";
+import { checkUniqueEmail } from "../services/apiAuth";
+import { notify } from "../utils/helpers";
+import { flex } from "../GlobalStyles";
+
+const StyledInfo = styled.div`
+  ${flex(undefined, "start")}
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: var(--color-secondary);
+  border: 1px solid var(--color-primary);
+  gap: 12px;
+  margin-bottom: 16px;
+
+  svg {
+    min-width: 20px;
+    fill: var(--color-primary);
+  }
+
+  .info-content {
+    h3 {
+      font-weight: 500;
+    }
+    p {
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+`;
 
 const EmployerSignup = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: ''
-  });
-
+  // Errors state
   const [errors, setErrors] = useState({});
-  const [errorDialog, setErrorDialog] = useState({
-      isOpen: false,
-      message: ''
-  });
 
+  // Check unique email api
+  const [check, loading] = useMutate(checkUniqueEmail);
+
+  // Navigate hook
   const navigate = useNavigate();
 
+  // Handle input change
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    // Get input name
+    const { name } = e.target;
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
-  const validateForm = () => {
+  // Validate form function
+  const validateForm = (formData) => {
+    // Create errors object
     const newErrors = {};
 
     // Password validation
     if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
+      newErrors.password = "Password must be at least 8 characters long";
     }
 
+    // Set errors
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const showErrorDialog = (message) => {
-    setErrorDialog({
-      isOpen: true,
-      message: message
-    });
-  };
-
-  const closeErrorDialog = () => {
-    setErrorDialog({
-      isOpen: false,
-      message: ''
-    });
-  };
-
-
   const handleSubmit = async (e) => {
+    // Prevent default submit
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
 
-    //check if email is unique
-    const jsonEmail = JSON.stringify({email: formData.email.trim()}) ;
-    const response = await apiFetcher2(`${API_URL}/check-unique-email`, {method: 'PUT', body: jsonEmail});
+    // Get values
+    const formData = Object.fromEntries(new FormData(e.target));
 
-    if(response.statusCode !==200){
-      showErrorDialog(response.data?.msg || 'An error occurred.');
+    // Validate data
+    if (!validateForm(formData)) return;
+
+    // Check for unique email
+    const response = await check({ email: formData.email });
+
+    // Check response
+    if (response !== 200) {
+      // Error
+      notify(response, "error");
+
       return;
     }
 
     // Store form data in local storage
-    localStorage.setItem('signupData', JSON.stringify(formData));
+    localStorage.setItem("signupData", JSON.stringify(formData));
 
-    navigate('/company/signup'); // Navigate to the next step
+    // Navigate to next step
+    navigate("/company/signup");
   };
 
   return (
-    <div className={style.container}>
-      {/* Error Dialog */}
-            {errorDialog.isOpen && (
-              <div className={style.errorOverlay}>
-                <div className={style.errorDialog}>
-                  <div className={style.errorHeader}>
-                    <h3 className={style.errorTitle}>Error</h3>
-                    <button 
-                      className={style.closeButton}
-                      onClick={closeErrorDialog}
-                    >
-                      <IoClose size={24} />
-                    </button>
-                  </div>
-                  <div className={style.errorBody}>
-                    <p className={style.errorMessage}>{errorDialog.message}</p>
-                  </div>
-                  <div className={style.errorFooter}>
-                    <button 
-                      className={style.okButton}
-                      onClick={closeErrorDialog}
-                    >
-                      OK
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-        <LeftPanel type='employer' />
-
-      <div className={style.rightSection}>
-        <SignupTopBar/>
-        
-        <div className={style.content}>
-          <div className={style.formContainer}>
-            <h1 className={style.title}>Sign up your company.</h1>
-            <h2 className={style.subtitle}>Grow your global team.</h2>
-            
-            <p className={style.description}>
-              All we need is a few company details. Then you'll be set up and able to simplify your global HR using Hepdex.
-            </p>
-
-            <div className={style.infoBox}>
-              <div className={style.infoIcon}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M12 16v-4"/>
-                  <path d="M12 8h.01"/>
-                </svg>
-              </div>
-              <div className={style.infoContent}>
-                <p className={style.infoTitle}>This sign up is for companies using Hepdex's HR platform</p>
-                <p className={style.infoText}>
-                  If you're an <span className={style.linkText}>employee, keep an eye on your inbox!</span> If your company uses Hepdex to manage your employment, you'll receive an email with sign up instructions.
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className={style.form}>
-              <div className={style.formGroup}>
-                <label className={style.label}>
-                  First name
-                  <span className={style.required}>*</span>
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  className={style.input}
-                  placeholder="First name"
-                  required
-                />
-                <p className={style.helperText}>Required field - As it appears on your identification.</p>
-              </div>
-
-              <div className={style.formGroup}>
-                <label className={style.label}>
-                  Last name
-                  <span className={style.required}>*</span>
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  className={style.input}
-                  placeholder="Last name"
-                  required
-                />
-                <p className={style.helperText}>Required field - As it appears on your identification.</p>
-              </div>
-
-              <div className={style.formGroup}>
-                <label className={style.label}>Company email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className={style.input}
-                  placeholder="Company email"
-                />
-                <p className={style.helperText}>For example 'you@companyname.com'</p>
-              </div>
-
-              <div className={style.formGroup}>
-                <label className={style.label}>
-                  Password
-                  <span className={style.required}>*</span>
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className={`${style.input} ${errors.password ? style.inputError : ''}`}
-                  placeholder="Password"
-                  required
-                />
-                {errors.password ? (
-                  <p className={style.errorText}>{errors.password}</p>
-                ) : (
-                  <p className={style.helperText}>Must be at least 8 characters long.</p>
-                )}
-              </div>
-
-              <button type="submit" className={style.submitButton}>
-                Create Account
-              </button>
-            </form>
-          </div>
+    <SignupBox>
+      <SignupBox.Left>
+        <div>
+          <h2>Sign up and step right in.</h2>
+          <p>
+            Signing up as an employer is quick, free, and easy. One platform to
+            handle all your global team’s needs.
+          </p>
         </div>
-      </div>
-    </div>
+      </SignupBox.Left>
+      <SignupBox.Content
+        title={
+          <>
+            Register your company. <br /> Expand your international team.
+          </>
+        }
+        subtitle="Just share a few company details, and you’ll be ready to streamline your global HR using HepDex."
+      >
+        <StyledInfo>
+          <BsInfoCircle size={20} />
+          <div className="info-content">
+            <h3>This sign up is for companies using HepDex's HR platform</h3>
+            <p>
+              If you're an employee, be sure to check your inbox! If your
+              company manages employment through Hepdex, you'll get an email
+              with instructions on how to sign up.
+            </p>
+          </div>
+        </StyledInfo>
+        <Form $gap={18} onSubmit={handleSubmit}>
+          <FormGroup
+            label={
+              <>
+                First name <span className="required">*</span>
+              </>
+            }
+            instructions="As it appears on your identification"
+          >
+            <Input
+              required
+              placeholder="First name"
+              type="text"
+              name="firstName"
+            />
+          </FormGroup>
+          <FormGroup
+            label={
+              <>
+                Last name <span className="required">*</span>
+              </>
+            }
+            instructions="As it appears on your identification"
+          >
+            <Input
+              required
+              placeholder="Last name"
+              type="text"
+              name="lastName"
+            />
+          </FormGroup>
+          <FormGroup
+            label={
+              <>
+                Company email <span className="required">*</span>
+              </>
+            }
+            instructions="For example 'you@companyname.com'"
+          >
+            <Input
+              required
+              placeholder="Company email"
+              type="email"
+              name="email"
+            />
+          </FormGroup>
+          <Password
+            placeholder="Password"
+            required
+            onChange={handleInputChange}
+            name="password"
+            label={
+              <>
+                Password <span className="required">*</span>
+              </>
+            }
+            instructions="Must be at least 8 characters long."
+            error={errors.password}
+          />
+          <div className="submit-box">
+            <Button
+              style={{ width: "100%" }}
+              $loading={loading}
+              disabled={loading}
+              type="submit"
+            >
+              <span>Create account</span>
+              {loading && <Spinner />}
+            </Button>
+          </div>
+        </Form>
+      </SignupBox.Content>
+    </SignupBox>
   );
 };
 
 export default EmployerSignup;
+

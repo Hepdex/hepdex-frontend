@@ -209,7 +209,7 @@ export default function JobApplication() {
                       {job.employer.companyLogo ? (
                         <img
                           alt="company-logo"
-                          src={`${job.employer.companyLogo}?t=${Date.now()}`}
+                          src={`${job.employer.companyLogo}`}
                         />
                       ) : (
                         <div className="no-image">{`${job.employer.companyName.at(
