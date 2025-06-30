@@ -66,7 +66,7 @@ const StyledLeft = styled.div`
     .pattern {
       display: none;
       flex-direction: column;
-      padding: 4rem 2rem 2rem 2rem;
+      padding: 4rem 0rem 2rem 0rem;
       gap: 4px;
 
       ${mq(
@@ -193,6 +193,11 @@ const StyledContent = styled.div`
           font-weight: 500;
           line-height: 36px;
         }
+
+        .subtitle {
+          color: var(--color-grey-2);
+          margin-top: 16px;
+        }
       }
     }
   }
@@ -202,7 +207,7 @@ function SignupBox({ children }) {
   return <StyledSignupBox>{children}</StyledSignupBox>;
 }
 
-function Left({ children, showPattern = true, title = "" }) {
+function Left({ children, showPattern = true }) {
   return (
     <StyledLeft>
       <div className="top">
@@ -213,7 +218,6 @@ function Left({ children, showPattern = true, title = "" }) {
           <div className="signup-icon">
             <BiUserPlus size={24} />
           </div>
-          {title && <h2>{title}</h2>}
           {children}
         </div>
         {showPattern && (

@@ -77,6 +77,23 @@ const StyledFormGroup = styled.div`
   flex-direction: column;
   row-gap: 4px;
 
+  .error-instructions {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--color-grey-2);
+  }
+
+  &.error {
+    input {
+      border-color: var(--color-error);
+    }
+
+    .error-instructions {
+      color: var(--color-error);
+    }
+  }
+
   .label {
     min-height: 25px;
 
@@ -84,6 +101,10 @@ const StyledFormGroup = styled.div`
       font-weight: 500;
       color: #484646;
       display: inline-block;
+
+      .required {
+        color: var(--color-error);
+      }
 
       &::first-letter {
         text-transform: capitalize;
@@ -386,11 +407,20 @@ function Time({ name, required = false, defaultTime }) {
   );
 }
 
-function FormGroup({ children, label, ...rest }) {
+function FormGroup({
+  children,
+  label,
+  error = "",
+  instructions = "",
+  ...rest
+}) {
   return (
-    <StyledFormGroup {...rest}>
+    <StyledFormGroup {...rest} className={error ? "error" : ""}>
       {label && <div className="label">{label && <span>{label}</span>}</div>}
       {children}
+      {(instructions || error) && (
+        <div className="error-instructions">{error || instructions}</div>
+      )}
     </StyledFormGroup>
   );
 }
@@ -590,16 +620,19 @@ function Password({
   name,
   required = false,
   placeholder = "Enter password",
+  onChange,
+  ...rest
 }) {
   // Hide password state
   const [show, setShow] = useState(false);
 
   return (
     <StyledPassword>
-      <FormGroup label={label}>
+      <FormGroup label={label} {...rest}>
         <Input
           type={`${show ? "text" : "password"}`}
           name={name}
+          onChange={onChange}
           required={required}
           placeholder={placeholder}
         />
