@@ -117,10 +117,10 @@ function EditCompanyForm() {
           <FormGroup label="Company size">
             <Select defaultValue={user.companySize} name="companySize" required>
               <option value="">Select company size</option>
-              <option value="1-10 employees">1-10 employees</option>
-              <option value="11-50 employees">11-50 employees</option>
-              <option value="51-200 employees">51-200 employees</option>
-              <option value="1000+ employees">1000+ employees</option>
+              <option value="1-10">1-10 employees</option>
+              <option value="11-50">11-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="1000+">1000+ employees</option>
             </Select>
           </FormGroup>
         </div>

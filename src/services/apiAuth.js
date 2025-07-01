@@ -10,6 +10,9 @@ export const checkUniqueEmail = apiFetcher(
   "statusCode"
 );
 
+// Employer signup
+export const employerSignup = apiFetcher("employer/signup", "POST", "data");
+
 // Login
 export const login = apiFetcher("login", "POST", "data");
 

@@ -129,10 +129,12 @@ export const getTimezones = (location) => {
 
 // Remove emoji from string
 export const removeEmojis = (str) => {
-  return str.replace(
-    /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF]+|\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
-    ""
-  );
+  return str
+    .replace(
+      /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF]+|\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu,
+      ""
+    )
+    .trim();
 };
 
 export const countries = [

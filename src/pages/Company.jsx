@@ -110,7 +110,7 @@ export default function Company() {
             </li>
             <li>
               <span className="name">Size</span>
-              <span className="value">{user.companySize}</span>
+              <span className="value">{user.companySize} employees</span>
             </li>
             <li>
               <span className="name">Location</span>

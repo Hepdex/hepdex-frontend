@@ -18,11 +18,11 @@ const ConfirmEmail = () => {
   const inputRefs = useRef([]);
 
   useEffect(() => {
-    // Check for userID in localStorage
-    const storedUserID = localStorage.getItem('userID');
+    // Check for userID in sessionStorage
+    const storedUserID = sessionStorage.getItem('userID');
     
     if (!storedUserID) {
-    //   Redirect to /signup if userID doesn't exist
+    //   Redirect to signup if userID doesn't exist
       navigate('/signup');
       return;
     }
