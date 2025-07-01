@@ -2,9 +2,10 @@ import Logo from "../components/Logo";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 import { Link, useNavigate } from "react-router-dom";
-import { BsArrowLeft } from "react-icons/bs";
-import { BiUserPlus } from "react-icons/bi";
+import { BsArrowLeft, BsCheck } from "react-icons/bs";
+import { BiLock, BiUserPlus } from "react-icons/bi";
 
+// Signup box styles
 const StyledSignupBox = styled.div`
   min-height: 100vh;
   ${flex(undefined)}
@@ -18,6 +19,7 @@ const StyledSignupBox = styled.div`
   )}
 `;
 
+// Aside styles
 const StyledLeft = styled.div`
   padding: 24px 16px;
   background: linear-gradient(135deg, #915dc2 0%, #7b4db8 100%);
@@ -30,9 +32,14 @@ const StyledLeft = styled.div`
   ${mq(
     "md",
     css`
-      flex: 0 0 35%;
+      width: 35%;
       max-width: 480px;
       padding: 24px;
+      position: fixed;
+      z-index: 10;
+      min-height: 100vh;
+      top: 0;
+      left: 0;
       max-height: none;
     `
   )}
@@ -116,10 +123,18 @@ const StyledLeft = styled.div`
   }
 `;
 
+// Content box styles
 const StyledContent = styled.div`
   background-color: #f3f4f6;
   flex: 1;
   position: relative;
+
+  ${mq(
+    "md",
+    css`
+      margin-left: min(35%, 480px);
+    `
+  )}
 
   .top {
     ${flex(undefined, "start")}
@@ -162,15 +177,23 @@ const StyledContent = styled.div`
   }
 
   .bottom {
-    padding: 145px 16px 48px 16px;
     min-height: 100vh;
 
-    ${mq(
-      "400px",
-      css`
-        padding: 112px 16px 48px 16px;
-      `
-    )}
+    ${(props) =>
+      props.$showTop
+        ? css`
+            padding: 145px 16px 48px 16px;
+
+            ${mq(
+              "400px",
+              css`
+                padding: 112px 16px 48px 16px;
+              `
+            )}
+          `
+        : css`
+            padding: 112px 16px 48px 16px;
+          `}
 
     ${mq(
       "md",
@@ -186,7 +209,7 @@ const StyledContent = styled.div`
 
       .title-subtitle {
         text-align: center;
-        margin-bottom: 32px;
+        margin-bottom: 40px;
 
         .title {
           font-size: 32px;
@@ -203,10 +226,101 @@ const StyledContent = styled.div`
   }
 `;
 
+// Steps box styles
+const StyledSteps = styled.div`
+  margin-top: 48px;
+  ul {
+    ${flex(undefined)}
+    flex-direction: column;
+
+    li {
+      ${flex(undefined, "start")}
+      gap: 16px;
+
+      h3 {
+        font-weight: 500;
+        font-size: 20px;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .icon {
+        ${flex("center", "center")}
+        flex-direction: column;
+
+        .step {
+          min-width: 40px;
+          border-radius: 50%;
+          height: 40px;
+          ${flex("center", "center")}
+          background: #fff3;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          font-weight: 600;
+        }
+
+        .arrow {
+          width: 0px;
+          border-right: 2px solid rgba(255, 255, 255, 0.3);
+          min-height: 48px;
+          flex: 1;
+        }
+      }
+
+      &:last-child {
+        .icon {
+          .arrow {
+            display: none;
+          }
+        }
+      }
+
+      &.active {
+        h3 {
+          color: var(--color-white-1);
+        }
+        .icon {
+          .step {
+            background-color: var(--color-white-1);
+            color: var(--color-primary);
+          }
+        }
+      }
+    }
+  }
+
+  .user-details {
+    margin-top: 40px;
+    ${flex("center", "start")}
+    flex-direction: column;
+    gap: 16px;
+
+    p {
+      font-size: 18px;
+    }
+
+    button {
+      background-color: transparent;
+      ${flex(undefined, "center")}
+      gap: 4px;
+      transition: color 0.4s ease-in-out;
+
+      span {
+        margin-top: 2px;
+      }
+
+      &:hover {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+`;
+
+// Signup box
 function SignupBox({ children }) {
   return <StyledSignupBox>{children}</StyledSignupBox>;
 }
 
+// Left - Aside
 function Left({ children, showPattern = true }) {
   return (
     <StyledLeft>
@@ -236,12 +350,13 @@ function Left({ children, showPattern = true }) {
   );
 }
 
+// Content box
 function Content({ children, showTop = true, title = "", subtitle = "" }) {
   // Navigate hook
   const navigate = useNavigate();
 
   return (
-    <StyledContent>
+    <StyledContent $showTop={showTop}>
       {showTop && (
         <div className="top">
           <button className="back" onClick={() => navigate(-1)}>
@@ -268,7 +383,57 @@ function Content({ children, showTop = true, title = "", subtitle = "" }) {
   );
 }
 
+// Steps box
+function Steps({ step = 1, email = "" }) {
+  // Navigate hook
+  const navigate = useNavigate();
+
+  // Logout user
+  const handleLogout = () => {
+    // Clear session storage
+    sessionStorage.clear();
+
+    // Redirect to signup page
+    navigate("/signup");
+  };
+
+  return (
+    <StyledSteps>
+      <ul>
+        <li className={step === 1 ? "active" : ""}>
+          <div className="icon">
+            <span className="step">{step > 1 ? <BsCheck size={24} /> : 1}</span>
+            <div className="arrow"></div>
+          </div>
+          <h3>Sign up</h3>
+        </li>
+        <li className={step === 2 ? "active" : ""}>
+          <div className="icon">
+            <span className="step">{step > 2 ? <BsCheck size={24} /> : 2}</span>
+            <div className="arrow"></div>
+          </div>
+          <h3>Basic information</h3>
+        </li>
+        <li className={step === 3 ? "active" : ""}>
+          <div className="icon">
+            <span className="step">{step > 3 ? <BsCheck size={24} /> : 3}</span>
+            <div className="arrow"></div>
+          </div>
+          <h3>Confirm email</h3>
+        </li>
+      </ul>
+      <div className="user-details">
+        <p>{email}</p>
+        <button className="user-details--logout" onClick={handleLogout}>
+          <BiLock size={18} /> <span>Logout</span>
+        </button>
+      </div>
+    </StyledSteps>
+  );
+}
+
 SignupBox.Left = Left;
 SignupBox.Content = Content;
+SignupBox.Steps = Steps;
 
 export default SignupBox;
