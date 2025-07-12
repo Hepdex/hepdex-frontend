@@ -46,10 +46,29 @@ export default function EditCandidate() {
   // Navigate hook
   const navigate = useNavigate();
 
+  // Validate form function
+  const validateForm = () => {
+    // Skills validation
+    if (skills.length === 0) {
+      notify("Add at least one skill", "error");
+      return false;
+    }
+
+    // Languages validation
+    if (languages.length === 0) {
+      notify("Add at least one language", "error");
+      return false;
+    }
+    return true;
+  };
+
   // Handle update bio
   const handleUpdateBio = async (e) => {
     // Prevent default submit
     e.preventDefault();
+
+    // Validate skills and languages
+    if (!validateForm()) return;
 
     // Get values
     let data = Object.fromEntries(new FormData(e.target));
@@ -85,7 +104,7 @@ export default function EditCandidate() {
 
       // Navigate to jobs page
       setTimeout(() => {
-        navigate("/dashboard/candidate-bio");
+        navigate("/dashboard/profile");
       }, 2000);
     } else {
       // Error

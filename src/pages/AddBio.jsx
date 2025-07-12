@@ -1,440 +1,275 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from '../styles/AddBio.module.css';
-import { IoChevronDown, IoClose } from 'react-icons/io5';
-import {apiFetcher2, API_URL} from "../utils/helpers"; // Import any helper functions if needed
+import SignupBox from "../components/SignupBox";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import Button from "../components/Button";
+import Spinner from "../components/Spinner";
+import useMutate from "../hooks/useMutate";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Form, FormGroup, Textarea, ValuesBox } from "../components/Form";
+import { base64ToBlob, notify } from "../utils/helpers";
+import { candidateSignup } from "../services/apiAuth";
+import { updateCandidateBio } from "../services/apiCandidate";
 
 const AddBio = () => {
+  // Document title
+  useDocumentTitle("Add bio");
+
+  // Navigate hook
   const navigate = useNavigate();
-  
-  const [formData, setFormData] = useState({
-    about: '',
-    skills: [],
-    languages: [],
-    acceptTerms: false,
-    receiveMarketing: false
-  });
 
-  const [newSkill, setNewSkill] = useState('');
-  const [newLanguage, setNewLanguage] = useState('');
-  const [userID, setUserID] = useState(null);
+  // Loading state
+  const [loading, setLoading] = useState(false);
 
-  const [dropdownOpen, setDropdownOpen] = useState({
-    country: false,
-    companySize: false
-  });
+  // Candidate signup api
+  const [signup] = useMutate(candidateSignup);
 
+  // Update candidate bio
+  const [update] = useMutate(updateCandidateBio);
+
+  // Signup data
   const [signupData, setSignupData] = useState(null);
-  const [errorDialog, setErrorDialog] = useState({
-    isOpen: false,
-    message: ''
-  });
 
-  // Updated useEffect
-    useEffect(() => {
-        // Check for userID in localStorage
-        const storedUserID = localStorage.getItem('userID');
-        const storedSignupData = localStorage.getItem('signupData');
+  // Skills state
+  const [skills, setSkills] = useState([]);
 
-        if( !storedSignupData) {
-            // Redirect to /signup if signupData doesn't exist
-            navigate('/signup');
-            return;
-        }
-  
-        if (!storedUserID) {
-            // Redirect to /login if userID doesn't exist
-            navigate('/login');
-            return;
-        }
+  // Languages state
+  const [languages, setLanguages] = useState([]);
 
-        try {
-            const parsedUserID = JSON.parse(storedUserID);
-            const parsedSignupData = JSON.parse(storedSignupData);
-            setSignupData(parsedSignupData);
-            setUserID(parsedUserID);
-            console.log('User ID:', parsedUserID); // For debugging
-        } catch (error) {
-            console.error('Error parsing userID from localStorage:', error);
-            // Redirect if userID is corrupted
-            navigate('/login');
-        }     
-    }, [navigate]);
-
-  const addSkill = () => {
-    if (newSkill.trim() && !formData.skills.includes(newSkill.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        skills: [...prev.skills, newSkill.trim()]
-      }));
-      setNewSkill('');
+  // Validate form function
+  const validateForm = () => {
+    // Skills validation
+    if (skills.length === 0) {
+      notify("Add at least one skill", "error");
+      return false;
     }
-  };
 
-  const removeSkill = (skillToRemove) => {
-    setFormData(prev => ({
-      ...prev,
-      skills: prev.skills.filter(skill => skill !== skillToRemove)
-    }));
-  };
-
-  const addLanguage = () => {
-    if (newLanguage.trim() && !formData.languages.includes(newLanguage.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        languages: [...prev.languages, newLanguage.trim()]
-      }));
-      setNewLanguage('');
+    // Languages validation
+    if (languages.length === 0) {
+      notify("Add at least one language", "error");
+      return false;
     }
+    return true;
   };
 
-  const removeLanguage = (languageToRemove) => {
-    setFormData(prev => ({
-      ...prev,
-      languages: prev.languages.filter(language => language !== languageToRemove)
-    }));
-  };
+  useEffect(() => {
+    // Get signup data
+    const storedSignupData = sessionStorage.getItem("signupData");
 
-  const handleKeyPress = (e, type) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      if (type === 'skill') {
-        addSkill();
-      } else if (type === 'language') {
-        addLanguage();
+    if (!storedSignupData) {
+      // Redirect to signup if signupData doesn't exist
+      navigate("/signup");
+      return;
+    }
+
+    try {
+      // Parse signup data
+      const parsedSignupData = JSON.parse(storedSignupData);
+
+      if (parsedSignupData.resume) {
+        // Convert base64 to blob
+        let file = base64ToBlob(parsedSignupData.resume);
+
+        // Create new file
+        file = new File([file], "resume.pdf", { type: "application/pdf" });
+
+        // Set file
+        parsedSignupData.resume = file;
       }
+
+      // Set signup data
+      setSignupData(parsedSignupData);
+    } catch (error) {
+      // Console log error
+      console.error("Error parsing signup data from sessionStorage:", error);
+
+      // Redirect if signup data is corrupted
+      navigate("/signup");
     }
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const toggleDropdown = (field) => {
-    setDropdownOpen(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }));
-  };
-
-  const selectOption = (field, value) => {
-    handleInputChange(field, value);
-    setDropdownOpen(prev => ({
-      ...prev,
-      [field]: false
-    }));
-  };
-
-  const showErrorDialog = (message) => {
-    setErrorDialog({
-      isOpen: true,
-      message: message
-    });
-  };
-
-  const closeErrorDialog = () => {
-    setErrorDialog({
-      isOpen: false,
-      message: ''
-    });
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/signup');
-  };
+  }, [navigate]);
 
   const handleContinue = async (e) => {
+    // Prevent default submit
     e.preventDefault();
-    
-    // Create updated signup data with bio information
-    const updatedSignupData = {
-      about: formData.about,
-      skills: formData.skills,
-      languages: formData.languages
+
+    // Validate data
+    if (!validateForm()) return;
+
+    // Get data
+    let data = Object.fromEntries(new FormData(e.target));
+
+    // Add extra fields
+    data = {
+      ...data,
+      acceptTerms: data.acceptTerms === "on",
     };
-    
-    // Prepare data for POST request
-    const requestBody = JSON.stringify(updatedSignupData);
-    
+
+    if (data.receiveMarketing)
+      data.receiveMarketing = data.receiveMarketing === "on";
+
+    const bioData = {
+      about: data.about,
+      skills,
+      languages,
+    };
+
+    // Create form data
+    const userData = new FormData();
+
+    // Append values
+    userData.append("resume", signupData.resume);
+    userData.append("country", signupData.country);
+    userData.append("email", signupData.email);
+    userData.append("firstName", signupData.firstName);
+    userData.append("lastName", signupData.lastName);
+    userData.append("password", signupData.password);
+    userData.append("jobTitle", signupData.jobTitle);
+    userData.append("jobType", signupData.jobType);
+
     try {
-      // Example POST request - replace with your actual endpoint
-      const response = await apiFetcher2(`${API_URL}/update-candidate-bio?userID=${userID}`, {method: 'PUT', body: requestBody, headers: {'Content-Type': 'application/json'}});
-      
-      if (response.statusCode === 200) {
-        // Redirect to email confirmation page
-        navigate('/confirm-email');
+      // Set loading state
+      setLoading(true);
+
+      // Create user
+      const createUserRes = await signup(userData);
+
+      // Check response
+      if (createUserRes?.userID) {
+        // Get user id
+        const userID = createUserRes.userID;
+        // Add bio data
+        const updateBioRes = await update(bioData, `?userID=${userID}`);
+
+        // Check response
+        if (updateBioRes === 200) {
+          // Set session storage
+          sessionStorage.setItem(
+            "user",
+            JSON.stringify({
+              userID,
+              email: signupData.email,
+            })
+          );
+
+          // Clear signup data
+          sessionStorage.removeItem("signupData");
+
+          // Redirect to email confirmation page
+          navigate("/confirm-email");
+        } else {
+          // Error
+          notify(updateBioRes, "error");
+        }
+      } else {
+        // Error
+        notify(createUserRes, "error");
       }
-      else {
-        // Handle any other status codes
-        showErrorDialog(response.data?.msg || 'An unexpected error occurred. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      showErrorDialog('Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
     }
-    
   };
 
   return (
-    <div className={styles.container}>
-      {/* Error Dialog */}
-      {errorDialog.isOpen && (
-        <div className={styles.errorOverlay}>
-          <div className={styles.errorDialog}>
-            <div className={styles.errorHeader}>
-              <h3 className={styles.errorTitle}>Error</h3>
-              <button 
-                className={styles.closeButton}
-                onClick={closeErrorDialog}
-              >
-                <IoClose size={24} />
-              </button>
-            </div>
-            <div className={styles.errorBody}>
-              <p className={styles.errorMessage}>{errorDialog.message}</p>
-            </div>
-            <div className={styles.errorFooter}>
-              <button 
-                className={styles.okButton}
-                onClick={closeErrorDialog}
-              >
-                OK
-              </button>
-            </div>
-          </div>
+    <SignupBox>
+      <SignupBox.Left showPattern={false}>
+        <div>
+          <h2>Create your account in a few steps.</h2>
         </div>
-      )}
-
-      {/* Mobile Top Bar */}
-      <div className={styles.mobileTopBar}>
-        <div className={styles.mobileTopBarContent}>
-          <div className={styles.logo}>
-            <div className={styles.logoIcon}>H</div>
-            <span className={styles.logoText}>HepDex</span>
+        <SignupBox.Steps step={2} email={signupData?.email} />
+      </SignupBox.Left>
+      <SignupBox.Content showTop={false} title="Get started with HepDex">
+        <div className="basic-info">
+          <div className="box-top">
+            <h3>Basic information</h3>
+            <p>Tell us about yourself, your skills, and languages you speak.</p>
           </div>
-          <button className={styles.mobileLogoutBtn} onClick={handleLogout}>
-            🔒 Logout
-          </button>
-        </div>
-      </div>
-
-      {/* Left Section */}
-      <div className={styles.leftSection}>
-        <div className={styles.leftContent}>
-          <div className={styles.logo}>
-            <div className={styles.logoIcon}>H</div>
-            <span className={styles.logoText}>HepDex</span>
-          </div>
-          
-          <h1 className={styles.title}>
-            Create your account in a few clicks
-          </h1>
-          
-          <div className={styles.stepsList}>
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={`${styles.stepNumber} ${styles.completed}`}>
-                  <span>✓</span>
-                </div>
-                <div className={styles.stepLine}></div>
-              </div>
-              <span className={styles.stepText}>Sign up</span>
-            </div>
-            
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={`${styles.stepNumber} ${styles.active}`}>
-                  <span>2</span>
-                </div>
-                <div className={styles.stepLine}></div>
-              </div>
-              <span className={styles.stepText}>Add bio</span>
-            </div>
-            
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={styles.stepNumber}>
-                  <span>3</span>
-                </div>
-              </div>
-              <span className={styles.stepText}>Confirm email</span>
-            </div>
-          </div>
-          
-          <div className={styles.userInfo}>
-            <span className={styles.email}>
-              {signupData?.email || 'info@hepdex.com'}
-            </span>
-            <button className={styles.logoutBtn} onClick={handleLogout}>
-              🔒 Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Section */}
-      <div className={styles.rightSection}>
-        <div className={styles.formContainer}>
-          <h2 className={styles.formTitle}>Let's get started</h2>
-          
-          <div className={styles.formSection}>
-            <h3 className={styles.sectionTitle}>Add bio</h3>
-            <p className={styles.sectionSubtitle}>
-              Tell us about yourself, your skills, and languages you speak.
-            </p>
-            
-            <form className={styles.form} onSubmit={handleContinue}>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  About <span className={styles.required}>*</span>
-                </label>
-                <textarea
-                  className={styles.textarea}
-                  value={formData.about}
-                  onChange={(e) => handleInputChange('about', e.target.value)}
-                  placeholder="Tell us about yourself..."
-                  maxLength={260}
-                  rows={4}
+          <Form
+            $gap={18}
+            onSubmit={handleContinue}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.code === 13) e.preventDefault();
+            }}
+          >
+            <FormGroup
+              label={
+                <>
+                  About <span className="required">*</span>
+                </>
+              }
+              instructions={`Maximum of 260 characters`}
+            >
+              <Textarea
+                placeholder="Tell us about yourself"
+                required
+                rows={5}
+                maxLength={260}
+                name="about"
+              />
+            </FormGroup>
+            <ValuesBox
+              state={skills}
+              setState={setSkills}
+              placeholder="Add a skill"
+              label={
+                <>
+                  Skills <span className="required">*</span>
+                </>
+              }
+              limit={15}
+              instructions="Add skills that are relevant to your work or interests."
+            />
+            <ValuesBox
+              state={languages}
+              setState={setLanguages}
+              placeholder="Add a Language"
+              label={
+                <>
+                  Languages <span className="required">*</span>
+                </>
+              }
+              limit={5}
+              instructions="Add languages you can speak or write in."
+            />
+            <div className="accept-box">
+              <label htmlFor="acceptTerms">
+                <input
+                  type="checkbox"
+                  name="acceptTerms"
+                  id="acceptTerms"
+                  required
                 />
-                <p className={styles.helpText}>
-                  {formData.about.length}/260 characters
-                </p>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Skills <span className={styles.required}>*</span>
-                </label>
-                <div className={styles.skillsContainer}>
-                  <div className={styles.inputWithButton}>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={newSkill}
-                      onChange={(e) => setNewSkill(e.target.value)}
-                      onKeyPress={(e) => handleKeyPress(e, 'skill')}
-                      placeholder="Add a skill"
-                    />
-                    <button
-                      type="button"
-                      className={styles.addButton}
-                      onClick={addSkill}
-                      disabled={!newSkill.trim()}
-                    >
-                      Add
-                    </button>
-                  </div>
-                  {formData.skills.length > 0 && (
-                    <div className={styles.tagsList}>
-                      {formData.skills.map((skill, index) => (
-                        <div key={index} className={styles.tag}>
-                          <span>{skill}</span>
-                          <button
-                            type="button"
-                            className={styles.removeTag}
-                            onClick={() => removeSkill(skill)}
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <p className={styles.helpText}>
-                  Add skills that are relevant to your work or interests.
-                </p>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Languages <span className={styles.required}>*</span>
-                </label>
-                <div className={styles.languagesContainer}>
-                  <div className={styles.inputWithButton}>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={newLanguage}
-                      onChange={(e) => setNewLanguage(e.target.value)}
-                      onKeyPress={(e) => handleKeyPress(e, 'language')}
-                      placeholder="Add a language"
-                    />
-                    <button
-                      type="button"
-                      className={styles.addButton}
-                      onClick={addLanguage}
-                      disabled={!newLanguage.trim()}
-                    >
-                      Add
-                    </button>
-                  </div>
-                  {formData.languages.length > 0 && (
-                    <div className={styles.tagsList}>
-                      {formData.languages.map((language, index) => (
-                        <div key={index} className={styles.tag}>
-                          <span>{language}</span>
-                          <button
-                            type="button"
-                            className={styles.removeTag}
-                            onClick={() => removeLanguage(language)}
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <p className={styles.helpText}>
-                  Add languages you can speak or write in.
-                </p>
-              </div>
-
-              <div className={styles.checkboxGroup}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={formData.acceptTerms}
-                    onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                    className={styles.checkbox}
-                  />
-                  <span className={styles.checkboxText}>
-                    I accept the <a href="#" className={styles.link}>Terms of Service</a> and I'm authorized to accept for my company
-                  </span>
-                </label>
-              </div>
-
-              <div className={styles.checkboxGroup}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={formData.receiveMarketing}
-                    onChange={(e) => handleInputChange('receiveMarketing', e.target.checked)}
-                    className={styles.checkbox}
-                  />
-                  <span className={styles.checkboxText}>
-                    I agree to receive marketing updates from HepDex
-                  </span>
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                className={styles.continueButton}
-                disabled={!formData.about.trim() || formData.skills.length === 0 || formData.languages.length === 0 || !formData.acceptTerms}
+                <span>
+                  I accept the
+                  <Link to="/terms-and-conditions" target="_blank">
+                    {"Terms of Service "}
+                  </Link>
+                  and I'm authorized to accept for my company
+                </span>
+              </label>
+            </div>
+            <div className="accept-box">
+              <label htmlFor="receiveMarketing">
+                <input
+                  type="checkbox"
+                  name="receiveMarketing"
+                  id="receiveMarketing"
+                />
+                <span>I agree to receive marketing updates from HepDex</span>
+              </label>
+            </div>
+            <div className="submit-box">
+              <Button
+                style={{ width: "100%" }}
+                disabled={loading}
+                $loading={loading}
               >
-                Continue
-              </button>
-            </form>
-          </div>
+                <span>Continue</span>
+                {loading && <Spinner />}
+              </Button>
+            </div>
+          </Form>
         </div>
-      </div>
-    </div>
+      </SignupBox.Content>
+    </SignupBox>
   );
 };
 

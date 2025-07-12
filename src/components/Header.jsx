@@ -199,9 +199,6 @@ export default function Header() {
   // Close menu
   const close = () => setIsOpen(false);
 
-  // User context
-  const { user, isLoggedIn } = useUserContext();
-
   return (
     <StyledHeader className="header">
       <Container>
@@ -224,11 +221,7 @@ export default function Header() {
                 </li>
                 <li>
                   <NavLink
-                    to={`${
-                      user?.role === "employer" && isLoggedIn
-                        ? "/dashboard/browse-talent"
-                        : "/login"
-                    }`}
+                    to="/hire-expert"
                     className="nav-link"
                     onClick={close}
                   >

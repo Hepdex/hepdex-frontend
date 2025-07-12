@@ -1,13 +1,13 @@
 import Container from "../../components/Container";
 import Button from "../../components/Button";
 import bgImage from "../../assets/heroBg.jpg";
+import AddJobBtn from "../../components/AddJobBtn";
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { Cursor, useTypewriter } from "react-simple-typewriter";
 import { flex, mq } from "../../GlobalStyles";
-import { useUserContext } from "../../context/UserContext";
 
 // Hero container
 const StyledHero = styled.div`
@@ -144,9 +144,6 @@ export default function Hero() {
   // Deleting state
   const [deleting, setDeleting] = useState(false);
 
-  // User context
-  const { user, isLoggedIn } = useUserContext();
-
   // Type effect
   const [typeEffect] = useTypewriter({
     words: ["virtual assistant", "developer", "designer", "digital marketer"],
@@ -188,17 +185,7 @@ export default function Hero() {
               </ul>
               {/* Button group */}
               <div className="btn-group">
-                <Button
-                  size="lg"
-                  as={Link}
-                  to={`${
-                    user?.role === "employer" && isLoggedIn
-                      ? "/post-a-job"
-                      : "/login"
-                  }`}
-                >
-                  Post a Job
-                </Button>
+                <AddJobBtn />
                 <Button color="outline" size="lg" as={Link} to="/find-work">
                   Find Work
                 </Button>

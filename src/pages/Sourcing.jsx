@@ -5,6 +5,7 @@ import { flex, mq } from "../GlobalStyles";
 import { getCandidates } from "../services/apiCandidate";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const SourcingBox = styled.div`
   // Search talent
@@ -117,17 +118,19 @@ export default function Sourcing() {
   }, [search]);
 
   return (
-    <SourcingBox>
-      <DashboardTitle
-        title="Sourcing"
-        subtitle="Find top candidates, wherever they are"
-        links={[{ name: "Sourcing" }]}
-      />
-      <SourcingTable
-        loading={loading}
-        candidates={candidates}
-        setCandidates={setCandidates}
-      />
-    </SourcingBox>
+    <ProtectedRoute allowedRoles={["employer"]}>
+      <SourcingBox>
+        <DashboardTitle
+          title="Sourcing"
+          subtitle="Find top candidates, wherever they are"
+          links={[{ name: "Sourcing" }]}
+        />
+        <SourcingTable
+          loading={loading}
+          candidates={candidates}
+          setCandidates={setCandidates}
+        />
+      </SourcingBox>
+    </ProtectedRoute>
   );
 }

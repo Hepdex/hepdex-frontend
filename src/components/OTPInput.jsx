@@ -23,7 +23,7 @@ const StyledOTP = styled.div`
   }
 `;
 
-const OTPInput = ({ length = 6, onChange }) => {
+const OTPInput = ({ length = 6, onChange, className = "" }) => {
   // Inital values
   const [otp, setOtp] = useState(Array(length).fill(""));
 
@@ -115,7 +115,7 @@ const OTPInput = ({ length = 6, onChange }) => {
   };
 
   return (
-    <StyledOTP>
+    <StyledOTP className={className}>
       {otp.map((digit, index) => (
         <div className="input-box" key={index}>
           <input

@@ -1,12 +1,23 @@
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { useUserContext } from "../context/UserContext";
-import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
-export default function ProtectedRoute({ children }) {
+export default function ProtectedRoute({ allowedRoles, children }) {
+  // User context
   const { user } = useUserContext();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!user) navigate("/");
-  }, [user, navigate]);
-  return user ? children : <div>Loading...</div>;
+
+  return user && allowedRoles.includes(user.role) ? (
+    <React.Fragment>{children}</React.Fragment>
+  ) : (
+    <Navigate
+      to={
+        user?.role === "employer"
+          ? "/dashboard/home"
+          : user?.role === "candidate"
+          ? "/dashboard/find-jobs"
+          : "/home"
+      }
+      replace
+    />
+  );
 }

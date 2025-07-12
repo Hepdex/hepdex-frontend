@@ -213,6 +213,7 @@ export default function Filter({ children, id, fields }) {
                   type="button"
                   color="secondary"
                   size="sm"
+                  className="alternate"
                   onClick={resetFilter}
                 >
                   Reset

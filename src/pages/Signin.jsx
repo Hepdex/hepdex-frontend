@@ -38,14 +38,28 @@ const Signin = () => {
       // Set user
       setUser(response.user);
 
-      // Set logged in
-      setIsLoggedIn(true);
-
-      // Redirect employer
+      // Employer redirect
       if (response.user.role === "employer") navigate("/dashboard/home");
 
-      // Redirect candidate
+      // Candidate redirect
       if (response.user.role === "candidate") navigate("/dashboard/find-jobs");
+
+      // Set logged in
+      setTimeout(() => {
+        setIsLoggedIn(true);
+      }, 1000);
+    } else if (response?.userId) {
+      // Set session storage
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({
+          userID: response.userID,
+          email: data.email,
+        })
+      );
+
+      // Redirect to email confirmation page
+      navigate("/confirm-email");
     } else {
       // Error
       notify(response, "error");

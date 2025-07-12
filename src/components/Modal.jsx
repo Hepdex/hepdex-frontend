@@ -4,6 +4,7 @@ import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { BsXLg } from "react-icons/bs";
 import { flex, mq } from "../GlobalStyles";
+import Overlay from "./Overlay";
 
 // Create context
 const ModalContext = createContext();
@@ -201,7 +202,7 @@ function Window({
 
   return createPortal(
     <>
-      <div className="overlay" onClick={close} />
+      <Overlay onClick={close} />
       <StyledWindow>
         <div className={`modal ${alt ? "modal-confirm" : ""}`}>
           <div className="modal--header">

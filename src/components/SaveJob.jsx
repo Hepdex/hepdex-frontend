@@ -9,7 +9,7 @@ export default function SaveJob({
   jobID,
   isCandidate,
   isEmployer,
-  className,
+  className = "",
   setSavedJobs,
   isSaved,
 }) {

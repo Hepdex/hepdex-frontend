@@ -1,3 +1,4 @@
+import ProtectedRoute from "../components/ProtectedRoute";
 import Button from "../components/Button";
 import useMutate from "../hooks/useMutate";
 import Spinner from "../components/Spinner";
@@ -26,7 +27,12 @@ import {
   Time,
 } from "../components/Form";
 import { addJob } from "../services/apiJobs";
-import { getTimezones, notify } from "../utils/helpers";
+import {
+  getCurrentTimeZone,
+  getTimezones,
+  notify,
+  removeEmojis,
+} from "../utils/helpers";
 import { countries } from "../data/countries";
 import { currencyFlagList } from "../data/currencies";
 import { getDepartments } from "../services/apiDepartments";
@@ -73,8 +79,7 @@ function AddJobForm() {
     let data = Object.fromEntries(new FormData(e.target));
 
     // Check if timeZone is empty
-    if (!data.timeZone)
-      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (!data.timeZone) data.timeZone = getCurrentTimeZone();
 
     data = {
       ...data,
@@ -83,8 +88,14 @@ function AddJobForm() {
         countries.find((item) => item.code === location).name,
 
       // Remove emoji from currency
-      currency: data.currency.split(" ")[1],
+      currency: removeEmojis(data.currency),
     };
+
+    // Check if max pay is less than or equal to min pay
+    if (data.minSalary >= data.maxSalary) {
+      notify("Invalid payout details", "error");
+      return;
+    }
 
     // Send request
     const response = await postJob(data);

@@ -1,15 +1,15 @@
-import Button from "../../components/Button";
-import Modal, { useModalContext } from "../../components/Modal";
-import useMutate from "../../hooks/useMutate";
-import Spinner from "../../components/Spinner";
-import { useUserContext } from "../../context/UserContext";
-import { logout as logoutApi } from "../../services/apiAuth";
+import Button from "./Button";
+import useMutate from "../hooks/useMutate";
+import Spinner from "./Spinner";
+import Modal, { useModalContext } from "./Modal";
+import { useUserContext } from "../context/UserContext";
+import { logout as logoutApi } from "../services/apiAuth";
 import { useNavigate } from "react-router-dom";
-import { notify } from "../../utils/helpers";
+import { notify } from "../utils/helpers";
 
-export default function EmployerNotify() {
+export default function RoleNotify({ customEmployerTxt = "" }) {
   // User context
-  const { setUser, setIsLoggedIn } = useUserContext();
+  const { user, setUser, setIsLoggedIn } = useUserContext();
 
   // Use modal context
   const { close } = useModalContext();
@@ -46,7 +46,7 @@ export default function EmployerNotify() {
 
   return (
     <Modal.Window
-      name="employer-notify"
+      name="role-notify"
       cancel={false}
       confirm={
         <Button
@@ -63,11 +63,19 @@ export default function EmployerNotify() {
     >
       <div className="modal-box">
         <div className="modal-box--top">
-          <h2>You are logged in as an employer</h2>
+          <h2>
+            You are logged in as
+            {user?.role === "employer" ? " an employer" : " a candidate"}
+          </h2>
         </div>
         <p className="modal-box--text">
-          Only candidates can apply for jobs. Please log out and sign in with a
-          candidate profile to apply for jobs.
+          {user?.role === "employer"
+            ? "Only candidates can apply for jobs. Please log out and sign in with a candidate profile to apply for jobs."
+            : `Only employers can ${
+                customEmployerTxt ? customEmployerTxt : "post jobs"
+              }. Please log out and sign in as an employer to ${
+                customEmployerTxt ? customEmployerTxt : "post jobs"
+              }.`}
         </p>
       </div>
     </Modal.Window>

@@ -63,7 +63,7 @@ export default function NoJobs({ isSaved = false }) {
         </p>
         {isSaved ? (
           <Button as={Link} size="sm" to="/dashboard/find-jobs">
-            Find jobs
+            Explore jobs
           </Button>
         ) : (
           <Button size="sm" onClick={clearParams}>

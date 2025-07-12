@@ -7,6 +7,7 @@ export const sendRequirement = apiFetcher(
   "statusCode"
 );
 
+
 // Upload logo
 export const uploadLogo = apiFetcher(
   "upload-logo-image",

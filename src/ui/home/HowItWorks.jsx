@@ -1,10 +1,8 @@
 import Steps from "../../components/Steps";
 import Section from "../../components/Section";
-import Button from "../../components/Button";
+import AddJobBtn from "../../components/AddJobBtn";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../../GlobalStyles";
-import { Link } from "react-router-dom";
-import { useUserContext } from "../../context/UserContext";
 
 // Box
 const StyledHowItWorks = styled.div`
@@ -25,9 +23,6 @@ const StyledHowItWorks = styled.div`
 `;
 
 export default function HowItWorks() {
-  // User context
-  const { user, isLoggedIn } = useUserContext();
-
   return (
     <StyledHowItWorks>
       <Section title="How it works" spaceBottom={true}>
@@ -54,17 +49,7 @@ export default function HowItWorks() {
             />
           </Steps>
           <div className="btn-box">
-            <Button
-              as={Link}
-              to={`${
-                user?.role === "employer" && isLoggedIn
-                  ? "/post-a-job"
-                  : "/login"
-              }`}
-              size="lg"
-            >
-              Post your job
-            </Button>
+            <AddJobBtn text="Post your job" />
           </div>
         </div>
       </Section>

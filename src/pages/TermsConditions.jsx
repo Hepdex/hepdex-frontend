@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
 import ContentBox from "../components/ContentBox";
 import PageContent from "../components/PageContent";
 import Section from "../components/Section";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import { Link } from "react-router-dom";
 
 export default function TermsConditions() {
+  // Document title
+  useDocumentTitle("Terms and conditions");
   return (
     <PageContent className="dark">
       <Section animation={false} title="Terms and conditions" spaceBottom>

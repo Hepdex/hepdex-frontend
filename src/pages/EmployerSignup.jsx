@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import useMutate from "../hooks/useMutate";
 import Spinner from "../components/Spinner";
 import styled from "styled-components";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, FormGroup, Input, Password } from "../components/Form";
@@ -37,6 +38,9 @@ const StyledInfo = styled.div`
 `;
 
 const EmployerSignup = () => {
+  // Document title
+  useDocumentTitle("Sign up as employer");
+
   // Errors state
   const [errors, setErrors] = useState({});
 
@@ -210,4 +214,3 @@ const EmployerSignup = () => {
 };
 
 export default EmployerSignup;
-

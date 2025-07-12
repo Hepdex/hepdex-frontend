@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { mq } from "../GlobalStyles";
 
 // Logo styles
-const StyledLogo = styled(Link)`
+const StyledLogo = styled.div`
   svg {
     height: 32px;
 
@@ -20,8 +20,12 @@ const StyledLogo = styled(Link)`
 `;
 
 export default function Logo({ alt = false, url = "/home" }) {
-  return (
-    <StyledLogo className="logo" to={url}>
+  return url ? (
+    <StyledLogo className="logo" as={Link} to={url}>
+      {alt ? <LogoSvgWhite /> : <LogoSvg />}
+    </StyledLogo>
+  ) : (
+    <StyledLogo className="logo">
       {alt ? <LogoSvgWhite /> : <LogoSvg />}
     </StyledLogo>
   );

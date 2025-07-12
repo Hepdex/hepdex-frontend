@@ -84,13 +84,8 @@ export default function RequirementsForm() {
           <FormGroup label="Requirement">
             <Select name="requirement" required>
               <option value="">Select requirement</option>
-              <option value="Looking for an employee">
-                Looking for an employee
-              </option>
-              <option value="Looking for a service">
-                Looking for a service
-              </option>
-              <option value="Not sure">Not sure</option>
+              <option value="HepDex Africa">HepDex Africa</option>
+              <option value="Looking for a service">HepDex World</option>
             </Select>
           </FormGroup>
           <FormGroup label="Duration">

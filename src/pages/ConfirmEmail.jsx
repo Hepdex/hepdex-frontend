@@ -1,343 +1,165 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from '../styles/ConfirmEmail.module.css';
-import { IoClose } from 'react-icons/io5';
-import { apiFetcher2, API_URL } from "../utils/helpers";
+import SignupBox from "../components/SignupBox";
+import Button from "../components/Button";
+import OTPInput from "../components/OTPInput";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import useMutate from "../hooks/useMutate";
+import ResendOTP from "../components/ResendOTP";
+import Spinner from "../components/Spinner";
+import styled, { css } from "styled-components";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { mq } from "../GlobalStyles";
+import { Form } from "../components/Form";
+import { resendOTP } from "../services/apiUser";
+import { verifyOTP } from "../services/apiAuth";
+import { notify } from "../utils/helpers";
+
+const StyledOTPBox = styled.div`
+  background-color: var(--color-white-1);
+  border-radius: 8px;
+  padding: 40px 24px;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+
+  ${mq(
+    "400px",
+    css`
+      padding: 40px 32px;
+    `
+  )}
+
+  .box-top {
+    text-align: center;
+    margin-bottom: 16px;
+
+    h3 {
+      font-size: 32px;
+      line-height: 36px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    p {
+      color: var(--color-grey-2);
+    }
+  }
+`;
 
 const ConfirmEmail = () => {
-  const navigate = useNavigate();
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [isLoading, setIsLoading] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
-  const [userID, setUserID] = useState('');
-  const [errorDialog, setErrorDialog] = useState({
-    isOpen: false,
-    message: ''
-  });
+  // Document title
+  useDocumentTitle("Confirm email");
 
-  const inputRefs = useRef([]);
+  // Navigate hook
+  const navigate = useNavigate();
+
+  // OTP state
+  const [OTP, setOTP] = useState("");
+
+  // Verify OTP
+  const [verify, loading] = useMutate(verifyOTP);
+
+  // Resend OTP
+  const [resend] = useMutate(resendOTP);
+
+  // User data state
+  const [user, setUser] = useState("");
+
+  // Handle resend OTP
+  const handleResendOTP = async () => {
+    // Check for user iD
+    if (!user.userID) return;
+
+    // Send request
+    await resend({ userID: user.userID });
+  };
+
+  // Handle verify OTP
+  const handleVerifyOTP = async (e) => {
+    // Prevent default submit
+    e.preventDefault();
+
+    // Check for OTP
+    if (!OTP || !user.userID) return;
+
+    // Send request
+    const response = await verify({ otp: OTP, userID: user.userID });
+
+    // Check response
+    if (response === 200) {
+      // Success
+      notify("Email verification successful", "success");
+
+      // Redirect to login
+      setTimeout(() => {
+        navigate("/login", { replace: true });
+      }, 2000);
+    } else {
+      // Error
+      notify(response, "error");
+    }
+  };
 
   useEffect(() => {
-    // Check for userID in sessionStorage
-    const storedUserID = sessionStorage.getItem('userID');
-    
-    if (!storedUserID) {
-    //   Redirect to signup if userID doesn't exist
-      navigate('/signup');
+    // Check for user in sessionStorage
+    const storedUser = sessionStorage.getItem("user");
+
+    if (!storedUser) {
+      // Redirect to signup if user doesn't exist
+      navigate("/signup");
       return;
     }
 
     try {
-      const parsedUserID = JSON.parse(storedUserID);
-      setUserID(parsedUserID);
-      
-      // You might want to fetch user email from API using userID
-      // For now, we'll use a placeholder or stored email
-      const storedSignupData = localStorage.getItem('signupData');
-      if (storedSignupData) {
-        const parsedSignupData = JSON.parse(storedSignupData);
-        setUserEmail(parsedSignupData.email || 'user@example.com');
-      }
+      // Parse user object
+      const parsedUser = JSON.parse(storedUser);
+
+      // Set user object
+      setUser(parsedUser);
     } catch (error) {
-      console.error('Error parsing userID from localStorage:', error);
-      navigate('/signup');
+      // Error
+      console.error("Error parsing user from sessionStorage:", error);
+
+      // Navigate to signup
+      navigate("/signup");
     }
   }, [navigate]);
 
-  const handleOtpChange = (index, value) => {
-    // Only allow single character
-    if (value.length > 1) return;
-    
-    // Allow alphanumeric characters (numbers and letters)
-    if (value !== '' && !/^[a-zA-Z0-9]$/.test(value)) return;
-
-    const newOtp = [...otp];
-    // Keep the original case (both uppercase and lowercase allowed)
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Move to next input if value is entered
-    if (value !== '' && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (index, e) => {
-    // Handle backspace
-    if (e.key === 'Backspace') {
-      if (otp[index] === '' && index > 0) {
-        // Move to previous input if current is empty
-        inputRefs.current[index - 1]?.focus();
-      } else {
-        // Clear current input
-        const newOtp = [...otp];
-        newOtp[index] = '';
-        setOtp(newOtp);
-      }
-    }
-    // Handle arrow keys
-    else if (e.key === 'ArrowLeft' && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-    else if (e.key === 'ArrowRight' && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e) => {
-    e.preventDefault();
-    const pastedText = e.clipboardData.getData('text');
-    // Extract alphanumeric characters only and limit to 6
-    const alphanumeric = pastedText.replace(/[^a-zA-Z0-9]/g, '').slice(0, 6);
-    
-    const newOtp = [...otp];
-    for (let i = 0; i < 6; i++) {
-      // Keep the original case (both uppercase and lowercase allowed)
-      newOtp[i] = alphanumeric[i] || '';
-    }
-    setOtp(newOtp);
-    
-    // Focus on the next empty input or the last input
-    const nextEmptyIndex = newOtp.findIndex(char => char === '');
-    const focusIndex = nextEmptyIndex === -1 ? 5 : nextEmptyIndex;
-    inputRefs.current[focusIndex]?.focus();
-  };
-
-  const showErrorDialog = (message) => {
-    setErrorDialog({
-      isOpen: true,
-      message: message
-    });
-  };
-
-  const closeErrorDialog = () => {
-    setErrorDialog({
-      isOpen: false,
-      message: ''
-    });
-  };
-
-  const handleVerify = async () => {
-    const otpString = otp.join('');
-    
-    if (otpString.length !== 6) {
-      showErrorDialog('Please enter the complete 6-character code.');
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      const requestBody = JSON.stringify({
-        userID: userID,
-        otp: otpString
-      });
-
-      const response = await apiFetcher2(`${API_URL}/verify-otp`, {
-        method: 'PUT',
-        body: requestBody,
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (response.statusCode === 400) {
-        showErrorDialog(response.data?.msg || 'Invalid verification code. Please try again.');
-      }
-      else if (response.statusCode === 500) {
-        showErrorDialog(response.data?.msg || 'Internal server error. Please try again later.');
-      }
-      else if (response.statusCode === 200) {
-        // Success - redirect to dashboard or next step
-        localStorage.clear();
-        navigate('/login'); // Adjust this route as needed
-      }
-      else {
-        showErrorDialog(response.data?.msg || 'An unexpected error occurred. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error verifying email:', error);
-      showErrorDialog('Network error. Please check your connection and try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRequestAgain = async () => {
-    setIsLoading(true);
-    
-    try {
-      const requestBody = JSON.stringify({
-        userID: userID
-      });
-
-      const response = await apiFetcher2(`${API_URL}/employer/resend-verification`, {
-        method: 'POST',
-        body: requestBody,
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (response.statusCode === 200) {
-        // Clear current OTP and show success message
-        setOtp(['', '', '', '', '', '']);
-        inputRefs.current[0]?.focus();
-        // You might want to show a success toast here
-      } else {
-        showErrorDialog(response.data?.msg || 'Failed to resend verification code. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error resending verification code:', error);
-      showErrorDialog('Network error. Please check your connection and try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/signup');
-  };
-
   return (
-    <div className={styles.container}>
-      {/* Error Dialog */}
-      {errorDialog.isOpen && (
-        <div className={styles.errorOverlay}>
-          <div className={styles.errorDialog}>
-            <div className={styles.errorHeader}>
-              <h3 className={styles.errorTitle}>Error</h3>
-              <button 
-                className={styles.closeButton}
-                onClick={closeErrorDialog}
+    <SignupBox>
+      <SignupBox.Left showPattern={false}>
+        <div>
+          <h2>Create your account in a few steps.</h2>
+        </div>
+        <SignupBox.Steps step={3} email={user?.email} />
+      </SignupBox.Left>
+      <SignupBox.Content showTop={false}>
+        <StyledOTPBox>
+          <div className="box-top">
+            <h3>Verify OTP</h3>
+            <p>Your code was sent to you via email</p>
+          </div>
+          <Form $gap={12}>
+            <OTPInput
+              className="box-top--otp"
+              onChange={(value) => setOTP(value)}
+            />
+            <ResendOTP onResend={handleResendOTP} initialSecs={0} />
+            <div className="submit-box">
+              <Button
+                style={{ width: "100%" }}
+                onClick={handleVerifyOTP}
+                $loading={loading}
+                disabled={loading}
               >
-                <IoClose size={24} />
-              </button>
+                <span>Verify</span>
+                {loading && <Spinner />}
+              </Button>
             </div>
-            <div className={styles.errorBody}>
-              <p className={styles.errorMessage}>{errorDialog.message}</p>
-            </div>
-            <div className={styles.errorFooter}>
-              <button 
-                className={styles.okButton}
-                onClick={closeErrorDialog}
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Top Bar - Only visible on mobile */}
-      <div className={styles.topBar}>
-        <div className={styles.logo} onClick={() => navigate('/')}>
-          <div className={styles.logoIcon}>H</div>
-          <span className={styles.logoText}>HepDex</span>
-        </div>
-        <button className={styles.logoutBtn} onClick={handleLogout}>
-          🔒 Logout
-        </button>
-      </div>
-
-      {/* Left Section - Hidden on mobile */}
-      <div className={styles.leftSection}>
-        <div className={styles.leftContent}>
-          <div className={styles.logo} onClick={() => navigate('/')}>
-            <div className={styles.logoIcon}>H</div>
-            <span className={styles.logoText}>HepDex</span>
-          </div>
-          
-          <h1 className={styles.title}>
-            Create your account in a few clicks
-          </h1>
-          
-          <div className={styles.stepsList}>
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={`${styles.stepNumber} ${styles.completed}`}>
-                  <span>✓</span>
-                </div>
-                <div className={styles.stepLine}></div>
-              </div>
-              <span className={styles.stepText}>Sign up</span>
-            </div>
-            
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={`${styles.stepNumber} ${styles.completed}`}>
-                  <span>✓</span>
-                </div>
-                <div className={styles.stepLine}></div>
-              </div>
-              <span className={styles.stepText}>Basic information</span>
-            </div>
-            
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={`${styles.stepNumber} ${styles.active}`}>
-                  <span>3</span>
-                </div>
-              </div>
-              <span className={styles.stepText}>Confirm email</span>
-            </div>
-          </div>
-          
-          <div className={styles.userInfo}>
-            <span className={styles.email}>
-              {userEmail}
-            </span>
-            <button className={styles.logoutBtn} onClick={handleLogout}>
-              🔒 Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Section */}
-      <div className={styles.rightSection}>
-        <div className={styles.verifyContainer}>
-          <h2 className={styles.verifyTitle}>Verify</h2>
-          <p className={styles.verifySubtitle}>
-            Your code was sent to you via email
-          </p>
-          
-          <div className={styles.otpContainer}>
-            {otp.map((char, index) => (
-              <input
-                key={index}
-                ref={el => inputRefs.current[index] = el}
-                type="text"
-                className={styles.otpInput}
-                value={char}
-                onChange={(e) => handleOtpChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={handlePaste}
-                maxLength={1}
-                autoComplete="off"
-                placeholder=""
-              />
-            ))}
-          </div>
-
-          <button
-            className={styles.verifyButton}
-            onClick={handleVerify}
-            disabled={isLoading || otp.join('').length !== 6}
-          >
-            {isLoading ? 'Verifying...' : 'Verify'}
-          </button>
-
-          <div className={styles.resendSection}>
-            <span className={styles.resendText}>Didn't receive code? </span>
-            <button 
-              className={styles.resendLink}
-              onClick={handleRequestAgain}
-              disabled={isLoading}
-            >
-              Request again
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Form>
+        </StyledOTPBox>
+      </SignupBox.Content>
+    </SignupBox>
   );
 };
 

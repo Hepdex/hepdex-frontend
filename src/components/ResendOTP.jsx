@@ -9,19 +9,16 @@ const StyledResendOTP = styled.div`
   .timer {
     color: var(--color-primary);
   }
+  text-align: center;
 
   .resend-btn {
     color: var(--color-primary);
     background-color: transparent;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 `;
 
-const ResendOTP = ({ onResend, seconds = 60 }) => {
-  const [counter, setCounter] = useState(seconds);
+const ResendOTP = ({ onResend, seconds = 60, initialSecs = 60 }) => {
+  const [counter, setCounter] = useState(initialSecs);
 
   useEffect(() => {
     // Return if counter is less than or equal to zero
@@ -49,7 +46,7 @@ const ResendOTP = ({ onResend, seconds = 60 }) => {
     <StyledResendOTP>
       {counter > 0 ? (
         <p>
-          Resend OTP in
+          Resend code in
           <span className="timer">
             {` ${String(Math.floor(counter / seconds)).padStart(
               2,
@@ -58,9 +55,12 @@ const ResendOTP = ({ onResend, seconds = 60 }) => {
           </span>
         </p>
       ) : (
-        <button onClick={handleResend} className="resend-btn">
-          Resend OTP
-        </button>
+        <p>
+          Didn't receive code?{" "}
+          <button onClick={handleResend} className="resend-btn">
+            Resend
+          </button>
+        </p>
       )}
     </StyledResendOTP>
   );

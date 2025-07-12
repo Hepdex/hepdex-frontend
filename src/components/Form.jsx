@@ -195,6 +195,16 @@ const Input = styled.input`
         transform: translateY(-50%);
       }
     `}
+
+    &[type = 'file'] {
+    background-color: var(--color-white-1);
+    border: 1px dashed var(--color-grey-3);
+    cursor: pointer;
+    transition: border 0.4s ease-in-out;
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
 `;
 
 // Textarea styles
@@ -261,9 +271,13 @@ const StyledPassword = styled.div`
 const StyledValuesBox = styled.div`
   .values-box {
     position: relative;
+    input {
+      width: 100%;
+    }
 
     button.add-value {
-      top: calc(29px + 15px);
+      top: 50%;
+      transform: translateY(-50%);
       right: 12px;
       background-color: transparent;
       position: absolute;
@@ -431,6 +445,7 @@ function ValuesBox({
   setState,
   placeholder = "Enter values",
   label,
+  instructions,
 }) {
   // Input state
   const [inputValue, setInputValue] = useState("");
@@ -447,26 +462,28 @@ function ValuesBox({
 
   return (
     <StyledValuesBox>
-      <FormGroup className="values-box" label={label}>
-        <Input
-          placeholder={placeholder}
-          value={inputValue}
-          type="text"
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyUp={(e) => {
-            if ((e.key === "Enter" || e.code === 13) && e.target.value)
-              handleSetValue(e.target.value);
-          }}
-        />
-        {inputValue && (
-          <button
-            className="add-value"
-            type="button"
-            onClick={() => handleSetValue(inputValue)}
-          >
-            <BsArrowRight />
-          </button>
-        )}
+      <FormGroup label={label} instructions={instructions}>
+        <div className="values-box">
+          <Input
+            placeholder={placeholder}
+            value={inputValue}
+            type="text"
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyUp={(e) => {
+              if ((e.key === "Enter" || e.code === 13) && e.target.value)
+                handleSetValue(e.target.value);
+            }}
+          />
+          {inputValue && (
+            <button
+              className="add-value"
+              type="button"
+              onClick={() => handleSetValue(inputValue)}
+            >
+              <BsArrowRight />
+            </button>
+          )}
+        </div>
       </FormGroup>
       {state.length > 0 && (
         <ul className="values-list">

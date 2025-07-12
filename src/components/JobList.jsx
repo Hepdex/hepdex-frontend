@@ -1,13 +1,13 @@
-import { formatDistanceToNow } from "date-fns";
-import { BsClock, BsFolder, BsGeoAlt, BsHouseDoor } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
-import { useUserContext } from "../context/UserContext";
-import { flex, mq } from "../GlobalStyles";
-import { capitalizeFirst } from "../utils/helpers";
 import AvatarImage from "./AvatarImage";
 import Badge from "./Badge";
 import SaveJob from "./SaveJob";
+import styled, { css } from "styled-components";
+import { formatDistanceToNow } from "date-fns";
+import { BsClock, BsFolder, BsGeoAlt, BsHouseDoor } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../context/UserContext";
+import { flex, mq } from "../GlobalStyles";
+import { capitalizeFirst, formatCurrencyToK } from "../utils/helpers";
 
 // Job list styles
 const StyledJobList = styled.div`
@@ -36,8 +36,10 @@ const StyledJobList = styled.div`
         ${flex(undefined, "start")}
         gap: 16px;
         flex-direction: column;
+        width: 100%;
+
         ${mq(
-          "820px",
+          "860px",
           css`
             flex-direction: row;
           `
@@ -51,6 +53,9 @@ const StyledJobList = styled.div`
 
         // Job info
         .job-info {
+          flex: 1;
+          width: 100%;
+
           &--title {
             font-size: 18px;
             line-height: 24px;
@@ -92,57 +97,62 @@ const StyledJobList = styled.div`
             ${flex(undefined, "center")}
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 12px;
+          }
+        }
+
+        &--bottom {
+          margin-top: 12px;
+          gap: 16px;
+          row-gap: 12px;
+          ${flex(undefined)}
+          flex-direction: column-reverse;
+
+          ${mq(
+            "1000px",
+            css`
+              justify-content: space-between;
+              flex-direction: row;
+            `
+          )}
+
+          .job-pay {
+            text-align: left;
+            white-space: nowrap;
+
+            ${mq(
+              "1000px",
+              css`
+                text-align: right;
+              `
+            )}
+
+            &--price {
+              font-size: 20px;
+              line-height: 24px;
+              font-weight: 500;
+            }
+
+            &--interval {
+              color: var(--color-grey-2);
+            }
           }
         }
       }
 
-      &-right {
-        ${flex("center", "start")}
-        text-align: right;
-        gap: 20px;
-        flex-direction: column;
-        ${mq(
-          "820px",
-          css`
-            align-items: end;
-          `
-        )}
+      .job-save--status {
+        ${flex(undefined, "center")}
+        gap: 12px;
+        position: absolute;
+        top: 24px;
+        right: 16px;
 
-        .job-save--status {
-          ${flex(undefined, "center")}
-          gap: 12px;
-          position: absolute;
-          top: 20px;
-          right: 16px;
-
-          ${mq(
-            "820px",
-            css`
-              position: static;
-            `
-          )}
-
-          button {
-            background-color: transparent;
-          }
-        }
-
-        .job-pay {
-          &--price {
-            font-size: 20px;
-            line-height: 24px;
-            font-weight: 500;
-          }
-
-          &--interval {
-            color: var(--color-grey-2);
-          }
+        button {
+          background-color: transparent;
         }
       }
 
       ${mq(
-        "820px",
+        "860px",
         css`
           align-items: center;
           flex-direction: row;
@@ -197,7 +207,7 @@ export default function JobList({
           <li
             key={index}
             className={`job ${alternate ? "alternate" : ""}`}
-            onClick={() => navigate(`/jobs/${job._id}`)}
+            onClick={() => navigate(`/jobs/${job.slug}`)}
           >
             <div className="job-left">
               <AvatarImage>
@@ -223,45 +233,47 @@ export default function JobList({
                     })}`}
                   </li>
                 </ul>
-                <ul className="job-info--meta">
-                  <Badge className="neutral">
-                    <BsHouseDoor />
-                    Remote
-                  </Badge>
-                  <Badge className="neutral">
-                    <BsClock />
-                    {capitalizeFirst(job.jobType)}
-                  </Badge>
-                  <Badge className="neutral">
-                    <BsFolder />
-                    {capitalizeFirst(job.department)}
-                  </Badge>
-                  <Badge className="neutral">
-                    <BsGeoAlt />
-                    {capitalizeFirst(job.country)}
-                  </Badge>
-                </ul>
+                <div className="job-left--bottom">
+                  <ul className="job-info--meta">
+                    <Badge className="neutral">
+                      <BsHouseDoor />
+                      Remote
+                    </Badge>
+                    <Badge className="neutral">
+                      <BsClock />
+                      {capitalizeFirst(job.jobType)}
+                    </Badge>
+                    <Badge className="neutral">
+                      <BsFolder />
+                      {capitalizeFirst(job.department)}
+                    </Badge>
+                    <Badge className="neutral">
+                      <BsGeoAlt />
+                      {capitalizeFirst(job.country)}
+                    </Badge>
+                  </ul>
+                  <div className="job-pay">
+                    <span className="job-pay--price">{`${formatCurrencyToK(
+                      job.minSalary
+                    )} - ${formatCurrencyToK(
+                      job.maxSalary
+                    )} ${job.currency.toUpperCase()}`}</span>
+                    <span className="job-pay--interval">{`/${
+                      intervals[job?.paymentInterval ?? "hourly"]
+                    }`}</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="job-right">
-              <SaveJob
-                isCandidate={isCandidate}
-                isEmployer={isEmployer}
-                className="job-save--status"
-                jobID={job._id}
-                defaultValue={job.isSaved}
-                isSaved={isSaved}
-                setSavedJobs={setSavedJobs}
-              />
-              <div className="job-pay">
-                <span className="job-pay--price">{`${job.minSalary} - ${
-                  job.maxSalary
-                } ${job.currency.toUpperCase()}`}</span>
-                <span className="job-pay--interval">{` / ${
-                  intervals[job?.paymentInterval ?? "hourly"]
-                }`}</span>
-              </div>
-            </div>
+            <SaveJob
+              isCandidate={isCandidate}
+              isEmployer={isEmployer}
+              className="job-save--status"
+              jobID={job._id}
+              defaultValue={job.isSaved}
+              isSaved={isSaved}
+              setSavedJobs={setSavedJobs}
+            />
           </li>
         ))}
       </ul>
