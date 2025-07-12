@@ -96,8 +96,8 @@ const EmployerSignup = () => {
       return;
     }
 
-    // Store form data in local storage
-    localStorage.setItem("signupData", JSON.stringify(formData));
+    // Store form data in session storage
+    sessionStorage.setItem("signupData", JSON.stringify(formData));
 
     // Navigate to next step
     navigate("/company/signup");

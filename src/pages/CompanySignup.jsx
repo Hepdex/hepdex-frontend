@@ -1,371 +1,252 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from '../styles/CompanySignup.module.css';
-import { IoChevronDown, IoClose } from 'react-icons/io5';
-import {apiFetcher2, API_URL, countries} from "../utils/helpers"; // Import any helper functions if needed
+import SignupBox from "../components/SignupBox";
+import useMutate from "../hooks/useMutate";
+import Button from "../components/Button";
+import Spinner from "../components/Spinner";
+import styled, { css } from "styled-components";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { removeEmojis, notify } from "../utils/helpers";
+import {
+  Form,
+  FormGroup,
+  Input,
+  SearchSelect,
+  Select,
+} from "../components/Form";
+import { countries } from "../data/countries";
+import { flex, mq } from "../GlobalStyles";
+import { employerSignup } from "../services/apiAuth";
+
+const StyledBasicInfo = styled.div`
+  background-color: var(--color-white-1);
+  border-radius: 8px;
+  padding: 40px 24px;
+
+  ${mq(
+    "400px",
+    css`
+      padding: 40px;
+    `
+  )}
+
+  .box-top {
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    P {
+      color: var(--color-grey-2);
+    }
+  }
+
+  .accept-box {
+    a {
+      color: var(--color-primary);
+    }
+
+    label {
+      ${flex(undefined, "start")}
+      gap: 12px;
+
+      &,
+      input {
+        cursor: pointer;
+      }
+
+      input {
+        margin-top: 3px;
+        min-width: 18px;
+        height: 18px;
+        accent-color: var(--color-primary);
+      }
+    }
+  }
+`;
 
 const CompanySignup = () => {
+  // Navigate hook
   const navigate = useNavigate();
-  
-  const [formData, setFormData] = useState({
-    companyName: '',
-    country: '',
-    companySize: '',
-    acceptTerms: false,
-    receiveMarketing: false
-  });
 
-  const [dropdownOpen, setDropdownOpen] = useState({
-    country: false,
-    companySize: false
-  });
+  // Signup data
+  const [signupData, setSignupData] = useState(undefined);
 
-  const [signupData, setSignupData] = useState(null);
-  const [errorDialog, setErrorDialog] = useState({
-    isOpen: false,
-    message: ''
-  });
+  // Employer sign up api
+  const [signup, loading] = useMutate(employerSignup);
 
   useEffect(() => {
-    // Check for signupData in localStorage
-    const storedSignupData = localStorage.getItem('signupData');
-    
+    // Check for signupData in sessionStorage
+    const storedSignupData = sessionStorage.getItem("signupData");
+
     if (!storedSignupData) {
-      // Redirect to /signup if signupData doesn't exist
-      navigate('/signup');
+      // Redirect to signup page if signupData doesn't exist
+      navigate("/signup");
       return;
     }
 
     try {
+      // Parse signupData
       const parsedSignupData = JSON.parse(storedSignupData);
+
+      // Set signupData
       setSignupData(parsedSignupData);
     } catch (error) {
-      console.error('Error parsing signupData from localStorage:', error);
+      // Error
+      console.error("Error parsing signupData from sessionStorage:", error);
+
       // Redirect if signupData is corrupted
-      navigate('/signup');
+      navigate("/signup");
     }
   }, [navigate]);
 
-
-  const companySizes = [
-    '1-10 employees', '11-50 employees', '51-200 employees', 
-    '201-1000 employees', '1000+ employees'
-  ];
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const toggleDropdown = (field) => {
-    setDropdownOpen(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }));
-  };
-
-  const selectOption = (field, value) => {
-    handleInputChange(field, value);
-    setDropdownOpen(prev => ({
-      ...prev,
-      [field]: false
-    }));
-  };
-
-  const showErrorDialog = (message) => {
-    setErrorDialog({
-      isOpen: true,
-      message: message
-    });
-  };
-
-  const closeErrorDialog = () => {
-    setErrorDialog({
-      isOpen: false,
-      message: ''
-    });
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/signup');
-  };
-
   const handleContinue = async (e) => {
+    // Prevent default submit
     e.preventDefault();
-    
-    // Clean up company size - remove "employees" from the end
-    const cleanedCompanySize = formData.companySize.replace(' employees', '');
-    
+
+    // Get form data
+    let formData = Object.fromEntries(new FormData(e.target));
+
+    // Add extra fields
+    formData = {
+      ...formData,
+      acceptTerms: formData.acceptTerms === "on",
+      country: removeEmojis(formData.country),
+    };
+
+    if (formData.receiveMarketing)
+      formData.receiveMarketing = formData.receiveMarketing === "on";
+
     // Create updated signup data with company information
     const updatedSignupData = {
       ...signupData,
       companyName: formData.companyName,
-      companySize: cleanedCompanySize,
-      country: formData.country
+      companySize: formData.companySize,
+      country: formData.country,
     };
-    
-    // Update localStorage with the new data
-    localStorage.setItem('signupData', JSON.stringify(updatedSignupData));
-    
-    // Prepare data for POST request
-    const requestBody = JSON.stringify(updatedSignupData);
-    
-    try {
-      // Example POST request - replace with your actual endpoint
-      const response = await apiFetcher2(`${API_URL}/employer/signup`, {method: 'POST', body: requestBody, headers: {'Content-Type': 'application/json'}});
-      
-      if (response.statusCode === 400) {
-        showErrorDialog(response.data?.msg || 'Bad request. Please check your input and try again.');
-      }
-      else if (response.statusCode === 500) { 
-        showErrorDialog(response.data?.msg || 'Internal server error. Please try again later.');
-      } 
-      else if (response.statusCode === 200) {
-        localStorage.clear()
-        localStorage.setItem('userID', JSON.stringify(response.data.userID));
-        // Redirect to email confirmation page
-        navigate('/confirm-email');
-      }
-      else {
-        // Handle any other status codes
-        showErrorDialog(response.data?.msg || 'An unexpected error occurred. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      showErrorDialog('Network error. Please check your connection and try again.');
+
+    // Send request
+    const response = await signup(updatedSignupData);
+
+    // Check response
+    if (response?.userID) {
+      // Clear session storage
+      sessionStorage.clear();
+      sessionStorage.setItem("userID", JSON.stringify(response.userID));
+      // Redirect to email confirmation page
+      navigate("/confirm-email");
+    } else {
+      // Error
+      notify(response, "error");
     }
-    
   };
 
   return (
-    <div className={styles.container}>
-      {/* Error Dialog */}
-      {errorDialog.isOpen && (
-        <div className={styles.errorOverlay}>
-          <div className={styles.errorDialog}>
-            <div className={styles.errorHeader}>
-              <h3 className={styles.errorTitle}>Error</h3>
-              <button 
-                className={styles.closeButton}
-                onClick={closeErrorDialog}
-              >
-                <IoClose size={24} />
-              </button>
-            </div>
-            <div className={styles.errorBody}>
-              <p className={styles.errorMessage}>{errorDialog.message}</p>
-            </div>
-            <div className={styles.errorFooter}>
-              <button 
-                className={styles.okButton}
-                onClick={closeErrorDialog}
-              >
-                OK
-              </button>
-            </div>
-          </div>
+    <SignupBox>
+      <SignupBox.Left showPattern={false}>
+        <div>
+          <h2>Create your account in a few steps.</h2>
         </div>
-      )}
-
-      {/* Mobile Top Bar */}
-      <div className={styles.mobileTopBar}>
-        <div className={styles.logo}>
-          <div className={styles.logoIcon}>H</div>
-          <span className={styles.logoText}>HepDex</span>
-        </div>
-        <button className={styles.logoutBtn} onClick={handleLogout}>
-          🔒 Logout
-        </button>
-      </div>
-
-      {/* Left Section - Desktop Only */}
-      <div className={styles.leftSection}>
-        <div className={styles.leftContent}>
-          <div className={styles.logo}>
-            <div className={styles.logoIcon}>H</div>
-            <span className={styles.logoText}>HepDex</span>
-          </div>
-          
-          <h1 className={styles.title}>
-            Create your account in a few clicks
-          </h1>
-          
-          <div className={styles.stepsList}>
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={`${styles.stepNumber} ${styles.completed}`}>
-                  <span>✓</span>
-                </div>
-                <div className={styles.stepLine}></div>
-              </div>
-              <span className={styles.stepText}>Sign up</span>
-            </div>
-            
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={`${styles.stepNumber} ${styles.active}`}>
-                  <span>2</span>
-                </div>
-                <div className={styles.stepLine}></div>
-              </div>
-              <span className={styles.stepText}>Basic information</span>
-            </div>
-            
-            <div className={styles.step}>
-              <div className={styles.stepContainer}>
-                <div className={styles.stepNumber}>
-                  <span>3</span>
-                </div>
-              </div>
-              <span className={styles.stepText}>Confirm email</span>
-            </div>
-          </div>
-          
-          <div className={styles.userInfo}>
-            <span className={styles.email}>
-              {signupData?.email || 'entamarketltd@bello.com'}
-            </span>
-            <button className={styles.logoutBtn} onClick={handleLogout}>
-              🔒 Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Section */}
-      <div className={styles.rightSection}>
-        <div className={styles.formContainer}>
-          <h2 className={styles.formTitle}>Let's get started</h2>
-          
-          <div className={styles.formSection}>
-            <h3 className={styles.sectionTitle}>Basic information</h3>
-            <p className={styles.sectionSubtitle}>
-              We use this for tax, security, and compliance purposes.
+        <SignupBox.Steps step={2} email={signupData?.email} />
+      </SignupBox.Left>
+      <SignupBox.Content title="Get started with HepDex" showTop={false}>
+        <StyledBasicInfo>
+          <div className="box-top">
+            <h3>Basic information</h3>
+            <p>
+              This information is required for tax, security, and compliance
+              reasons.
             </p>
-            
-            <form className={styles.form} onSubmit={handleContinue}>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Legal company name <span className={styles.required}>*</span>
-                </label>
-                <input
-                  type="text"
-                  className={styles.input}
-                  value={formData.companyName}
-                  onChange={(e) => handleInputChange('companyName', e.target.value)}
-                  placeholder="Enter your legal company name"
-                />
-                <p className={styles.helpText}>
-                  Make sure this name matches your company's legal documentation.
-                </p>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Country <span className={styles.required}>*</span>
-                </label>
-                <div className={styles.dropdown}>
-                  <button
-                    type="button"
-                    className={`${styles.dropdownButton} ${dropdownOpen.country ? styles.open : ''}`}
-                    onClick={() => toggleDropdown('country')}
-                  >
-                    <span>{formData.country || 'Select country'}</span>
-                    <IoChevronDown size={20} />
-                  </button>
-                  {dropdownOpen.country && (
-                    <div className={styles.dropdownMenu}>
-                      {countries.map((country) => (
-                        <button
-                          key={country}
-                          type="button"
-                          className={styles.dropdownItem}
-                          onClick={() => selectOption('country', country.name)}
-                        >
-                          {country.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <p className={styles.helpText}>
-                  Where your company is legally based.
-                </p>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Company size <span className={styles.required}>*</span>
-                </label>
-                <div className={styles.dropdown}>
-                  <button
-                    type="button"
-                    className={`${styles.dropdownButton} ${dropdownOpen.companySize ? styles.open : ''}`}
-                    onClick={() => toggleDropdown('companySize')}
-                  >
-                    <span>{formData.companySize || 'Select company size'}</span>
-                    <IoChevronDown size={20} />
-                  </button>
-                  {dropdownOpen.companySize && (
-                    <div className={styles.dropdownMenu}>
-                      {companySizes.map((size) => (
-                        <button
-                          key={size}
-                          type="button"
-                          className={styles.dropdownItem}
-                          onClick={() => selectOption('companySize', size)}
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className={styles.checkboxGroup}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={formData.acceptTerms}
-                    onChange={(e) => handleInputChange('acceptTerms', e.target.checked)}
-                    className={styles.checkbox}
-                  />
-                  <span className={styles.checkboxText}>
-                    I accept the <a href="#" className={styles.link}>Terms of Service</a> and I'm authorized to accept for my company
-                  </span>
-                </label>
-              </div>
-
-              <div className={styles.checkboxGroup}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={formData.receiveMarketing}
-                    onChange={(e) => handleInputChange('receiveMarketing', e.target.checked)}
-                    className={styles.checkbox}
-                  />
-                  <span className={styles.checkboxText}>
-                    I agree to receive marketing updates from HepDex
-                  </span>
-                </label>
-              </div>
-
-              <button
-                type="submit"
-                className={styles.continueButton}
-                disabled={!formData.companyName || !formData.country || !formData.companySize || !formData.acceptTerms}
-              >
-                Continue
-              </button>
-            </form>
           </div>
-        </div>
-      </div>
-    </div>
+          <Form $gap={18} onSubmit={handleContinue}>
+            <FormGroup
+              label={
+                <>
+                  Legal company name <span className="required">*</span>
+                </>
+              }
+              instructions="Make sure this name matches your company's legal documentation."
+            >
+              <Input
+                required
+                placeholder="Legal company name"
+                name="companyName"
+              />
+            </FormGroup>
+            <FormGroup
+              label={
+                <>
+                  Country <span className="required">*</span>
+                </>
+              }
+              instructions="Where your company is legally based."
+            >
+              <SearchSelect
+                items={countries.filter((ct) => ct.name !== "Anywhere")}
+                name="country"
+                placeholder="Select country"
+                defaultItem={{}}
+                searchPlaceholder="Search countries..."
+                required
+              />
+            </FormGroup>
+            <FormGroup
+              label={
+                <>
+                  Company size <span className="required">*</span>
+                </>
+              }
+            >
+              <Select name="companySize" defaultValue="" required>
+                <option value="">Select company size</option>
+                <option value="1-10">1-10 employees</option>
+                <option value="11-50">11-50 employees</option>
+                <option value="51-200">51-200 employees</option>
+                <option value="201-1000">201-1000 employees</option>
+                <option value="1000+">1000+ employees</option>
+              </Select>
+            </FormGroup>
+            <div className="accept-box">
+              <label htmlFor="acceptTerms">
+                <input
+                  type="checkbox"
+                  name="acceptTerms"
+                  id="acceptTerms"
+                  required
+                />
+                <span>
+                  I accept the
+                  <Link to="/terms-and-conditions">Terms of Service</Link> and
+                  I'm authorized to accept for my company
+                </span>
+              </label>
+            </div>
+            <div className="accept-box">
+              <label htmlFor="receiveMarketing">
+                <input
+                  type="checkbox"
+                  name="receiveMarketing"
+                  id="receiveMarketing"
+                />
+                <span>I agree to receive marketing updates from HepDex</span>
+              </label>
+            </div>
+            <div className="submit-box">
+              <Button
+                style={{ width: "100%" }}
+                $loading={loading}
+                disabled={loading}
+              >
+                <span>Continue</span>
+                {loading && <Spinner />}
+              </Button>
+            </div>
+          </Form>
+        </StyledBasicInfo>
+      </SignupBox.Content>
+    </SignupBox>
   );
 };
 
