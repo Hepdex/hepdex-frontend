@@ -342,6 +342,10 @@ img{
   transition:  transform .5s ease-in, opacity .5s ease-in;
 }
 
+[data-aos="custom-fade-up"]{
+
+}
+
 .custom-fade-up.sm{
   transform: translateY(20%);
 }

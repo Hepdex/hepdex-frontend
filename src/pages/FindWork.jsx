@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import useSearchJobs from "../hooks/useSearchJobs";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import styled from "styled-components";
+import { useEffect, useRef } from "react";
 
 const StyledFindWork = styled.div`
   .job-search {
@@ -24,8 +25,20 @@ export default function FindWork() {
   // Document title
   useDocumentTitle("Find work");
 
+  // Current page ref
+  const pageRef = useRef(undefined);
+
+  // Fix animation bug
+  useEffect(() => {
+    setTimeout(() => {
+      if (pageRef.current) {
+        pageRef.current.style.transform = "none";
+      }
+    }, 1000);
+  }, []);
+
   return (
-    <StyledFindWork className="custom-fade-up sm" data-aos>
+    <StyledFindWork className="custom-fade-up sm" data-aos ref={pageRef}>
       <PageContent>
         <Section
           title="Browse open jobs"

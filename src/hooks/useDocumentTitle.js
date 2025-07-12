@@ -2,6 +2,10 @@ import { useEffect } from "react";
 
 export default function useDocumentTitle(title) {
   useEffect(() => {
-    document.title = `HepDex -  ${title}`;
+    if (title) {
+      document.title = `HepDex -  ${title}`;
+    } else {
+      document.title = "HepDex";
+    }
   }, [title]);
 }

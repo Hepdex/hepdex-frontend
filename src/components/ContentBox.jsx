@@ -7,11 +7,11 @@ const StyledContentBox = styled.div`
   border: 1px solid var(--color-grey-3);
 
   h2 {
-    margin: 30px 0 20px;
+    margin: 30px 0 12px;
   }
 
   h3 {
-    margin: 8px 0 12px;
+    margin: 8px 0 8px;
   }
 
   p {

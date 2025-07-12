@@ -188,7 +188,11 @@ export default function JobSearch() {
   }
 
   useEffect(() => {
+    // Set param
     setJobTitle(jobTitleParam);
+
+    // Scroll to top
+    window.scrollTo({ top: 0 });
   }, [jobTitleParam, setJobTitle]);
 
   return (

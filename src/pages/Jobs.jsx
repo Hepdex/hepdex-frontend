@@ -2,6 +2,8 @@ import useQuery from "../hooks/useQuery";
 import DashboardTitle from "../components/DashboardTitle";
 import Button from "../components/Button";
 import JobsTable from "../ui/jobs/JobsTable";
+import ProtectedRoute from "../components/ProtectedRoute";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import styled, { css } from "styled-components";
 import { BsBox, BsCheckCircle } from "react-icons/bs";
 import { Link, useSearchParams } from "react-router-dom";
@@ -69,96 +71,111 @@ const JobsBox = styled.div`
 const JobsContext = createContext(undefined);
 
 export default function Jobs() {
+  // Document title
+  useDocumentTitle("Jobs");
+
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
-  // Fetch jobs
+
+  // Fetch jobs api
   const [jobs, loading, setJobs] = useQuery(fetchJobs);
+
   // Selected tab
   const status = searchParams.get("active") ?? "";
+
   // Set params
   const handleSetParams = (field, value) => {
+    // New params
     const params = new URLSearchParams(searchParams);
+
+    // Set param
     params.set(field, value);
+
     // Delete page
+
     params.delete("page");
     // Delete param if value is empty
     if (value === "") params.delete(field);
+
+    // Update params state
     setSearchParams(params);
   };
 
   return (
-    <JobsBox>
-      <DashboardTitle
-        title="Jobs"
-        subtitle="Recruit top talent, wherever they are"
-        links={[{ name: "Jobs" }]}
-      />
-      <div className="jobs">
-        <div className="top-bar">
-          <ul className="status-bar">
-            <li className="status-bar__item">
-              <Button
-                color="secondary"
-                size="sm"
-                className={`status-bar__btn alternate ${
-                  status === "" ? "active" : ""
-                }`}
-                onClick={() => handleSetParams("active", "")}
-              >
-                All jobs {loading ? "" : `(${jobs?.jobs.length ?? 0})`}
-              </Button>
-            </li>
-            <li className="status-bar__item">
-              <div className="status-bar__separator" />
-            </li>
-            <li className="status-bar__item">
-              <Button
-                size="sm"
-                color="secondary"
-                className={`status-bar__btn alternate ${
-                  status === "true" ? "active" : ""
-                }`}
-                onClick={() => handleSetParams("active", "true")}
-              >
-                <BsCheckCircle size={16} />
-                Open
-                {loading
-                  ? ""
-                  : ` (${
-                      jobs?.jobs.filter((item) => item.active).length ?? 0
-                    })`}
-              </Button>
-            </li>
-            <li className="status-bar__item">
-              <Button
-                size="sm"
-                color="secondary"
-                className={`status-bar__btn alternate ${
-                  status === "false" ? "active" : ""
-                }`}
-                onClick={() => handleSetParams("active", "false")}
-              >
-                <BsBox size={16} />
-                Closed
-                {loading
-                  ? ""
-                  : ` (${
-                      jobs?.jobs.filter((item) => !item.active).length ?? 0
-                    })`}
-              </Button>
-            </li>
-            <li className="status-bar__item" id="add-job">
-              <Button size="sm" as={Link} to="/post-a-job">
-                Add Job
-              </Button>
-            </li>
-          </ul>
+    <ProtectedRoute allowedRoles={["employer"]}>
+      <JobsBox>
+        <DashboardTitle
+          title="Jobs"
+          subtitle="Recruit top talent, wherever they are"
+          links={[{ name: "Jobs" }]}
+        />
+        <div className="jobs">
+          <div className="top-bar">
+            <ul className="status-bar">
+              <li className="status-bar__item">
+                <Button
+                  color="secondary"
+                  size="sm"
+                  className={`status-bar__btn alternate ${
+                    status === "" ? "active" : ""
+                  }`}
+                  onClick={() => handleSetParams("active", "")}
+                >
+                  All jobs {loading ? "" : `(${jobs?.jobs.length ?? 0})`}
+                </Button>
+              </li>
+              <li className="status-bar__item">
+                <div className="status-bar__separator" />
+              </li>
+              <li className="status-bar__item">
+                <Button
+                  size="sm"
+                  color="secondary"
+                  className={`status-bar__btn alternate ${
+                    status === "true" ? "active" : ""
+                  }`}
+                  onClick={() => handleSetParams("active", "true")}
+                >
+                  <BsCheckCircle size={16} />
+                  Open
+                  {loading
+                    ? ""
+                    : ` (${
+                        jobs?.jobs.filter((item) => item.active).length ?? 0
+                      })`}
+                </Button>
+              </li>
+              <li className="status-bar__item">
+                <Button
+                  size="sm"
+                  color="secondary"
+                  className={`status-bar__btn alternate ${
+                    status === "false" ? "active" : ""
+                  }`}
+                  onClick={() => handleSetParams("active", "false")}
+                >
+                  <BsBox size={16} />
+                  Closed
+                  {loading
+                    ? ""
+                    : ` (${
+                        jobs?.jobs.filter((item) => !item.active).length ?? 0
+                      })`}
+                </Button>
+              </li>
+              <li className="status-bar__item" id="add-job">
+                <Button size="sm" as={Link} to="/post-a-job">
+                  Add Job
+                </Button>
+              </li>
+            </ul>
+          </div>
+          <JobsContext.Provider value={{ jobs: jobs?.jobs, setJobs, loading }}>
+            <JobsTable />
+          </JobsContext.Provider>
         </div>
-        <JobsContext.Provider value={{ jobs: jobs?.jobs, setJobs, loading }}>
-          <JobsTable />
-        </JobsContext.Provider>
-      </div>
-    </JobsBox>
+      </JobsBox>
+    </ProtectedRoute>
   );
 }
 

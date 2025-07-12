@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Button from "../../components/Button";
+import Dropdown from "../../components/Dropdown";
 import { useState } from "react";
 import {
-  BsCheck,
   BsCheck2,
   BsChevronDown,
   BsEnvelope,
@@ -11,7 +11,7 @@ import {
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
-import Dropdown from "../../components/Dropdown";
+import { mq } from "../../GlobalStyles";
 
 const StyledShareJob = styled.div`
   position: relative;
@@ -20,7 +20,7 @@ const StyledShareJob = styled.div`
     &--dropdown {
       position: absolute;
       top: calc(100% + 1px);
-      right: 0;
+      left: 0;
       background-color: var(--color-white-1);
       z-index: 10;
       box-shadow: 0 7px 24px 0 #64646f33;
@@ -30,6 +30,14 @@ const StyledShareJob = styled.div`
       flex-direction: column;
       display: flex;
       justify-content: center;
+
+      ${mq(
+        "md",
+        css`
+          left: unset;
+          right: 0;
+        `
+      )}
 
       li {
         padding: 3px 0;
@@ -104,7 +112,7 @@ export default function ShareJob({
   const shareLinks = [
     {
       label: "Refer a friend",
-      url: `mailto:?subject=${encodedTitle}&body=Hey there, I saw this job on Hepdex.com/jobs and thought you might be interested: ${encodedURL}`,
+      url: `mailto:?subject=${encodedTitle}&body=Hey there, I saw this job on hepdex.com/find-work and thought you might be interested: ${encodedURL}`,
       icon: <BsEnvelope size={16} />,
     },
     {

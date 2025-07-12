@@ -22,7 +22,12 @@ import {
   Time,
 } from "../components/Form";
 import { useNavigate, useParams } from "react-router-dom";
-import { getTimezones, notify } from "../utils/helpers";
+import {
+  getCurrentTimeZone,
+  getTimezones,
+  notify,
+  removeEmojis,
+} from "../utils/helpers";
 import { currencyFlagList } from "../data/currencies";
 import { getDepartments } from "../services/apiDepartments";
 
@@ -96,15 +101,19 @@ function EditJobForm({ job, departments }) {
       country: countries.find((item) => item.code === location).name,
 
       // Remove emoji from currency
-      currency: data.currency.split(" ")[1],
+      currency: removeEmojis(data.currency),
 
       // Add job ID
       jobID: job._id,
     };
 
+    // Check if max pay is less than or equal to min pay
+    if (data.minSalary >= data.maxSalary) {
+      notify("Invalid payout details", "error");
+      return;
+    }
     // Check if timeZone is empty
-    if (!data.timeZone)
-      data.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (!data.timeZone) data.timeZone = getCurrentTimeZone();
 
     // Send request
     const response = await editJob(data);

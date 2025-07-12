@@ -80,7 +80,6 @@ const StyledStep = styled.li`
           css`
             font-size: 24px;
             line-height: 32px;
-            margin-bottom: 8px;
           `
         )}
       }

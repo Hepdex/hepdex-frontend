@@ -4,6 +4,9 @@ import Button from "../components/Button";
 import Container from "../components/Container";
 import PageContent from "../components/PageContent";
 import Section from "../components/Section";
+import useMutate from "../hooks/useMutate";
+import Spinner from "../components/Spinner";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { Link } from "react-router-dom";
 import { flex, mq } from "../GlobalStyles";
 import {
@@ -14,11 +17,8 @@ import {
   Select,
   Textarea,
 } from "../components/Form";
-import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useRef } from "react";
-import useMutate from "../hooks/useMutate";
 import { sendMessage } from "../services/apiContact";
-import Spinner from "../components/Spinner";
 import { notify } from "../utils/helpers";
 
 const StyledContact = styled.div`
@@ -189,7 +189,7 @@ export default function Contact() {
               Visit FAQs
             </Button>
           </div>
-          <div className="custom-fade-up sm" ref={formBoxRef} data-aos>
+          <div ref={formBoxRef}>
             <h2 className="contact-title">Get in Touch</h2>
             <Form
               $gap={18}

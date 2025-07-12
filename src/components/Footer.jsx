@@ -115,7 +115,7 @@ export default function Footer() {
       navigate(`/dashboard/browse-talent?jobTitle=${jobTitle}`);
     } else {
       // Navigate to login
-      navigate("/login");
+      navigate("/hire-expert");
     }
   };
 

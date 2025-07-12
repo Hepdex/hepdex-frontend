@@ -6,15 +6,19 @@ import JobList from "../components/JobList";
 import JobSearch from "../components/JobSearch";
 import ContentLoader from "../components/ContentLoader";
 import useSearchJobs from "../hooks/useSearchJobs";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function FindJobs() {
   // Search jobs hook
   const { jobs, page, pagination, loading, searchParams, setSearchParams } =
     useSearchJobs();
 
-  console.log(jobs);
+  // Document title
+  useDocumentTitle("Find jobs");
+
   return (
-    <>
+    <ProtectedRoute allowedRoles={["candidate"]}>
       <DashboardTitle
         title="Find jobs"
         subtitle="Discover your next big opportunity"
@@ -49,6 +53,6 @@ export default function FindJobs() {
           )}
         </>
       )}
-    </>
+    </ProtectedRoute>
   );
 }

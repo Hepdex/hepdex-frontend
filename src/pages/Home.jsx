@@ -1,4 +1,4 @@
-import Faqs from "../ui/home/Faqs";
+import FaqList from "../ui/home/FaqList";
 import Hero from "../ui/home/Hero";
 import HowItWorks from "../ui/home/HowItWorks";
 import Portfolio from "../ui/home/Portfolio";
@@ -10,6 +10,7 @@ import Talent from "../ui/home/Talent";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function Home() {
+  // Document title
   useDocumentTitle("The #1 Global platform for remote workers.");
 
   return (
@@ -22,7 +23,7 @@ export default function Home() {
       <Reviews />
       <HowItWorks />
       <WhyHepDex />
-      <Faqs />
+      <FaqList />
     </>
   );
 }

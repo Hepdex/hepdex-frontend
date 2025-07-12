@@ -31,7 +31,7 @@ export default function Talent() {
             to={`${
               user?.role === "employer" && isLoggedIn
                 ? "/dashboard/browse-talent"
-                : "/login"
+                : "/hire-expert"
             }`}
           >
             Find Talent

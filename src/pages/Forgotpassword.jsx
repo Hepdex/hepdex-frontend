@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   // Document title
-  useDocumentTitle("Forgot Password");
+  useDocumentTitle("Forgot password");
 
   // Navigate hook
   const navigate = useNavigate();
@@ -107,12 +107,12 @@ const ForgotPassword = () => {
       title={`${isVerify ? "Verify OTP" : "Forgot password"}`}
       subtitle={`${
         isVerify
-          ? "Enter the code sent to your email"
+          ? "Your code was sent to you via email"
           : "Forgot password? reset your password"
       }`}
     >
       {isVerify ? (
-        <Form $gap={18} onSubmit={handleVerifyOTP}>
+        <Form $gap={12} onSubmit={handleVerifyOTP}>
           <OTPInput onChange={(value) => setOTP(value)} />
           <ResendOTP onResend={handleResendOTP} />
           <div className="submit-box">

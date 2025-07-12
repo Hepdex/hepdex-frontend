@@ -5,10 +5,11 @@ import useQuery from "../hooks/useQuery";
 import ApplicationsBox from "../ui/jobDetails/ApplicationsBox";
 import ContentLoader from "../components/ContentLoader";
 import JobInfo from "../components/JobInfo";
+import Button from "../components/Button";
+import ProtectedRoute from "../components/ProtectedRoute";
 import { flex } from "../GlobalStyles";
 import { getJob } from "../services/apiJobs";
 import { Link, useParams } from "react-router-dom";
-import Button from "../components/Button";
 
 const JobDetailsBox = styled.div`
   // Page card
@@ -32,41 +33,46 @@ const JobDetailsBox = styled.div`
   }
 `;
 
-export default function JobDetails() {
+export default function Job() {
+  // Get job ID
   const { jobID } = useParams();
+
   // Fetch job
   const [data, loading] = useQuery(getJob, `?jobID=${jobID}`);
+
   // Job
   const job = data?.job;
   return (
-    <JobDetailsBox>
-      <DashboardTitle
-        title="Job details"
-        subtitle="Job description and applications"
-        links={[
-          { name: "Jobs", url: "/dashboard/jobs" },
-          { name: "Job details" },
-        ]}
-      />
-      {loading ? (
-        <ContentLoader />
-      ) : (
-        <>
-          {job && (
-            <Container.Row>
-              <JobInfo
-                job={job}
-                editBtn={
-                  <Button size="sm" as={Link} to={`/edit-job/${job._id}`}>
-                    Edit job
-                  </Button>
-                }
-              />
-              <ApplicationsBox job={job} />
-            </Container.Row>
-          )}
-        </>
-      )}
-    </JobDetailsBox>
+    <ProtectedRoute allowedRoles={["employer"]}>
+      <JobDetailsBox>
+        <DashboardTitle
+          title="Job details"
+          subtitle="Job description and applications"
+          links={[
+            { name: "Jobs", url: "/dashboard/jobs" },
+            { name: "Job details" },
+          ]}
+        />
+        {loading ? (
+          <ContentLoader />
+        ) : (
+          <>
+            {job && (
+              <Container.Row>
+                <JobInfo
+                  job={job}
+                  editBtn={
+                    <Button size="sm" as={Link} to={`/edit-job/${job._id}`}>
+                      Edit job
+                    </Button>
+                  }
+                />
+                <ApplicationsBox job={job} />
+              </Container.Row>
+            )}
+          </>
+        )}
+      </JobDetailsBox>
+    </ProtectedRoute>
   );
 }

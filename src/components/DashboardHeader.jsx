@@ -271,7 +271,7 @@ export default function DashboardHeader() {
       <div className="right">
         <ul className="right-nav">
           <li>
-            <Link to="/dashboard/notifications" className="nav-btn">
+            <Link className="nav-btn">
               <BsBell size={20} />
             </Link>
           </li>

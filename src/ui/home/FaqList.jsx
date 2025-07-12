@@ -4,8 +4,8 @@ import Section from "../../components/Section";
 import Faq from "../../components/Faq";
 import { faqs } from "../../data/faqs";
 
-// Faqs container
-const StyledFaqs = styled.div`
+// Faq list container
+const StyledFaqList = styled.div`
   background-color: var(--color-grey-1);
 
   section ul {
@@ -13,9 +13,9 @@ const StyledFaqs = styled.div`
   }
 `;
 
-export default function Faqs() {
+export default function FaqList() {
   return (
-    <StyledFaqs>
+    <StyledFaqList>
       <Section
         title="Frequently asked questions"
         spaceBottom={true}
@@ -27,6 +27,6 @@ export default function Faqs() {
           ))}
         </Container.Row>
       </Section>
-    </StyledFaqs>
+    </StyledFaqList>
   );
 }

@@ -2,7 +2,6 @@ import SignupBox from "../components/SignupBox";
 import useMutate from "../hooks/useMutate";
 import Button from "../components/Button";
 import Spinner from "../components/Spinner";
-import styled, { css } from "styled-components";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { removeEmojis, notify } from "../utils/helpers";
@@ -14,58 +13,7 @@ import {
   Select,
 } from "../components/Form";
 import { countries } from "../data/countries";
-import { flex, mq } from "../GlobalStyles";
 import { employerSignup } from "../services/apiAuth";
-
-const StyledBasicInfo = styled.div`
-  background-color: var(--color-white-1);
-  border-radius: 8px;
-  padding: 40px 24px;
-
-  ${mq(
-    "400px",
-    css`
-      padding: 40px;
-    `
-  )}
-
-  .box-top {
-    margin-bottom: 20px;
-
-    h3 {
-      font-size: 20px;
-      line-height: 24px;
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-    P {
-      color: var(--color-grey-2);
-    }
-  }
-
-  .accept-box {
-    a {
-      color: var(--color-primary);
-    }
-
-    label {
-      ${flex(undefined, "start")}
-      gap: 12px;
-
-      &,
-      input {
-        cursor: pointer;
-      }
-
-      input {
-        margin-top: 3px;
-        min-width: 18px;
-        height: 18px;
-        accent-color: var(--color-primary);
-      }
-    }
-  }
-`;
 
 const CompanySignup = () => {
   // Navigate hook
@@ -132,9 +80,17 @@ const CompanySignup = () => {
 
     // Check response
     if (response?.userID) {
-      // Clear session storage
-      sessionStorage.clear();
-      sessionStorage.setItem("userID", JSON.stringify(response.userID));
+      // Set session storage
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({
+          userID: response.userID,
+          email: updatedSignupData.email,
+        })
+      );
+
+      // Clear signup data
+      sessionStorage.removeItem("signupData");
       // Redirect to email confirmation page
       navigate("/confirm-email");
     } else {
@@ -152,7 +108,7 @@ const CompanySignup = () => {
         <SignupBox.Steps step={2} email={signupData?.email} />
       </SignupBox.Left>
       <SignupBox.Content title="Get started with HepDex" showTop={false}>
-        <StyledBasicInfo>
+        <div className="basic-info">
           <div className="box-top">
             <h3>Basic information</h3>
             <p>
@@ -218,8 +174,10 @@ const CompanySignup = () => {
                 />
                 <span>
                   I accept the
-                  <Link to="/terms-and-conditions">Terms of Service</Link> and
-                  I'm authorized to accept for my company
+                  <Link to="/terms-and-conditions" target="_blank">
+                    Terms of Service
+                  </Link>
+                  and I'm authorized to accept for my company
                 </span>
               </label>
             </div>
@@ -244,7 +202,7 @@ const CompanySignup = () => {
               </Button>
             </div>
           </Form>
-        </StyledBasicInfo>
+        </div>
       </SignupBox.Content>
     </SignupBox>
   );

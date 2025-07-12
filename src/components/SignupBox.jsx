@@ -177,7 +177,7 @@ const StyledContent = styled.div`
   }
 
   .bottom {
-    min-height: 100vh;
+    min-height: calc(100vh - 84px);
 
     ${(props) =>
       props.$showTop
@@ -198,6 +198,7 @@ const StyledContent = styled.div`
     ${mq(
       "md",
       css`
+        min-height: 100vh;
         padding: 128px 32px 48px 32px;
       `
     )}
@@ -220,6 +221,56 @@ const StyledContent = styled.div`
         .subtitle {
           color: var(--color-grey-2);
           margin-top: 16px;
+        }
+      }
+
+      .basic-info {
+        background-color: var(--color-white-1);
+        border-radius: 8px;
+        padding: 40px 24px;
+
+        ${mq(
+          "400px",
+          css`
+            padding: 40px;
+          `
+        )}
+
+        .box-top {
+          margin-bottom: 20px;
+
+          h3 {
+            font-size: 20px;
+            line-height: 24px;
+            font-weight: 500;
+            margin-bottom: 2px;
+          }
+          P {
+            color: var(--color-grey-2);
+          }
+        }
+
+        .accept-box {
+          a {
+            color: var(--color-primary);
+          }
+
+          label {
+            ${flex(undefined, "start")}
+            gap: 12px;
+
+            &,
+            input {
+              cursor: pointer;
+            }
+
+            input {
+              margin-top: 3px;
+              min-width: 18px;
+              height: 18px;
+              accent-color: var(--color-primary);
+            }
+          }
         }
       }
     }
@@ -394,7 +445,7 @@ function Steps({ step = 1, email = "" }) {
     sessionStorage.clear();
 
     // Redirect to signup page
-    navigate("/signup");
+    navigate("/login", { replace: true });
   };
 
   return (

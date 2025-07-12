@@ -1,48 +1,19 @@
 import AOS from "aos";
 import "aos/dist/aos.css";
-import ScrollToTop from "./components/ScrollToTop";
 import GlobalStyles from "./GlobalStyles";
-import MainLayout from "./layouts/MainLayout";
-import Home from "./pages/Home";
-import Requirements from "./pages/Requirements";
-import DashboardLayout from "./layouts/DashboardLayout";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Dashboard from "./pages/Dashboard";
-import Settings from "./pages/Settings";
-import AddJob from "./pages/AddJob";
-import Jobs from "./pages/Jobs";
-import Signin from "./pages/Signin";
-import ForgotPassword from "./pages/Forgotpassword";
-import AltLayout from "./layouts/AltLayout";
-import EditJob from "./pages/EditJob";
-import EditCompany from "./pages/EditCompany";
-import Company from "./pages/Company";
-import JobDetails from "./pages/JobDetails";
-import Sourcing from "./pages/Sourcing";
-import FindJobs from "./pages/FindJobs";
-import UploadResume from "./pages/UploadResume";
-import JobApplication from "./pages/JobApplication";
-import Services from "./pages/Services";
-import FindWork from "./pages/FindWork";
-import Signup from "./pages/Signup";
-import CompanySignup from "./pages/CompanySignup";
-import EmployerSignup from "./pages/EmployerSignup";
-import CandidateSignup from "./pages/CandidateSignup";
-import AddBio from "./pages/AddBio";
-import ConfirmEmail from "./pages/ConfirmEmail";
-import CandidateBio from "./pages/CandidateBio";
-import EditCandidate from "./pages/EditCandidate";
-import Candidate from "./pages/Candidate";
-import Contact from "./pages/Contact";
-import SavedJobs from "./pages/SavedJobs";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsConditions from "./pages/TermsConditions";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { fetchUser } from "./services/apiUser";
-import { useUserContext } from "./context/UserContext";
-import { ToastContainer } from "react-toastify";
+import AltRoutes from "./routes/AltRoutes";
+import AuthRoutes from "./routes/AuthRoutes";
+import DashboardRoutes from "./routes/DashboardRoutes";
+import MainRoutes from "./routes/MainRoutes";
+import Preloader from "./components/Preloader";
+import ScrollToTop from "./components/ScrollToTop";
+import NotFound from "./pages/NotFound";
 import { polyfillCountryFlagEmojis } from "country-flag-emoji-polyfill";
+import { useEffect, useState } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { useUserContext } from "./context/UserContext";
+import { fetchUser } from "./services/apiUser";
 
 // Set emojis
 polyfillCountryFlagEmojis();
@@ -76,17 +47,21 @@ export default function App() {
         const response = await fetchUser();
         // Set user state
         if (response?.user) {
+          // Set user
           setUser(response.user);
+          // Set logged in state
           setIsLoggedIn(true);
         }
       } catch (err) {
+        // Error
         console.log(err.message);
       } finally {
+        // Set loading state
         setLoading(false);
       }
     })();
   }, [setIsLoggedIn, setUser]);
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Preloader />;
   return (
     <div>
       <GlobalStyles />
@@ -94,51 +69,11 @@ export default function App() {
       <ToastContainer />
       <Routes>
         <Route index element={<Navigate replace to="home" />} />
-        <Route element={<MainLayout />}>
-          <Route path="home" element={<Home />} />
-          <Route path="share-requirement" element={<Requirements />} />
-          <Route path="services" element={<Services />} />
-          <Route path="contact-us" element={<Contact />} />
-          <Route path="find-work" element={<FindWork />} />
-          <Route path="privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="terms-and-conditions" element={<TermsConditions />} />
-        </Route>
-        <Route
-          element={
-            <ProtectedRoute>
-              <DashboardLayout />
-            </ProtectedRoute>
-          }
-          path="dashboard"
-        >
-          <Route index element={<Navigate replace to="home" />} />
-          <Route path="jobs" element={<Jobs />} />
-          <Route path="jobs/:jobID" element={<JobDetails />} />
-          <Route path="home" element={<Dashboard />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="company-bio" element={<Company />} />
-          <Route path="browse-talent" element={<Sourcing />} />
-          <Route path="browse-talent/:id" element={<Candidate />} />
-          <Route path="find-jobs" element={<FindJobs />} />
-          <Route path="candidate-bio" element={<CandidateBio />} />
-          <Route path="saved-jobs" element={<SavedJobs />} />
-        </Route>
-        <Route element={<AltLayout />}>
-          <Route element={<AddJob />} path="post-a-job" />
-          <Route element={<EditJob />} path="edit-job/:jobID" />
-          <Route element={<EditCompany />} path="edit-company" />
-          <Route element={<UploadResume />} path="upload-resume" />
-          <Route element={<EditCandidate />} path="edit-profile" />
-          <Route path="jobs/:jobID" element={<JobApplication />} />
-        </Route>
-        <Route path="login" element={<Signin />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="employer/signup" element={<EmployerSignup />} />
-        <Route path="candidate/signup" element={<CandidateSignup />} />
-        <Route path="company/signup" element={<CompanySignup />} />
-        <Route path="add-bio" element={<AddBio />} />
-        <Route path="confirm-email" element={<ConfirmEmail />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
+        {MainRoutes()}
+        {DashboardRoutes()}
+        {AltRoutes()}
+        {AuthRoutes()}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

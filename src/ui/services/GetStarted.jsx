@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from "../../components/Button";
 import Section from "../../components/Section";
-import { useUserContext } from "../../context/UserContext";
+import AddJobBtn from "../../components/AddJobBtn";
 import { Link } from "react-router-dom";
 import { flex } from "../../GlobalStyles";
 
@@ -26,9 +26,6 @@ const StyledGetStarted = styled.div`
 `;
 
 export default function GetStarted() {
-  // User context
-  const { user, isLoggedIn } = useUserContext();
-
   return (
     <StyledGetStarted>
       <Section
@@ -38,15 +35,7 @@ export default function GetStarted() {
         className="get-started"
       >
         <div className="get-started--cta custom-fade-up" data-aos>
-          <Button
-            size="lg"
-            as={Link}
-            to={`${
-              user?.role === "employer" && isLoggedIn ? "/post-a-job" : "/login"
-            }`}
-          >
-            Post a Job
-          </Button>
+          <AddJobBtn />
           <Button color="outline" size="lg" as={Link} to={"/find-work"}>
             Find Work
           </Button>
