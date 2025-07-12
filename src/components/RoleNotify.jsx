@@ -7,7 +7,7 @@ import { logout as logoutApi } from "../services/apiAuth";
 import { useNavigate } from "react-router-dom";
 import { notify } from "../utils/helpers";
 
-export default function RoleNotify() {
+export default function RoleNotify({ customEmployerTxt = "" }) {
   // User context
   const { user, setUser, setIsLoggedIn } = useUserContext();
 
@@ -71,7 +71,11 @@ export default function RoleNotify() {
         <p className="modal-box--text">
           {user?.role === "employer"
             ? "Only candidates can apply for jobs. Please log out and sign in with a candidate profile to apply for jobs."
-            : "Only employers can post jobs. Please log out and sign in as an employer to post jobs."}
+            : `Only employers can ${
+                customEmployerTxt ? customEmployerTxt : "post jobs"
+              }. Please log out and sign in as an employer to ${
+                customEmployerTxt ? customEmployerTxt : "post jobs"
+              }.`}
         </p>
       </div>
     </Modal.Window>

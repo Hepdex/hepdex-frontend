@@ -9,6 +9,7 @@ import TermsConditions from "../pages/TermsConditions";
 import Faqs from "../pages/Faqs";
 import About from "../pages/About";
 import { Route } from "react-router-dom";
+import HireExperts from "../pages/HireExperts";
 
 export default function MainRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function MainRoutes() {
       <Route path="privacy-policy" element={<PrivacyPolicy />} />
       <Route path="terms-and-conditions" element={<TermsConditions />} />
       <Route path="about-us" element={<About />} />
+      <Route path="hire-expert" element={<HireExperts />} />
     </Route>
   );
 }

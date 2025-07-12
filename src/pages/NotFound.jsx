@@ -2,6 +2,6 @@ import useDocumentTitle from "../hooks/useDocumentTitle";
 
 export default function NotFound() {
   // Document title
-  useDocumentTitle("Not found");
+  useDocumentTitle("404");
   return <div>Not found</div>;
 }
