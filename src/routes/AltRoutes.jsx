@@ -15,7 +15,7 @@ export default function AltRoutes() {
       <Route element={<EditCompany />} path="edit-company" />
       <Route element={<UploadResume />} path="upload-resume" />
       <Route element={<EditCandidate />} path="edit-profile" />
-      <Route path="jobs/:slug" element={<JobApplication />} />
+      <Route path="jobs/:company/:slug" element={<JobApplication />} />
     </Route>
   );
 }

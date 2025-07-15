@@ -10,6 +10,11 @@ const StyledNoJobs = styled.div`
   flex-wrap: wrap;
   gap: 48px;
 
+  &.alternate {
+    background-color: var(--color-white-1);
+    border-radius: 8px;
+  }
+
   .no-jobs {
     &--details {
       text-align: center;
@@ -28,7 +33,7 @@ const StyledNoJobs = styled.div`
   }
 `;
 
-export default function NoJobs({ isSaved = false }) {
+export default function NoJobs({ isSaved = false, alternate = false }) {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -51,7 +56,7 @@ export default function NoJobs({ isSaved = false }) {
   };
 
   return (
-    <StyledNoJobs className="no-jobs">
+    <StyledNoJobs className={`no-jobs ${alternate ? "alternate" : ""}`}>
       <div className="no-jobs--details">
         <h3 className="heading-sm">
           {isSaved ? "No saved jobs available" : "No jobs matching that search"}

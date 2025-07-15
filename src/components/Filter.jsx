@@ -53,7 +53,7 @@ const FilterBox = styled.div`
         font-weight: 500;
         color: var(--color-black-1);
         background-color: var(--color-secondary);
-        border-radius: 4px;
+        border-radius: 8px;
         height: 40px;
         border: 1px solid var(--color-primary);
         padding: 0 16px;

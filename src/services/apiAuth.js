@@ -35,6 +35,8 @@ export const login = apiFetcher(
   (data) => {
     if (data.statusCode === 401) {
       return data.data;
+    } else {
+      throw new Error(data.data.msg);
     }
   }
 );

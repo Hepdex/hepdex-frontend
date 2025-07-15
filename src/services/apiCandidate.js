@@ -12,3 +12,10 @@ export const updateCandidateBio = apiFetcher(
   "PUT",
   "statusCode"
 );
+
+// Update applicant stage
+export const updateHiredStatus = apiFetcher(
+  "update-applicant-hired-status",
+  "PUT",
+  "statusCode"
+);

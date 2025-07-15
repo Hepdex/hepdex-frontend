@@ -1,25 +1,22 @@
-import CloseJobModal from "./CloseJobModal";
-import DeleteJobModal from "./DeleteJobModal";
 import Dropdown from "../../components/Dropdown";
 import styled from "styled-components";
 import Modal from "../../components/Modal";
 import useMutate from "../../hooks/useMutate";
 import useSetPageParam from "../../hooks/useSetPageParam";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
   BsCheckCircle,
+  BsEnvelope,
   BsListUl,
-  BsPencil,
+  BsPlusCircle,
   BsThreeDots,
-  BsTrash,
   BsXCircle,
 } from "react-icons/bs";
-import { Link } from "react-router-dom";
 import { flex } from "../../GlobalStyles";
-import { updateJobStatus } from "../../services/apiJobs";
 import { notify } from "../../utils/helpers";
-import { useJobsContext } from "../../pages/Jobs";
+import { updateHiredStatus } from "../../services/apiCandidate";
+import { useApplicationsContext } from "./ApplicationsBox";
 
 const List = styled.ul`
   position: fixed;
@@ -54,17 +51,16 @@ const List = styled.ul`
   }
 `;
 
-export default function Actions({
-  jobID,
-  open,
-  setOpen,
+export default function ApplicantActions({
   index,
   active,
   currentDataLength,
-  slug,
+  application,
+  open,
+  setOpen,
 }) {
-  // Jobs context
-  const { setJobs } = useJobsContext();
+  // Applications context
+  const { setApplicantsData, setCandidate } = useApplicationsContext();
 
   // Set page param
   const setPageParam = useSetPageParam(currentDataLength);
@@ -75,8 +71,8 @@ export default function Actions({
   // Menu ref
   const menuRef = useRef(null);
 
-  // Open job
-  const [openJob] = useMutate(updateJobStatus);
+  // Update hired status api
+  const [update] = useMutate(updateHiredStatus);
 
   // Close
   const close = () => setOpen(undefined);
@@ -104,44 +100,6 @@ export default function Actions({
     }
   };
 
-  // Handle open job
-  const handleOpenJob = async () => {
-    // Close menu
-    close();
-
-    // Send request
-    const response = await openJob({ jobID, active: true });
-
-    // Check response
-    if (response === 200) {
-      // Update jobs state
-      setJobs((data) => {
-        const jobs = data.jobs;
-
-        // Updated job
-        const updatedJob = jobs.find((job) => job._id === jobID);
-
-        // Check if job exists
-        if (!updatedJob) return data;
-
-        // Set job status
-        updatedJob.active = true;
-
-        // Update jobs
-        return { jobs };
-      });
-
-      // Change page param if jobs length is one
-      setPageParam();
-
-      // Display message
-      notify("Job successfully opened", "success");
-    } else {
-      // Display error
-      notify(response, "error");
-    }
-  };
-
   // Listener
   useEffect(() => {
     if (open) {
@@ -161,6 +119,57 @@ export default function Actions({
     };
   }, [open]);
 
+  // Handle update stage
+  const handleUpdateStage = async (stage) => {
+    // Close menu
+    close();
+
+    // Send request
+    const response = await update({
+      jobID: application.jobID,
+      candidateID: application.userID,
+      hiredStatus: stage,
+    });
+
+    // Check response
+    if (response === 200) {
+      // Update applicants state
+      setApplicantsData((data) => {
+        // Updated applicant
+        const updatedApplicant = data.find(
+          (curr) => curr.userID === application.userID
+        );
+
+        // Check if applicant exists
+        if (!updatedApplicant) return data;
+
+        // Set applicant status
+        updatedApplicant.hiredStatus = stage;
+
+        // Update applicants
+        return [...data];
+      });
+
+      // Change page param if jobs length is one
+      setPageParam();
+
+      // Display message
+      notify("Applicant stage updated", "success");
+    } else {
+      // Display error
+      notify(response, "error");
+    }
+  };
+
+  // Handle view candidate
+  function handleViewCandidate() {
+    // Close menu
+    close();
+
+    // Set candidate
+    setCandidate(application);
+  }
+
   return (
     <td className="sticky" onClick={(e) => e.stopPropagation()}>
       <div>
@@ -169,14 +178,16 @@ export default function Actions({
             className="sticky-btn"
             ref={buttonRef}
             onClick={() => {
-              setOpen((s) => (s === jobID ? undefined : jobID));
+              setOpen((s) =>
+                s === application.userID ? undefined : application.userID
+              );
             }}
           >
             <BsThreeDots />
           </button>
         </div>
         <Modal>
-          {open === jobID &&
+          {open === application.userID &&
             createPortal(
               <Dropdown
                 menuId={`action-menu__${index}`}
@@ -189,49 +200,46 @@ export default function Actions({
                   ref={menuRef}
                 >
                   <li>
-                    <Link
-                      to={`/dashboard/jobs/${jobID}/${slug}`}
-                      onClick={close}
-                    >
+                    <button onClick={handleViewCandidate}>
                       <BsListUl size={16} />
-                      <span>View job</span>
-                    </Link>
+                      <span>View candidate</span>
+                    </button>
                   </li>
-                  <li>
-                    <Link to={`/edit-job/${jobID}`} onClick={close}>
-                      <BsPencil size={16} />
-                      <span>Edit job</span>
-                    </Link>
-                  </li>
-                  <li>
-                    {active ? (
-                      <Modal.Open opens="close-job">
-                        <button onClick={close}>
-                          <BsXCircle size={16} />
-                          <span>Close job</span>
-                        </button>
-                      </Modal.Open>
-                    ) : (
-                      <button onClick={handleOpenJob}>
+                  {["b", "r"].includes(active) && (
+                    <li>
+                      <button onClick={() => handleUpdateStage("a")}>
+                        <BsPlusCircle size={16} />
+                        <span>Shortlist candidate</span>
+                      </button>
+                    </li>
+                  )}
+                  {active === "a" && (
+                    <li>
+                      <button onClick={() => handleUpdateStage("h")}>
                         <BsCheckCircle size={16} />
-                        <span>Open job</span>
+                        <span>Hire candidate</span>
                       </button>
-                    )}
-                  </li>
+                    </li>
+                  )}
+
+                  {!["h", "r"].includes(active) && (
+                    <li>
+                      <button onClick={() => handleUpdateStage("r")}>
+                        <BsXCircle size={16} />
+                        <span>Reject candidate</span>
+                      </button>
+                    </li>
+                  )}
                   <li>
-                    <Modal.Open opens="delete-job">
-                      <button onClick={close}>
-                        <BsTrash size={16} />
-                        <span>Delete job</span>
-                      </button>
-                    </Modal.Open>
+                    <button>
+                      <BsEnvelope size={16} />
+                      <span>Send message</span>
+                    </button>
                   </li>
                 </List>
               </Dropdown>,
               document.body
             )}
-          <CloseJobModal jobID={jobID} currentDataLength={currentDataLength} />
-          <DeleteJobModal jobID={jobID} currentDataLength={currentDataLength} />
         </Modal>
       </div>
     </td>

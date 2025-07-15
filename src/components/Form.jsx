@@ -290,7 +290,7 @@ const StyledValuesBox = styled.div`
 
   .values-list {
     ${flex(undefined, "center")}
-    gap: 12px;
+    gap: 8px;
     margin-top: 8px;
     flex-wrap: wrap;
 

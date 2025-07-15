@@ -4,7 +4,8 @@ import NoResultsTable from "../../components/NoResultsTable";
 import TableBox from "../../components/TableBox";
 import Button from "../../components/Button";
 import Filter from "../../components/Filter";
-import EyeIcon from "../../assets/icons/eye.svg?react";
+import SourcingActions from "./SourcingActions";
+import CandidateModal from "../../components/CandidateModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -26,6 +27,12 @@ import { countries } from "../../data/countries";
 export default function SourcingTable({ loading, candidates, setCandidates }) {
   // Search params
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Active candidate
+  const [candidate, setCandidate] = useState(undefined);
+
+  // Open menu
+  const [open, setOpen] = useState(undefined);
 
   // Navigate hook
   const navigate = useNavigate();
@@ -77,13 +84,18 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
         <div className="search-talent">
           <Input
             type="text"
-            placeholder="Search candidates"
+            placeholder="Search job title"
             className="search-talent__input"
             $sm={true}
             value={inputValue}
             onChange={(e) => {
               if (e.target.value === "") clearParams();
               setInputValue(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.code === 13) && inputValue) {
+                setParams(inputValue);
+              }
             }}
           />
           <Button
@@ -145,7 +157,7 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
               <th>Candidates</th>
               <th>Location</th>
               <th>Email</th>
-              <th>Join Date</th>
+              <th>Register Date</th>
               <th className="sticky">
                 <div></div>
               </th>
@@ -160,15 +172,12 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
                   {dataNum > 0 && (
                     <tbody>
                       {currentData.map((item, index) => (
-                        <tr
-                          key={index}
-                          onClick={() =>
-                            navigate(`/dashboard/browse-talent/${item._id}`)
-                          }
-                        >
+                        <tr key={index} onClick={() => setCandidate(item)}>
                           <td>
                             <div className="cell-box">
-                              <p className="cell-box__name">{`${item.firstName} ${item.lastName}`}</p>
+                              <p className="cell-box__name">{`${capitalizeFirst(
+                                item.firstName
+                              )} ${capitalizeFirst(item.lastName)}`}</p>
                               <ul className="cell-box__details">
                                 <li>{capitalizeFirst(item.jobTitle)}</li>
                                 <li>{capitalizeFirst(item.jobType)}</li>
@@ -178,13 +187,13 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
                           <td>{capitalizeFirst(item.country)}</td>
                           <td>{item.email}</td>
                           <td>{formatDate(item.createdAt)}</td>
-                          <td className="sticky">
-                            <div>
-                              <button className="sticky-btn">
-                                <EyeIcon width={20} height={20} />
-                              </button>
-                            </div>
-                          </td>
+                          <SourcingActions
+                            index={index}
+                            candidate={item}
+                            setCandidate={setCandidate}
+                            open={open}
+                            setOpen={setOpen}
+                          />
                         </tr>
                       ))}
                     </tbody>
@@ -248,6 +257,12 @@ export default function SourcingTable({ loading, candidates, setCandidates }) {
           </>
         )}
       </div>
+      {candidate && (
+        <CandidateModal
+          candidate={candidate}
+          close={() => setCandidate(undefined)}
+        />
+      )}
     </TableBox>
   );
 }

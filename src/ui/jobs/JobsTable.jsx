@@ -15,6 +15,7 @@ import { capitalizeFirst, formatDate } from "../../utils/helpers";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { flex } from "../../GlobalStyles";
 import { countries } from "../../data/countries";
+import { useState } from "react";
 
 // Jobs table
 const StyledJobsTable = styled(TableBox)`
@@ -63,12 +64,15 @@ export default function JobsTable() {
   // Jobs context
   const { jobs, loading } = useJobsContext();
 
+  // Dropdown state
+  const [open, setOpen] = useState(false);
+
   // Navigate hook
   const navigate = useNavigate();
 
   // Navigate to job page
-  const handleNavigate = (id) => {
-    navigate(`/dashboard/jobs/${id}`);
+  const handleNavigate = (item) => {
+    navigate(`/dashboard/jobs/${item._id}/${item.slug}`);
   };
 
   // Departments
@@ -140,8 +144,8 @@ export default function JobsTable() {
           ) : (
             <tbody>
               {currentData.map((item, index) => (
-                <tr key={index}>
-                  <td onClick={() => handleNavigate(item._id)}>
+                <tr key={index} onClick={() => handleNavigate(item)}>
+                  <td>
                     <div className="cell-box">
                       <p className="cell-box__name">{item.jobTitle}</p>
                       <ul className="cell-box__details">
@@ -150,7 +154,7 @@ export default function JobsTable() {
                       </ul>
                     </div>
                   </td>
-                  <td onClick={() => handleNavigate(item._id)}>
+                  <td>
                     <div className="status">
                       <i
                         className={`status-icon ${
@@ -160,20 +164,18 @@ export default function JobsTable() {
                       {item.active ? "Open" : "Closed"}
                     </div>
                   </td>
-                  <td onClick={() => handleNavigate(item._id)}>
-                    {item.applicants.length}
-                  </td>
-                  <td onClick={() => handleNavigate(item._id)}>
-                    {item.department}
-                  </td>
-                  <td onClick={() => handleNavigate(item._id)}>
-                    {formatDate(item.createdAt)}
-                  </td>
+                  <td>{item.applicants.length}</td>
+                  <td>{item.department}</td>
+                  <td>{formatDate(item.createdAt)}</td>
                   <Actions
                     jobID={item._id}
+                    link={`/dashboard/${item._id}/${item.slug}`}
                     index={index}
                     active={item.active}
                     currentDataLength={dataNum}
+                    open={open}
+                    setOpen={setOpen}
+                    slug={item.slug}
                   />
                 </tr>
               ))}

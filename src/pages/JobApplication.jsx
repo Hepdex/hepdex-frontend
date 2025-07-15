@@ -163,7 +163,7 @@ const StyledJobApplication = styled.div`
       .left {
         & > ul {
           ${flex(undefined, "center")}
-          gap:12px;
+          gap:8px;
           flex-wrap: wrap;
         }
       }
@@ -185,6 +185,10 @@ const StyledJobApplication = styled.div`
 
     &--content {
       margin-top: 20px;
+
+      .left {
+        color: var(--color-grey-2);
+      }
 
       .right {
         .details-box {
@@ -246,7 +250,7 @@ const StyledJobApplication = styled.div`
 
 export default function JobApplication() {
   // Get job slug
-  const { slug } = useParams();
+  const { company, slug } = useParams();
 
   // Navigate hook
   const navigate = useNavigate();
@@ -264,16 +268,59 @@ export default function JobApplication() {
   const intervals = { monthly: "month", annually: "year", hourly: "hour" };
 
   // Fetch job
-  const [data, loading] = useQuery(getJob, `/${slug}`);
+  const [data, loading, setData] = useQuery(getJob, `/${slug}`);
 
   //  Assign job
   const job = data?.job;
 
+  // Title
+  const title = (() => {
+    const arr = slug.split("-");
+    arr.pop();
+    return capitalizeFirst(arr.join(" "));
+  })();
+
+  // Company name
+  const companyName = company.replaceAll("-", " ");
+
   // Description
-  const description = `${job?.jobTitle} at ${job?.employer?.companyName}`;
+  const description = `${title} at ${companyName}`;
 
   return (
     <StyledJobApplication>
+      <Helmet>
+        <title>{`HepDex - ${description}`}</title>
+        <meta
+          name="description"
+          content={`${companyName} is hiring a ${title}, Apply now on hepdex.com/find-work.`}
+        />
+        <meta property="og:title" content={description} />
+        <meta property="og:url" content={window.location.href} />
+        <meta
+          property="og:description"
+          content="Apply on hepdex.com/find-work."
+        />
+        <meta
+          property="og:image"
+          content={`${window.location.origin}/hepdex-banner`}
+        />
+        <meta property="og:image:alt" content={description} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={description} />
+        <meta
+          name="twitter:description"
+          content="Apply now on hepdex.com/find-work"
+        />
+        <meta
+          name="twitter:image"
+          content={`${window.location.origin}/hepdex-banner`}
+        />
+        <meta name="twitter:image:width" content="1200" />
+        <meta name="twitter:image:height" content="630" />
+      </Helmet>
       {loading ? (
         <ContentLoader />
       ) : (
@@ -281,40 +328,6 @@ export default function JobApplication() {
           <DashboardBox>
             {job ? (
               <>
-                <Helmet>
-                  <title>{`HepDex -  ${description} `}</title>
-                  <meta
-                    name="description"
-                    content={`${job.employer.companyName} is hiring a ${job.jobTitle}, Apply now on hepdex.com/find-work.`}
-                  />
-                  <meta property="og:title" content={description} />
-                  <meta property="og:url" content={window.location.href} />
-                  <meta
-                    property="og:description"
-                    content="Apply on hepdex.com/find-work."
-                  />
-                  <meta
-                    property="og:image"
-                    content={`${window.location.origin}/hepdex-banner`}
-                  />
-                  <meta property="og:image:alt" content={description} />
-                  <meta property="og:image:width" content="1200" />
-                  <meta property="og:image:height" content="630" />
-
-                  <meta property="og:type" content="website" />
-                  <meta name="twitter:card" content="summary_large_image" />
-                  <meta name="twitter:title" content={description} />
-                  <meta
-                    name="twitter:description"
-                    content="Apply now on hepdex.com/find-work"
-                  />
-                  <meta
-                    name="twitter:image"
-                    content={`${window.location.origin}/hepdex-banner`}
-                  />
-                  <meta name="twitter:image:width" content="1200" />
-                  <meta name="twitter:image:height" content="630" />
-                </Helmet>
                 <Modal>
                   <div className="job-details--top">
                     <div className="left">
@@ -483,7 +496,7 @@ export default function JobApplication() {
                       </Container.Col>
                     </Container.Row>
                   </div>
-                  <ApplyBox job={job} />
+                  <ApplyBox job={job} setData={setData} />
                   <LoginNotify />
                   <RoleNotify />
                   <ReportJob jobID={job._id} />

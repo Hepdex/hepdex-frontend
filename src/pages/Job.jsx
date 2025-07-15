@@ -10,6 +10,9 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { flex } from "../GlobalStyles";
 import { getJob } from "../services/apiJobs";
 import { Link, useParams } from "react-router-dom";
+import { capitalizeFirst } from "../utils/helpers";
+import useDocumentTitle from "../hooks/useDocumentTitle";
+import { useUserContext } from "../context/UserContext";
 
 const JobDetailsBox = styled.div`
   // Page card
@@ -28,29 +31,43 @@ const JobDetailsBox = styled.div`
   // Top
   .top {
     ${flex("space-between", "center")}
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     gap: 16px;
   }
 `;
 
 export default function Job() {
   // Get job ID
-  const { jobID } = useParams();
+  const { jobID, slug } = useParams();
+
+  // User context
+  const { user } = useUserContext();
 
   // Fetch job
   const [data, loading] = useQuery(getJob, `?jobID=${jobID}`);
 
   // Job
   const job = data?.job;
+
+  // Title
+  const title = (() => {
+    const arr = slug.split("-");
+    arr.pop();
+    return capitalizeFirst(arr.join(" "));
+  })();
+
+  // Document title
+  useDocumentTitle(`${title} for ${user.companyName}`);
+
   return (
     <ProtectedRoute allowedRoles={["employer"]}>
       <JobDetailsBox>
         <DashboardTitle
-          title="Job details"
-          subtitle="Job description and applications"
+          title={title}
+          subtitle={`Manage job info and applications`}
           links={[
             { name: "Jobs", url: "/dashboard/jobs" },
-            { name: "Job details" },
+            { name: `${title}` },
           ]}
         />
         {loading ? (

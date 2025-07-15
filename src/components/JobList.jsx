@@ -95,7 +95,7 @@ const StyledJobList = styled.div`
 
           &--meta {
             ${flex(undefined, "center")}
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
           }
         }
@@ -207,7 +207,13 @@ export default function JobList({
           <li
             key={index}
             className={`job ${alternate ? "alternate" : ""}`}
-            onClick={() => navigate(`/jobs/${job.slug}`)}
+            onClick={() =>
+              navigate(
+                `/jobs/${job.employer.companyName.replaceAll(" ", "-")}/${
+                  job.slug
+                }`
+              )
+            }
           >
             <div className="job-left">
               <AvatarImage>
