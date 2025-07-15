@@ -31,7 +31,7 @@ export default function SavedJobs() {
           {jobs.length > 0 ? (
             <JobList jobs={jobs} isSaved setSavedJobs={setSavedJobs} />
           ) : (
-            <NoJobs isSaved alternate />
+            <NoJobs isSaved />
           )}
         </>
       )}
