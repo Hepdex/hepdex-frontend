@@ -1,11 +1,12 @@
 import SourcingTable from "../ui/sourcing/SourcingTable";
 import DashboardTitle from "../components/DashboardTitle";
+import ProtectedRoute from "../components/ProtectedRoute";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import styled, { css } from "styled-components";
 import { flex, mq } from "../GlobalStyles";
 import { getCandidates } from "../services/apiCandidate";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import ProtectedRoute from "../components/ProtectedRoute";
 
 const SourcingBox = styled.div`
   // Search talent
@@ -85,12 +86,18 @@ const SourcingBox = styled.div`
 export default function Sourcing() {
   // Search params
   const [searchParams] = useSearchParams();
+
   // Search
   const search = searchParams.get("jobTitle") ?? "";
+
   // Candidates state
   const [candidates, setCandidates] = useState(undefined);
+
   // Fetch candidates
   const [loading, setLoading] = useState(search ? true : false);
+
+  // Document title
+  useDocumentTitle("Sourcing");
 
   // Fetch candidates
   useEffect(() => {

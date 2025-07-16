@@ -19,7 +19,7 @@ const StyledPlans = styled.div`
   )}
 
   .plan-box {
-    padding: 32px 24px;
+    padding: 40px 24px;
     border-radius: 8px;
     background-color: var(--color-grey-1);
     height: 100%;

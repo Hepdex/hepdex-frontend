@@ -61,6 +61,7 @@ const Signin = () => {
       // Redirect to email confirmation page
       navigate("/confirm-email");
     } else {
+      console.log(response);
       // Error
       notify(response, "error");
     }

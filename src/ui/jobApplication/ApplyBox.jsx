@@ -7,7 +7,7 @@ import { useUserContext } from "../../context/UserContext";
 import { applyForJob } from "../../services/apiJobs";
 import { capitalizeFirst, notify } from "../../utils/helpers";
 
-export default function ApplyBox({ job }) {
+export default function ApplyBox({ job, setData }) {
   // User context
   const { user } = useUserContext();
 
@@ -41,6 +41,13 @@ export default function ApplyBox({ job }) {
     if (response === 200) {
       // Close modal
       close();
+
+      // Update state of job
+      setData((prev) => {
+        const updatedJob = prev.job;
+        updatedJob.hasApplied = true;
+        return { job: updatedJob };
+      });
 
       // Success
       notify(`Application sent to ${job.employer.companyName}`, "success");

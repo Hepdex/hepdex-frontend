@@ -15,7 +15,7 @@ export default function DashboardRoutes() {
     <Route element={<DashboardLayout />} path="dashboard">
       <Route path="home" element={<Dashboard />} />
       <Route path="jobs" element={<Jobs />} />
-      <Route path="jobs/:jobID" element={<Job />} />
+      <Route path="jobs/:jobID/:slug" element={<Job />} />
       <Route path="settings" element={<Settings />} />
       <Route path="company-bio" element={<Company />} />
       <Route path="browse-talent" element={<Sourcing />} />
