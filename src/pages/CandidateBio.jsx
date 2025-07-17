@@ -124,7 +124,7 @@ const StyledCandidateBio = styled.div`
           font-size: 18px;
           line-height: 24px;
           font-weight: 500;
-          margin-bottom: 8px;
+          margin-bottom: 4px;
         }
 
         .badge-list {
