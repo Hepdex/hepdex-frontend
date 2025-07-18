@@ -17,8 +17,8 @@ import styled, { css } from "styled-components";
 import { useUserContext } from "../context/UserContext";
 import { flex, mq } from "../GlobalStyles";
 import { getJob } from "../services/apiJobs";
-import { Helmet } from "react-helmet";
 import {
+  API_URL,
   capitalizeFirst,
   formatCurrencyToK,
   formatDate,
@@ -288,39 +288,6 @@ export default function JobApplication() {
 
   return (
     <StyledJobApplication>
-      <Helmet>
-        <title>{`HepDex - ${description}`}</title>
-        <meta
-          name="description"
-          content={`${companyName} is hiring a ${title}, Apply now on hepdex.com/find-work.`}
-        />
-        <meta property="og:title" content={description} />
-        <meta property="og:url" content={window.location.href} />
-        <meta
-          property="og:description"
-          content="Apply on hepdex.com/find-work."
-        />
-        <meta
-          property="og:image"
-          content={`${window.location.origin}/hepdex-banner`}
-        />
-        <meta property="og:image:alt" content={description} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={description} />
-        <meta
-          name="twitter:description"
-          content="Apply now on hepdex.com/find-work"
-        />
-        <meta
-          name="twitter:image"
-          content={`${window.location.origin}/hepdex-banner`}
-        />
-        <meta name="twitter:image:width" content="1200" />
-        <meta name="twitter:image:height" content="630" />
-      </Helmet>
       {loading ? (
         <ContentLoader />
       ) : (
@@ -366,7 +333,10 @@ export default function JobApplication() {
                         className="save-job"
                         defaultValue={job.isSaved}
                       />
-                      <ShareJob title={description} />
+                      <ShareJob
+                        title={description}
+                        url={`${API_URL}/share-job/${job.slug}`}
+                      />
                       {job.hasApplied ? (
                         <Badge className="success md">
                           <BsCheckCircleFill size={16} /> Applied
