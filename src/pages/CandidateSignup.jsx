@@ -54,20 +54,23 @@ const CandidateSignup = () => {
       newErrors.password = "Password must be at least 8 characters long";
     }
 
+    console.log(newErrors);
+
     // Resume validation
-    if (formData.resume && formData.resume.type !== "application/pdf") {
+    if (formData.resume.name && formData.resume.type !== "application/pdf") {
       newErrors.resume = "Please select a PDF file";
     }
 
     // Set errors
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     // Prevent default submit
     e.preventDefault();
-
+    console.log("I submitted");
     // Get data
     const data = Object.fromEntries(new FormData(e.target));
 
@@ -75,7 +78,7 @@ const CandidateSignup = () => {
     if (!validateForm(data)) return;
 
     // Check for resume file
-    if (data.resume) {
+    if (data.resume.name) {
       // New file reader
       const reader = new FileReader();
 
@@ -87,7 +90,7 @@ const CandidateSignup = () => {
 
       // Start scan
       reader.readAsDataURL(data.resume);
-    }
+    } else delete data.resume;
 
     // Check for unique email
     const response = await check({ email: data.email });
@@ -131,6 +134,7 @@ const CandidateSignup = () => {
           <FormGroup
             label="Resume (PDF)"
             instructions="Optional - Upload your resume as a PDF file."
+            error={errors.resume}
           >
             <Input type="file" name="resume" onChange={handleInputChange} />
           </FormGroup>

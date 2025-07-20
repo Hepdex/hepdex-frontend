@@ -116,7 +116,7 @@ const AddBio = () => {
     const userData = new FormData();
 
     // Append values
-    userData.append("resume", signupData.resume);
+    if (signupData.resume) userData.append("resume", signupData.resume);
     userData.append("country", signupData.country);
     userData.append("email", signupData.email);
     userData.append("firstName", signupData.firstName);
@@ -208,7 +208,7 @@ const AddBio = () => {
             <ValuesBox
               state={skills}
               setState={setSkills}
-              placeholder="Add a skill"
+              placeholder="Add skill and press Enter"
               label={
                 <>
                   Skills <span className="required">*</span>
@@ -220,7 +220,7 @@ const AddBio = () => {
             <ValuesBox
               state={languages}
               setState={setLanguages}
-              placeholder="Add a Language"
+              placeholder="Add language and press Enter"
               label={
                 <>
                   Languages <span className="required">*</span>
